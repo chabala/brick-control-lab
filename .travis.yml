@@ -3,3 +3,5 @@ sudo: false
 jdk:
   - oraclejdk8
 script: mvn clean verify
+after_success:
+  - mvn jacoco:report coveralls:report
