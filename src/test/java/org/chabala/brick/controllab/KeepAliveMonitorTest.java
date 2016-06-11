@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
  */
 public class KeepAliveMonitorTest {
 
-    private final long TWO_SECONDS = Timer.ONE_SECOND * 2;
+    private final long twoSeconds = Timer.ONE_SECOND * 2;
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -46,10 +46,10 @@ public class KeepAliveMonitorTest {
     public void testMonitorSendsKeepAlives() throws Exception {
         when(serialPort.isOpen()).thenReturn(true);
         try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort)) {
-            Thread.sleep(TWO_SECONDS);
+            Thread.sleep(twoSeconds);
             verify(serialPort, times(1)).isOpen();
             verify(serialPort, times(1)).write(anyByte());
-            Thread.sleep(TWO_SECONDS);
+            Thread.sleep(twoSeconds);
             verify(serialPort, times(2)).isOpen();
             verify(serialPort, times(2)).write(anyByte());
         }
@@ -57,13 +57,13 @@ public class KeepAliveMonitorTest {
 
     @Test
     public void testResetPreventsKeepAlives() throws Exception {
-        long ONE_AND_A_HALF_SECONDS = Timer.ONE_SECOND / 2 * 3;
+        long oneAndAHalfSeconds = Timer.ONE_SECOND / 2 * 3;
         try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort)) {
-            Thread.sleep(ONE_AND_A_HALF_SECONDS);
+            Thread.sleep(oneAndAHalfSeconds);
             verify(serialPort, never()).isOpen();
             verify(serialPort, never()).write(anyByte());
             monitor.reset();
-            Thread.sleep(ONE_AND_A_HALF_SECONDS);
+            Thread.sleep(oneAndAHalfSeconds);
             verify(serialPort, never()).isOpen();
             verify(serialPort, never()).write(anyByte());
         }
@@ -74,7 +74,7 @@ public class KeepAliveMonitorTest {
         try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort)) {
             monitor.close();
         }
-        Thread.sleep(TWO_SECONDS);
+        Thread.sleep(twoSeconds);
         verify(serialPort, never()).isOpen();
         verify(serialPort, never()).write(anyByte());
     }

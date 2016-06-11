@@ -30,8 +30,12 @@
                     <version>3.0.0</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.13</version>
+                    <version>2.19.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -47,12 +51,16 @@
                     <version>2.9</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.17</version>
                     <configuration>
                         <configLocation>src/main/config/checkstyle.xml</configLocation>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
