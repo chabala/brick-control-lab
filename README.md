@@ -6,6 +6,7 @@ Library for controlling the [LEGO® control lab interface][1].
 [![Coverage Status][7]][8]
 [![Codacy Badge][5]][6]
 [![License: GNU LGPL 3.0][4]](http://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![Dependency Status][12]][13]
 
 ### What is the control lab?
 
@@ -50,6 +51,8 @@ Licensed under [GNU Lesser General Public License 3.0](http://www.gnu.org/licens
 [9]: http://www.bricklink.com/SL/9751-1.jpg
 [10]: http://www.bricklink.com/catalogItemPic.asp?S=9751-1
 [11]: https://en.wikipedia.org/wiki/Lego_Mindstorms#RCX
+[12]: https://www.versioneye.com/user/projects/575c4fd77757a0003bd4c053/badge.svg?style=flat
+[13]: https://www.versioneye.com/user/projects/575c4fd77757a0003bd4c053
 
 LEGO®, DACTA®, TECHNIC®, and MINDSTORMS® are trademarks and/or copyrights of the LEGO Group,
 which does not sponsor, authorize or endorse this software.
