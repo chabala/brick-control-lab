@@ -16,32 +16,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.chabala.brick.controllab.jssc;
+package org.chabala.brick.controllab;
 
-import jssc.SerialPortList;
-import org.chabala.brick.controllab.SerialPort;
-import org.chabala.brick.controllab.SerialPortFactory;
+import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
 
 /**
- * jSSC based implementation of {@link SerialPortFactory}.
- *
- * @see <a href="https://github.com/scream3r/java-simple-serial-connector">
- *               https://github.com/scream3r/java-simple-serial-connector</a>
+ * Testing {@link Direction}.
  */
-public class JsscSerialPortFactory implements SerialPortFactory {
+public class DirectionTest {
 
-    /** {@inheritDoc} */
-    @Override
-    public List<String> getAvailablePorts() {
-        return Arrays.asList(SerialPortList.getPortNames());
+    @Test
+    public void testThereAreThreeDirections() throws Exception {
+        assertThat(Direction.values(), arrayWithSize(3));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public SerialPort getSerialPort(String portName) {
-        return new JsscSerialPort(portName);
+    @Test
+    public void testEveryDirectionHasAUniqueCode() throws Exception {
+        Set<Byte> codes = new HashSet<>();
+        for (Direction d : Direction.values()) {
+            codes.add(d.getCode());
+        }
+        assertThat(codes, hasSize(Direction.values().length));
     }
 }

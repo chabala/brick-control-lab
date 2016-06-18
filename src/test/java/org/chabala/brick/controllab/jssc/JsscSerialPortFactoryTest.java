@@ -18,30 +18,38 @@
  */
 package org.chabala.brick.controllab.jssc;
 
-import jssc.SerialPortList;
 import org.chabala.brick.controllab.SerialPort;
 import org.chabala.brick.controllab.SerialPortFactory;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * jSSC based implementation of {@link SerialPortFactory}.
- *
- * @see <a href="https://github.com/scream3r/java-simple-serial-connector">
- *               https://github.com/scream3r/java-simple-serial-connector</a>
- */
-public class JsscSerialPortFactory implements SerialPortFactory {
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
-    /** {@inheritDoc} */
-    @Override
-    public List<String> getAvailablePorts() {
-        return Arrays.asList(SerialPortList.getPortNames());
+/**
+ * Testing {@link JsscSerialPortFactory}.
+ */
+public class JsscSerialPortFactoryTest {
+
+    private SerialPortFactory serialPortFactory;
+
+    @Before
+    public void setUp() throws Exception {
+        serialPortFactory = new JsscSerialPortFactory();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public SerialPort getSerialPort(String portName) {
-        return new JsscSerialPort(portName);
+    @Test
+    public void getAvailablePorts() throws Exception {
+        List<String> availablePorts = serialPortFactory.getAvailablePorts();
+        assertThat(availablePorts, is(not(nullValue())));
+    }
+
+    @Test
+    public void getSerialPort() throws Exception {
+        SerialPort serialPort = serialPortFactory.getSerialPort("test");
+        assertThat(serialPort, is(not(nullValue())));
+        assertThat(serialPort, is(instanceOf(JsscSerialPort.class)));
     }
 }

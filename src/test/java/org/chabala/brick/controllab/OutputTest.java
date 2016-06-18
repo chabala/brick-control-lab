@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
+import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -58,5 +59,10 @@ public class OutputTest {
     @Test
     public void testByteWithHighBitSetDecodesToOutputH() throws Exception {
         assertThat(Output.decodeByteToSet((byte) 0b10000000), is(EnumSet.of(Output.H)));
+    }
+
+    @Test
+    public void testThereAreEightOutputs() throws Exception {
+        assertThat(Output.values(), arrayWithSize(8));
     }
 }
