@@ -31,10 +31,22 @@ import java.io.IOException;
  *               https://github.com/scream3r/java-simple-serial-connector</a>
  */
 class JsscSerialPort implements SerialPort {
+    /** The wrapped jSSC {@link jssc.SerialPort} that all methods delegate to. */
     private final jssc.SerialPort serialPort;
 
+    /**
+     * jSSC based implementation of {@link SerialPort}.
+     * @param portName system specific serial port identifier
+     */
     JsscSerialPort(String portName) {
-        this.serialPort = new jssc.SerialPort(portName);
+        this(new jssc.SerialPort(portName));
+    }
+
+    /**
+     * This constructor is for unit testing.
+     */
+    JsscSerialPort(jssc.SerialPort serialPort) {
+        this.serialPort = serialPort;
     }
 
     /** {@inheritDoc} */

@@ -76,4 +76,11 @@ public interface SerialPort extends Closeable {
      * @throws IOException if any number of possible communication issues occurs
      */
     void addEventListener(SerialPortEventListener listener) throws IOException;
+
+    /**
+     * Disconnects from the serial port and releases any resources.
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    @Override
+    void close() throws IOException;
 }
