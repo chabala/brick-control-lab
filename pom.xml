@@ -63,7 +63,6 @@
                     <version>2.17</version>
                     <configuration>
                         <configLocation>src/main/config/checkstyle.xml</configLocation>
-                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     </configuration>
                 </plugin>
                 <plugin>
