@@ -98,6 +98,34 @@ public class ControlLabIT {
         }
     }
 
+    @Test
+    public void testOutputPowerLevels() throws Exception {
+        try (ControlLab controlLab = ControlLab.newControlLab()) {
+            try {
+                controlLab.open(choosePort(controlLab));
+            } catch (IOException e) {
+                assumeNoException(e);
+            }
+            Thread.sleep(ONE_SECOND);
+
+            controlLab.setOutputPowerLevel(PowerLevel.P1, EnumSet.of(Output.A));
+            controlLab.turnOutputOn(EnumSet.of(Output.A));
+            Thread.sleep(ONE_SECOND);
+            controlLab.turnOutputOn(EnumSet.of(Output.A));
+
+            for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
+                controlLab.setOutputPowerLevel(p, EnumSet.of(Output.A));
+                Thread.sleep(ONE_SECOND);
+            }
+
+            controlLab.setOutputPowerLevel(PowerLevel.P0, EnumSet.of(Output.A));
+            Thread.sleep(ONE_SECOND);
+
+            controlLab.turnOutputOn(EnumSet.of(Output.A));
+            Thread.sleep(ONE_SECOND);
+        }
+    }
+
     @Ignore
     @Test
     public void testRunUntilStopButtonPressed() throws Exception {

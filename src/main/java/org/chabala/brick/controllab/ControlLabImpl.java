@@ -113,6 +113,12 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
+    public void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException {
+        sendCommand(powerLevel.getCode(), Output.encodeSetToByte(outputs));
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public List<String> getAvailablePorts() {
         return portFactory.getAvailablePorts();
     }

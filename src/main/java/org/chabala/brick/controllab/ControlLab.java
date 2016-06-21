@@ -75,6 +75,15 @@ public interface ControlLab extends Closeable {
     void setOutputDirection(Direction direction, Set<Output> outputs) throws IOException;
 
     /**
+     * Sets the {@link PowerLevel} of the specified outputs. Power level may be changed
+     * while the outputs are powered or unpowered.
+     * @param powerLevel desired power level
+     * @param outputs which outputs to change
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException;
+
+    /**
      * Attach a listener for {@link StopButtonEvent}s.
      *
      * <p>Multiple listeners are allowed. A listener instance will only be registered
