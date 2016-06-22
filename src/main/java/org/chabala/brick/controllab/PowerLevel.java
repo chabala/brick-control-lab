@@ -68,7 +68,7 @@ public enum PowerLevel {
         if (level == 0) {
             return (byte) 0b10010010;
         } else {
-            return (byte) (0b10110000 + (level-1 & 0x07));
+            return (byte) (0b10110000 + (level - 1 & 0x07));
         }
     }
 }

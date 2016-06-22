@@ -19,7 +19,7 @@
 package org.chabala.brick.controllab;
 
 /**
- * {@inheritDoc}
+ * {@inheritDoc}.
  */
 class SensorValueImpl implements SensorValue {
     private final int analogValue;
@@ -30,13 +30,15 @@ class SensorValueImpl implements SensorValue {
         statusCode = extractStatus(low);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getAnalogValue() {
         return analogValue;
     }
 
     /**
-     * bit 5 looks like 'in flux'
+     * {@inheritDoc}.
+     * bit 5 looks like 'in flux'.
      */
     @Override
     public int getStatusCode() {
