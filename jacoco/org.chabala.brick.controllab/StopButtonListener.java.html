@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StopButtonListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">StopButtonListener.java</span></div><h1>StopButtonListener.java</h1><pre class="source lang-java linenums">/*
+ * Copyright © 2016 Greg Chabala
+ *
+ * This file is part of brick-control-lab.
+ *
+ * brick-control-lab is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * brick-control-lab is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package org.chabala.brick.controllab;
+
+import java.util.EventListener;
+
+/**
+ * The listener interface for receiving stop button events.
+ *
+ * @see StopButtonEvent
+ */
+public interface StopButtonListener extends EventListener {
+
+    /**
+     * Invoked when the stop button is first pressed. The hardware will have
+     * a flashing LED next to the stop button to indicate a paused state.
+     * &lt;p&gt;
+     * While the OEM implementation of the control lab software would halt
+     * program operation in this state, the hardware does not hamper output
+     * control or the flow of input data, so actual behavior is left to the
+     * implementor of the interface.
+     * &lt;p&gt;
+     * The default implementation is no-op.
+     *
+     * @param stopButtonEvent The event that triggered this callback.
+     */
+    default void stopButtonPressed(StopButtonEvent stopButtonEvent) {
+<span class="nc" id="L44">    }</span>
+
+    /**
+     * Invoked when the stop button is disengaged. The hardware will have
+     * an unlit LED next to the stop button to indicate the computer is
+     * connected.
+     * &lt;p&gt;
+     * The default implementation is no-op.
+     *
+     * @param stopButtonEvent The event that triggered this callback.
+     */
+    default void stopButtonReleased(StopButtonEvent stopButtonEvent) {
+<span class="nc" id="L56">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

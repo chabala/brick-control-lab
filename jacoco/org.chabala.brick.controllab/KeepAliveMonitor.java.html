@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeepAliveMonitor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">KeepAliveMonitor.java</span></div><h1>KeepAliveMonitor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright © 2016 Greg Chabala
+ *
+ * This file is part of brick-control-lab.
+ *
+ * brick-control-lab is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * brick-control-lab is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package org.chabala.brick.controllab;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.concurrent.*;
+
+/**
+ * Handles sending keep alive messages in the absence of other commands.
+ */
+class KeepAliveMonitor implements Closeable {
+<span class="fc" id="L32">    private final Logger log = LoggerFactory.getLogger(getClass());</span>
+    private final SerialPort serialPort;
+    private final ScheduledExecutorService executor;
+    private static final byte KEEP_ALIVE_COMMAND = 0x02;
+    /** Slightly less than two seconds. */
+    private static final int KEEP_ALIVE_PERIOD_MS = 1800;
+    private ScheduledFuture&lt;?&gt; task;
+
+    /**
+     * Creates a keep alive monitor for the specified serial port. As soon
+     * as it's constructed, will send a keep alive message to the serial
+     * port with a frequency just under two seconds, as long as the port
+     * is open.
+     * @param serialPort the port to receive keep alive messages
+     */
+<span class="fc" id="L47">    KeepAliveMonitor(SerialPort serialPort) {</span>
+<span class="fc" id="L48">        this.serialPort = serialPort;</span>
+<span class="fc" id="L49">        executor = Executors.newSingleThreadScheduledExecutor(</span>
+                new NamedDaemonThreadFactory(
+<span class="fc" id="L51">                        &quot;KeepAlive &quot; + serialPort.getPortName()));</span>
+<span class="fc" id="L52">        scheduleTask();</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Call this method when a command is being sent, to reset the countdown
+     * on the keep alive monitor. It will reschedule the next keep alive
+     * message from this moment.
+     */
+    void reset() {
+<span class="fc" id="L61">        task.cancel(false);</span>
+<span class="fc" id="L62">        scheduleTask();</span>
+<span class="fc" id="L63">    }</span>
+
+    private void scheduleTask() {
+<span class="fc" id="L66">        task = executor.scheduleAtFixedRate(() -&gt; {</span>
+            try {
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">                if (serialPort.isOpen()) {</span>
+<span class="fc" id="L69">                    sendCommand(KEEP_ALIVE_COMMAND);</span>
+                }
+<span class="nc" id="L71">            } catch (IOException e) {</span>
+<span class="nc" id="L72">                LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);</span>
+<span class="fc" id="L73">            }</span>
+<span class="fc" id="L74">        }, KEEP_ALIVE_PERIOD_MS, KEEP_ALIVE_PERIOD_MS, TimeUnit.MILLISECONDS);</span>
+<span class="fc" id="L75">    }</span>
+
+    private void sendCommand(byte b) throws IOException {
+<span class="fc" id="L78">        log.info(&quot;TX -&gt; {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
+<span class="fc" id="L79">        serialPort.write(b);</span>
+<span class="fc" id="L80">    }</span>
+
+    /**
+     * Cancel the next keep alive message and shutdown the monitor.
+     */
+    @Override
+    public void close() {
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (executor != null) {</span>
+<span class="fc" id="L88">            executor.shutdownNow();</span>
+        }
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * A {@link ThreadFactory} which produces named, daemon threads.
+     */
+    private static class NamedDaemonThreadFactory implements ThreadFactory {
+<span class="fc" id="L96">        private ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();</span>
+        private final String threadName;
+
+<span class="fc" id="L99">        NamedDaemonThreadFactory(String threadName) {</span>
+<span class="fc" id="L100">            this.threadName = threadName;</span>
+<span class="fc" id="L101">        }</span>
+
+        @Override
+        public Thread newThread(Runnable r) {
+<span class="fc" id="L105">            Thread thread = defaultThreadFactory.newThread(r);</span>
+<span class="fc" id="L106">            thread.setName(threadName);</span>
+<span class="fc" id="L107">            thread.setDaemon(true);</span>
+<span class="fc" id="L108">            return thread;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
