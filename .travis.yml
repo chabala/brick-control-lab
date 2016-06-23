@@ -7,4 +7,4 @@ jdk:
   - oraclejdk8
 script: mvn clean verify
 after_success:
-  - mvn jacoco:report coveralls:report
+  - mvn jacoco:report coveralls:report site-deploy

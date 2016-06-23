@@ -30,6 +30,9 @@ piece of hobby software to target working with the control lab, but it is the fi
 * as a library (e.g. no user interface, used by other programs)
 * usable from Maven (TODO)
 
+### Usage
+Refer to the Maven generated site for apidocs: https://chabala.github.io/brick-control-lab/
+
 ### Prerequisites to build from source
 * Java 8
 * Maven 3
