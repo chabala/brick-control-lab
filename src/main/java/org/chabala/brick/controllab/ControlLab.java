@@ -24,7 +24,22 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Object to represent interacting with the LEGO® control lab interface.
+ * This is the main interface for interacting with the LEGO® control lab, instances of
+ * which can be created with {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
+ *
+ * <p>Usage example: <pre>   {@code
+ *   ControlLab controlLab = ControlLab.newControlLab();
+ *   List<String> availablePorts = controlLab.getAvailablePorts();
+ *   try {
+ *       controlLab.open(availablePorts.get(0));
+ *       controlLab.setOutputPowerLevel(PowerLevel.P4, EnumSet.of(Output.A));
+ *       controlLab.turnOutputOn(EnumSet.of(Output.A));
+ *   } catch (IOException e) {
+ *       e.printStackTrace();
+ *   } finally {
+ *       controlLab.close();
+ *   }
+ *       }</pre>
  */
 public interface ControlLab extends Closeable {
 

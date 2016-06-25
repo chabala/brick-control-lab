@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Function;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
@@ -37,18 +38,21 @@ class ControlLabImpl implements ControlLab {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final SerialPortFactory portFactory;
     private SerialPort serialPort;
-    private SerialListener serialListener = null;
+    private SerialPortEventListener serialListener = null;
     private KeepAliveMonitor keepAliveMonitor;
+    private final Function<SerialPort, SerialPortEventListener> listenerFactory;
 
     /**
      * Default constructor using jSSC serial implementation.
      */
     ControlLabImpl() {
-        this(new JsscSerialPortFactory());
+        this(new JsscSerialPortFactory(), SerialListener::new);
     }
 
-    ControlLabImpl(SerialPortFactory portFactory) {
+    ControlLabImpl(SerialPortFactory portFactory,
+                   Function<SerialPort, SerialPortEventListener> listenerFactory) {
         this.portFactory = portFactory;
+        this.listenerFactory = listenerFactory;
     }
 
     @Override
@@ -56,7 +60,7 @@ class ControlLabImpl implements ControlLab {
         serialPort = portFactory.getSerialPort(portName);
         log.info("Opening port {}", serialPort.getPortName());
         serialPort.openPort();
-        serialListener = new SerialListener(serialPort);
+        serialListener = listenerFactory.apply(serialPort);
         serialPort.addEventListener(serialListener);
 
         sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());

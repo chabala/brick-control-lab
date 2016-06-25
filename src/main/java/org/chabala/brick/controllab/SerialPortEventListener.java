@@ -16,10 +16,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * Library for controlling the LEGO® control lab interface.
- *
- * <p>The main interface is {@link org.chabala.brick.controllab.ControlLab}, instances of
- * which can be created with {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
- */
 package org.chabala.brick.controllab;
+
+import jssc.SerialPortEvent;
+
+/**
+ * SerialPortEventListener.
+ */
+interface SerialPortEventListener extends jssc.SerialPortEventListener {
+
+    @Override
+    default void serialEvent(SerialPortEvent event) {
+        if (event.isRXCHAR()) {
+            serialEventRXCHAR(event);
+        }
+    }
+
+    /**
+     * This event happens when data is available to be read from the port.
+     * @param event where {@link SerialPortEvent#isRXCHAR()} is true
+     */
+    void serialEventRXCHAR(SerialPortEvent event);
+
+    boolean isHandshakeSeen();
+
+    void addStopButtonListener(StopButtonListener listener);
+
+    void removeStopButtonListener(StopButtonListener listener);
+}

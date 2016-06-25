@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.chabala.brick.controllab;
+package org.chabala.brick.controllab.sensor;
+
+import org.chabala.brick.controllab.SensorValue;
 
 /**
- * Touch sensor.
+ * Light sensor.
  */
-public class TouchSensor implements SensorValue {
+public class LightSensor implements SensorValue {
 
     private SensorValue sensorValue;
 
-    public TouchSensor(SensorValue sensorValue) {
+    public LightSensor(SensorValue sensorValue) {
         this.sensorValue = sensorValue;
     }
 
@@ -39,27 +41,16 @@ public class TouchSensor implements SensorValue {
         return sensorValue.getStatusCode();
     }
 
-    public String touchStatus() {
-        switch (getStatusCode()) {
-            case 0:
-                return "depressed";
-            case 8:
-                return "released";
-            case 24:
-                return "releasing";
-            case 16:
-                return "depressing";
-            default:
-                return "";
-        }
+    public String lightValue() {
+        return String.format("%.2f", (1023 - getAnalogValue()) / 1023.0 * 100);
     }
 
     @Override
     public String toString() {
-        return "TouchSensor{" +
+        return "LightSensor{" +
                 "value=" + String.format("0x%02X", getAnalogValue()) +
                 ", status=" + getStatusCode() +
-                ", touch=" + touchStatus() +
+                ", light=" + lightValue() +
                 '}';
     }
 }

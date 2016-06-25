@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.chabala.brick.controllab;
+package org.chabala.brick.controllab.sensor;
+
+import org.chabala.brick.controllab.SensorValue;
 
 /**
- * Temperature sensor.
+ * Touch sensor.
  */
-public class TemperatureSensor implements SensorValue {
+public class TouchSensor implements SensorValue {
 
     private SensorValue sensorValue;
 
-    public TemperatureSensor(SensorValue sensorValue) {
+    public TouchSensor(SensorValue sensorValue) {
         this.sensorValue = sensorValue;
     }
 
@@ -39,21 +41,27 @@ public class TemperatureSensor implements SensorValue {
         return sensorValue.getStatusCode();
     }
 
-    public String temperatureValue() {
-        if (isPassive() && isEngaged()) {
-            double degreesF = (760 - getAnalogValue()) / 4.4 + 32;
-            return String.format("%.2f", degreesF);
-        } else {
-            return "";
+    public String touchStatus() {
+        switch (getStatusCode()) {
+            case 0:
+                return "depressed";
+            case 8:
+                return "released";
+            case 24:
+                return "releasing";
+            case 16:
+                return "depressing";
+            default:
+                return "";
         }
     }
 
     @Override
     public String toString() {
-        return "TemperatureSensor{" +
+        return "TouchSensor{" +
                 "value=" + String.format("0x%02X", getAnalogValue()) +
                 ", status=" + getStatusCode() +
-                ", temp=" + temperatureValue() +
+                ", touch=" + touchStatus() +
                 '}';
     }
 }

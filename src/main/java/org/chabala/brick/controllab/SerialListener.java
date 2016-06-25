@@ -19,7 +19,6 @@
 package org.chabala.brick.controllab;
 
 import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,22 +54,14 @@ class SerialListener implements SerialPortEventListener {
                 System.getProperty("brick-control-lab.ignoreBadHandshake", "false"));
     }
 
-    boolean isHandshakeSeen() {
+    @Override
+    public boolean isHandshakeSeen() {
         return handshakeSeen;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void serialEvent(SerialPortEvent event) {
-        if (event.isRXCHAR()) {
-            serialEventRXCHAR(event);
-        }
-    }
-
-    /**
-     * This event happens when data is available to be read from the port.
-     * @param event where {@link SerialPortEvent#isRXCHAR()} is true
-     */
-    private void serialEventRXCHAR(SerialPortEvent event) {
+    public void serialEventRXCHAR(SerialPortEvent event) {
         int availableBytes = event.getEventValue();
         if (!handshakeSeen) {
             processHandshake(availableBytes);
@@ -114,11 +105,13 @@ class SerialListener implements SerialPortEventListener {
         }
     }
 
-    void addStopButtonListener(StopButtonListener listener) {
+    @Override
+    public void addStopButtonListener(StopButtonListener listener) {
         stopButtonListeners.add(listener);
     }
 
-    void removeStopButtonListener(StopButtonListener listener) {
+    @Override
+    public void removeStopButtonListener(StopButtonListener listener) {
         stopButtonListeners.remove(listener);
     }
 
