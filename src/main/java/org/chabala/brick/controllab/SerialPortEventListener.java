@@ -28,15 +28,15 @@ interface SerialPortEventListener extends jssc.SerialPortEventListener {
     @Override
     default void serialEvent(SerialPortEvent event) {
         if (event.isRXCHAR()) {
-            serialEventRXCHAR(event);
+            serialEventRXCHAR(event.getEventValue());
         }
     }
 
     /**
      * This event happens when data is available to be read from the port.
-     * @param event where {@link SerialPortEvent#isRXCHAR()} is true
+     * @param availableBytes count of bytes available on the serial port
      */
-    void serialEventRXCHAR(SerialPortEvent event);
+    void serialEventRXCHAR(int availableBytes);
 
     boolean isHandshakeSeen();
 

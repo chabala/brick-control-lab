@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Interface to separate listing and obtaining serial ports from implementation.
  */
-public interface SerialPortFactory {
+interface SerialPortFactory {
     /**
      * List available serial ports on this machine. May change over time due to
      * hot pluggable USB serial port adapters and the like.

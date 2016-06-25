@@ -18,7 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.jssc.JsscSerialPortFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -16,11 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.chabala.brick.controllab.jssc;
+package org.chabala.brick.controllab;
 
 import jssc.SerialPortList;
-import org.chabala.brick.controllab.SerialPort;
-import org.chabala.brick.controllab.SerialPortFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +29,7 @@ import java.util.List;
  * @see <a href="https://github.com/scream3r/java-simple-serial-connector">
  *               https://github.com/scream3r/java-simple-serial-connector</a>
  */
-public class JsscSerialPortFactory implements SerialPortFactory {
+class JsscSerialPortFactory implements SerialPortFactory {
 
     /** {@inheritDoc} */
     @Override

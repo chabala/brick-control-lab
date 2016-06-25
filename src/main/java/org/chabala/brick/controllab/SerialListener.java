@@ -18,7 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import jssc.SerialPortEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +60,7 @@ class SerialListener implements SerialPortEventListener {
 
     /** {@inheritDoc} */
     @Override
-    public void serialEventRXCHAR(SerialPortEvent event) {
-        int availableBytes = event.getEventValue();
+    public void serialEventRXCHAR(int availableBytes) {
         if (!handshakeSeen) {
             processHandshake(availableBytes);
         } else {

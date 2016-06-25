@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.chabala.brick.controllab.jssc;
+package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.SerialPort;
-import org.chabala.brick.controllab.SerialPortFactory;
 import org.junit.Before;
 import org.junit.Test;
 

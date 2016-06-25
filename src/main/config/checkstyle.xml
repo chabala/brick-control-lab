@@ -82,11 +82,11 @@
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
-            <property name="scope" value="package"/>
+            <property name="scope" value="protected"/>
         </module>
         <module name="JavadocType"/>
         <module name="JavadocVariable">
-            <property name="scope" value="package"/>
+            <property name="scope" value="protected"/>
             <property name="tokens" value="VARIABLE_DEF"/>
         </module>
         <module name="JavadocStyle"/>

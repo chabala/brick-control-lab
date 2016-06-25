@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * Interface to separate serial port clients from implementation.
  */
-public interface SerialPort extends Closeable {
+interface SerialPort extends Closeable {
 
     /**
      * The platform specific identifier for this port.
