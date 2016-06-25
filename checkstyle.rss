@@ -26,7 +26,7 @@ under the License.
     <copyright>&#169;2016</copyright>
     <item>
       <title>File: 22,
-             Errors: 58,
+             Errors: 44,
              Warnings: 0,
              Infos: 0
       </title>
@@ -56,20 +56,6 @@ under the License.
                 </td>
                 <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.TemperatureSensor.java">org/chabala/brick/controllab/TemperatureSensor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  9
                 </td>
               </tr>
                           <tr>
@@ -111,7 +97,63 @@ under the License.
                   0
                 </td>
                 <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.sensor.TemperatureSensor.java">org/chabala/brick/controllab/sensor/TemperatureSensor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
                   9
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.sensor.LightSensor.java">org/chabala/brick/controllab/sensor/LightSensor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  9
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SerialPortEventListener.java">org/chabala/brick/controllab/SerialPortEventListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.sensor.TouchSensor.java">org/chabala/brick/controllab/sensor/TouchSensor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
                 </td>
               </tr>
                           <tr>
@@ -125,7 +167,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  4
                 </td>
               </tr>
                           <tr>
@@ -139,7 +181,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
               </tr>
                           <tr>
@@ -154,20 +196,6 @@ under the License.
                 </td>
                 <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.LightSensor.java">org/chabala/brick/controllab/LightSensor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  9
                 </td>
               </tr>
                           <tr>
@@ -209,7 +237,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
               </tr>
                           <tr>
@@ -228,49 +256,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.jssc.JsscSerialPortFactory.java">org/chabala/brick/controllab/jssc/JsscSerialPortFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.TouchSensor.java">org/chabala/brick/controllab/TouchSensor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  9
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.KeepAliveMonitor.java">org/chabala/brick/controllab/KeepAliveMonitor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.jssc.package-info.java">org/chabala/brick/controllab/jssc/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -298,7 +284,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.JsscSerialPort.java">org/chabala/brick/controllab/JsscSerialPort.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.package-info.java">org/chabala/brick/controllab/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.JsscSerialPortFactory.java">org/chabala/brick/controllab/JsscSerialPortFactory.java</a>
                 </td>
                 <td>
                   0
@@ -336,20 +350,6 @@ under the License.
                 </td>
                 <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.jssc.JsscSerialPort.java">org/chabala/brick/controllab/jssc/JsscSerialPort.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
                 </td>
               </tr>
                       </tbody>

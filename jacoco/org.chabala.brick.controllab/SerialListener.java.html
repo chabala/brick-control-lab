@@ -18,8 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,170 +33,163 @@ import static org.chabala.brick.controllab.Protocol.HANDSHAKE_RESPONSE;
 class SerialListener implements SerialPortEventListener {
 
     private static final int FRAME_SIZE = 19;
-<span class="fc" id="L38">    private final Logger log = LoggerFactory.getLogger(getClass());</span>
+<span class="fc" id="L36">    private final Logger log = LoggerFactory.getLogger(getClass());</span>
     private final SerialPort serialPort;
     private final Map&lt;Input, byte[]&gt; sensorData;
-<span class="fc" id="L41">    private final Set&lt;StopButtonListener&gt; stopButtonListeners = Collections.synchronizedSet(new HashSet&lt;&gt;(2));</span>
-<span class="fc" id="L42">    private final List&lt;Input&gt; frameInputOrder =</span>
-<span class="fc" id="L43">            Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);</span>
+<span class="fc" id="L39">    private final Set&lt;StopButtonListener&gt; stopButtonListeners = Collections.synchronizedSet(new HashSet&lt;&gt;(2));</span>
+<span class="fc" id="L40">    private final List&lt;Input&gt; frameInputOrder =</span>
+<span class="fc" id="L41">            Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);</span>
     private final boolean ignoreBadHandshake;
 
-<span class="fc" id="L46">    private boolean handshakeSeen = false;</span>
-<span class="fc" id="L47">    private boolean stopDepressed = false;</span>
-<span class="fc" id="L48">    private String handshake = &quot;&quot;;</span>
+<span class="fc" id="L44">    private boolean handshakeSeen = false;</span>
+<span class="fc" id="L45">    private boolean stopDepressed = false;</span>
+<span class="fc" id="L46">    private String handshake = &quot;&quot;;</span>
 
-<span class="fc" id="L50">    SerialListener(SerialPort serialPort) {</span>
-<span class="fc" id="L51">        this.serialPort = serialPort;</span>
-<span class="fc" id="L52">        sensorData = Collections.synchronizedMap(new EnumMap&lt;&gt;(Input.class));</span>
-<span class="fc" id="L53">        Arrays.stream(Input.values()).forEach(i -&gt; sensorData.put(i, new byte[] {0, 0}));</span>
-<span class="fc" id="L54">        ignoreBadHandshake = Boolean.valueOf(</span>
-<span class="fc" id="L55">                System.getProperty(&quot;brick-control-lab.ignoreBadHandshake&quot;, &quot;false&quot;));</span>
-<span class="fc" id="L56">    }</span>
-
-    boolean isHandshakeSeen() {
-<span class="fc" id="L59">        return handshakeSeen;</span>
-    }
+<span class="fc" id="L48">    SerialListener(SerialPort serialPort) {</span>
+<span class="fc" id="L49">        this.serialPort = serialPort;</span>
+<span class="fc" id="L50">        sensorData = Collections.synchronizedMap(new EnumMap&lt;&gt;(Input.class));</span>
+<span class="fc" id="L51">        Arrays.stream(Input.values()).forEach(i -&gt; sensorData.put(i, new byte[] {0, 0}));</span>
+<span class="fc" id="L52">        ignoreBadHandshake = Boolean.valueOf(</span>
+<span class="fc" id="L53">                System.getProperty(&quot;brick-control-lab.ignoreBadHandshake&quot;, &quot;false&quot;));</span>
+<span class="fc" id="L54">    }</span>
 
     @Override
-    public void serialEvent(SerialPortEvent event) {
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (event.isRXCHAR()) {</span>
-<span class="fc" id="L65">            serialEventRXCHAR(event);</span>
-        }
-<span class="fc" id="L67">    }</span>
+    public boolean isHandshakeSeen() {
+<span class="fc" id="L58">        return handshakeSeen;</span>
+    }
 
-    /**
-     * This event happens when data is available to be read from the port.
-     * @param event where {@link SerialPortEvent#isRXCHAR()} is true
-     */
-    private void serialEventRXCHAR(SerialPortEvent event) {
-<span class="fc" id="L74">        int availableBytes = event.getEventValue();</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!handshakeSeen) {</span>
-<span class="fc" id="L76">            processHandshake(availableBytes);</span>
+    /** {@inheritDoc} */
+    @Override
+    public void serialEventRXCHAR(int availableBytes) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (!handshakeSeen) {</span>
+<span class="fc" id="L65">            processHandshake(availableBytes);</span>
         } else {
-<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (availableBytes &gt;= FRAME_SIZE) {</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (availableBytes &gt;= FRAME_SIZE) {</span>
                 try {
-<span class="fc" id="L80">                    byte[] buffer = serialPort.readBytes(FRAME_SIZE);</span>
-<span class="fc" id="L81">                    processInputSensors(buffer);</span>
-<span class="nc" id="L82">                } catch (IOException e) {</span>
-<span class="nc" id="L83">                    log.error(e.getMessage(), e);</span>
-<span class="fc" id="L84">                }</span>
+<span class="fc" id="L69">                    byte[] buffer = serialPort.readBytes(FRAME_SIZE);</span>
+<span class="fc" id="L70">                    processInputSensors(buffer);</span>
+<span class="nc" id="L71">                } catch (IOException e) {</span>
+<span class="nc" id="L72">                    log.error(e.getMessage(), e);</span>
+<span class="fc" id="L73">                }</span>
             }
         }
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L76">    }</span>
 
     private void processHandshake(int availableBytes) {
         try {
-<span class="fc bfc" id="L91" title="All 4 branches covered.">            while (!handshakeSeen &amp;&amp; availableBytes &gt; 0) {</span>
-<span class="fc" id="L92">                availableBytes--;</span>
-<span class="fc" id="L93">                String newChar = new String(serialPort.readBytes(1), ISO_8859_1);</span>
-<span class="fc" id="L94">                handshake += newChar;</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">                if (handshake.endsWith(HANDSHAKE_RESPONSE)) {</span>
-<span class="fc" id="L96">                    handshakeSeen = true;</span>
-<span class="fc" id="L97">                    log.info(handshake);</span>
-<span class="fc" id="L98">                    handshake = &quot;&quot;;</span>
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">                } else if (handshake.length() &gt;= HANDSHAKE_RESPONSE.length()) {</span>
-<span class="nc" id="L100">                    log.error(&quot;Bad handshake: {}&quot;, handshake);</span>
-<span class="nc bnc" id="L101" title="All 2 branches missed.">                    if (ignoreBadHandshake) {</span>
-<span class="nc" id="L102">                        handshakeSeen = true;</span>
-<span class="nc" id="L103">                        handshake = &quot;&quot;;</span>
+<span class="fc bfc" id="L80" title="All 4 branches covered.">            while (!handshakeSeen &amp;&amp; availableBytes &gt; 0) {</span>
+<span class="fc" id="L81">                availableBytes--;</span>
+<span class="fc" id="L82">                String newChar = new String(serialPort.readBytes(1), ISO_8859_1);</span>
+<span class="fc" id="L83">                handshake += newChar;</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">                if (handshake.endsWith(HANDSHAKE_RESPONSE)) {</span>
+<span class="fc" id="L85">                    handshakeSeen = true;</span>
+<span class="fc" id="L86">                    log.info(handshake);</span>
+<span class="fc" id="L87">                    handshake = &quot;&quot;;</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                } else if (handshake.length() &gt;= HANDSHAKE_RESPONSE.length()) {</span>
+<span class="nc" id="L89">                    log.error(&quot;Bad handshake: {}&quot;, handshake);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                    if (ignoreBadHandshake) {</span>
+<span class="nc" id="L91">                        handshakeSeen = true;</span>
+<span class="nc" id="L92">                        handshake = &quot;&quot;;</span>
                     } else {
-<span class="nc" id="L105">                        serialPort.close();</span>
+<span class="nc" id="L94">                        serialPort.close();</span>
                     }
                 }
-<span class="fc" id="L108">            }</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (!handshakeSeen) {</span>
-<span class="fc" id="L110">                log.debug(handshake);</span>
+<span class="fc" id="L97">            }</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (!handshakeSeen) {</span>
+<span class="fc" id="L99">                log.debug(handshake);</span>
             }
-<span class="nc" id="L112">        } catch (IOException e) {</span>
-<span class="nc" id="L113">            log.error(e.getMessage(), e);</span>
-<span class="fc" id="L114">        }</span>
-<span class="fc" id="L115">    }</span>
+<span class="nc" id="L101">        } catch (IOException e) {</span>
+<span class="nc" id="L102">            log.error(e.getMessage(), e);</span>
+<span class="fc" id="L103">        }</span>
+<span class="fc" id="L104">    }</span>
 
-    void addStopButtonListener(StopButtonListener listener) {
-<span class="nc" id="L118">        stopButtonListeners.add(listener);</span>
-<span class="nc" id="L119">    }</span>
+    @Override
+    public void addStopButtonListener(StopButtonListener listener) {
+<span class="nc" id="L108">        stopButtonListeners.add(listener);</span>
+<span class="nc" id="L109">    }</span>
 
-    void removeStopButtonListener(StopButtonListener listener) {
-<span class="nc" id="L122">        stopButtonListeners.remove(listener);</span>
-<span class="nc" id="L123">    }</span>
+    @Override
+    public void removeStopButtonListener(StopButtonListener listener) {
+<span class="nc" id="L113">        stopButtonListeners.remove(listener);</span>
+<span class="nc" id="L114">    }</span>
 
     /**
      * Expects 19 bytes of data.
      * @param inputFrame byte array of 19 bytes
      */
     private void processInputSensors(byte[] inputFrame) throws IOException {
-<span class="fc" id="L130">        int frameIndex = 0;</span>
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (inputFrame.length != FRAME_SIZE) {</span>
-<span class="nc" id="L132">            StringBuilder sb = new StringBuilder();</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">            for (byte b : inputFrame) {</span>
-<span class="nc" id="L134">                sb.append(String.format(&quot;0x%02X &quot;, b));</span>
+<span class="fc" id="L121">        int frameIndex = 0;</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (inputFrame.length != FRAME_SIZE) {</span>
+<span class="nc" id="L123">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            for (byte b : inputFrame) {</span>
+<span class="nc" id="L125">                sb.append(String.format(&quot;0x%02X &quot;, b));</span>
             }
-<span class="nc" id="L136">            throw new IOException(</span>
+<span class="nc" id="L127">            throw new IOException(</span>
                     &quot;Expected 19 bytes, got &quot; + inputFrame.length +
-<span class="nc" id="L138">                    &quot; - &quot; + sb.toString());</span>
+<span class="nc" id="L129">                    &quot; - &quot; + sb.toString());</span>
         }
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if (!isChecksumValid(inputFrame)) {</span>
-<span class="nc" id="L141">            log.warn(&quot;Bad checksum received&quot;);</span>
-<span class="nc" id="L142">            return;</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (!isChecksumValid(inputFrame)) {</span>
+<span class="nc" id="L132">            log.warn(&quot;Bad checksum received&quot;);</span>
+<span class="nc" id="L133">            return;</span>
         }
-<span class="fc" id="L144">        processStopButton(inputFrame[frameIndex++]);</span>
-<span class="fc" id="L145">        int lastCommandIndex = frameIndex++;</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (0x00 != inputFrame[lastCommandIndex]) {</span>
-<span class="fc" id="L147">            log.info(&quot;Ports affected by last command {}&quot;,</span>
-<span class="fc" id="L148">                    Output.decodeByteToSet(inputFrame[lastCommandIndex]));</span>
+<span class="fc" id="L135">        processStopButton(inputFrame[frameIndex++]);</span>
+<span class="fc" id="L136">        int lastCommandIndex = frameIndex++;</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (0x00 != inputFrame[lastCommandIndex]) {</span>
+<span class="fc" id="L138">            log.info(&quot;Ports affected by last command {}&quot;,</span>
+<span class="fc" id="L139">                    Output.decodeByteToSet(inputFrame[lastCommandIndex]));</span>
         }
-<span class="fc bfc" id="L150" title="All 2 branches covered.">        for (Input in : frameInputOrder) {</span>
-<span class="fc" id="L151">            setSensorValue(in, inputFrame[frameIndex++], inputFrame[frameIndex++]);</span>
-<span class="fc" id="L152">        }</span>
-<span class="fc" id="L153">    }</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for (Input in : frameInputOrder) {</span>
+<span class="fc" id="L142">            setSensorValue(in, inputFrame[frameIndex++], inputFrame[frameIndex++]);</span>
+<span class="fc" id="L143">        }</span>
+<span class="fc" id="L144">    }</span>
 
     private void processStopButton(byte b) {
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (0x00 != b) {</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (!stopDepressed) {</span>
-<span class="nc" id="L158">                synchronized (stopButtonListeners) {</span>
-<span class="nc bnc" id="L159" title="All 2 branches missed.">                    for (StopButtonListener listener : stopButtonListeners) {</span>
-<span class="nc" id="L160">                        listener.stopButtonPressed(new StopButtonEvent(this, b));</span>
-<span class="nc" id="L161">                    }</span>
-<span class="nc" id="L162">                }</span>
-<span class="nc" id="L163">                log.info(&quot;Stop button depressed {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
-<span class="nc" id="L164">                stopDepressed = true;</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (0x00 != b) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (!stopDepressed) {</span>
+<span class="nc" id="L149">                synchronized (stopButtonListeners) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                    for (StopButtonListener listener : stopButtonListeners) {</span>
+<span class="nc" id="L151">                        listener.stopButtonPressed(new StopButtonEvent(this, b));</span>
+<span class="nc" id="L152">                    }</span>
+<span class="nc" id="L153">                }</span>
+<span class="nc" id="L154">                log.info(&quot;Stop button depressed {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
+<span class="nc" id="L155">                stopDepressed = true;</span>
             }
         } else {
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (stopDepressed) {</span>
-<span class="nc" id="L168">                synchronized (stopButtonListeners) {</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">                    for (StopButtonListener listener : stopButtonListeners) {</span>
-<span class="nc" id="L170">                        listener.stopButtonReleased(new StopButtonEvent(this, b));</span>
-<span class="nc" id="L171">                    }</span>
-<span class="nc" id="L172">                }</span>
-<span class="nc" id="L173">                log.info(&quot;Stop button released {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
-<span class="nc" id="L174">                stopDepressed = false;</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">            if (stopDepressed) {</span>
+<span class="nc" id="L159">                synchronized (stopButtonListeners) {</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">                    for (StopButtonListener listener : stopButtonListeners) {</span>
+<span class="nc" id="L161">                        listener.stopButtonReleased(new StopButtonEvent(this, b));</span>
+<span class="nc" id="L162">                    }</span>
+<span class="nc" id="L163">                }</span>
+<span class="nc" id="L164">                log.info(&quot;Stop button released {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
+<span class="nc" id="L165">                stopDepressed = false;</span>
             }
+        }
+<span class="fc" id="L168">    }</span>
+
+    private void setSensorValue(Input input, byte high, byte low) {
+<span class="fc" id="L171">        byte[] newValue = {high, low};</span>
+<span class="fc" id="L172">        byte[] oldValue = sensorData.put(input, newValue);</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (!Arrays.equals(newValue, oldValue)) {</span>
+<span class="fc" id="L174">            log.info(&quot;{} value changed: {} -&gt; {} aka {}&quot;, input,</span>
+<span class="fc" id="L175">                    printInBinary(oldValue), printInBinary(newValue), new SensorValueImpl(high, low));</span>
         }
 <span class="fc" id="L177">    }</span>
 
-    private void setSensorValue(Input input, byte high, byte low) {
-<span class="fc" id="L180">        byte[] newValue = {high, low};</span>
-<span class="fc" id="L181">        byte[] oldValue = sensorData.put(input, newValue);</span>
-<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (!Arrays.equals(newValue, oldValue)) {</span>
-<span class="fc" id="L183">            log.info(&quot;{} value changed: {} -&gt; {} aka {}&quot;, input,</span>
-<span class="fc" id="L184">                    printInBinary(oldValue), printInBinary(newValue), new SensorValueImpl(high, low));</span>
-        }
-<span class="fc" id="L186">    }</span>
-
     private boolean isChecksumValid(byte[] inputFrame) {
-<span class="fc" id="L189">        int checksum = 0;</span>
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (byte b : inputFrame) {</span>
-<span class="fc" id="L191">            checksum += Byte.toUnsignedInt(b);</span>
+<span class="fc" id="L180">        int checksum = 0;</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        for (byte b : inputFrame) {</span>
+<span class="fc" id="L182">            checksum += Byte.toUnsignedInt(b);</span>
         }
-<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        return (checksum &amp; 0xFF) == 0xFF;</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        return (checksum &amp; 0xFF) == 0xFF;</span>
     }
 
     private String printInBinary(byte[] highLow) {
-<span class="fc" id="L197">        return printByteInBinary(highLow[0]) + printByteInBinary(highLow[1]);</span>
+<span class="fc" id="L188">        return printByteInBinary(highLow[0]) + printByteInBinary(highLow[1]);</span>
     }
 
     String printByteInBinary(int data) {
-<span class="fc" id="L201">        return Integer.toBinaryString((data &amp; 0xFF) + 0x100).substring(1);</span>
+<span class="fc" id="L192">        return Integer.toBinaryString((data &amp; 0xFF) + 0x100).substring(1);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
