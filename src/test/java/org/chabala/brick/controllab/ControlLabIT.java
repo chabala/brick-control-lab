@@ -111,7 +111,6 @@ public class ControlLabIT {
             controlLab.setOutputPowerLevel(PowerLevel.P1, EnumSet.of(Output.A));
             controlLab.turnOutputOn(EnumSet.of(Output.A));
             Thread.sleep(ONE_SECOND);
-            controlLab.turnOutputOn(EnumSet.of(Output.A));
 
             for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
                 controlLab.setOutputPowerLevel(p, EnumSet.of(Output.A));
