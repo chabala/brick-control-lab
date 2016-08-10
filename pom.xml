@@ -300,7 +300,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.3</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -358,7 +358,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.0.71-beta</version>
+            <version>2.0.100-beta</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
