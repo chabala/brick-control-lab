@@ -26,7 +26,6 @@ import org.mockito.junit.MockitoRule;
 
 import javax.management.timer.Timer;
 
-import static org.mockito.Matchers.anyByte;
 import static org.mockito.Mockito.*;
 
 /**
