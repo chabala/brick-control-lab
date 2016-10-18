@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.chabala.brick</groupId>
@@ -81,7 +83,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.6</version>
+                    <version>3.7</version>
                     <configuration>
                         <linkXRef>true</linkXRef>
                     </configuration>
@@ -206,7 +208,7 @@
                     </properties>
                     <useDefaultExcludes>true</useDefaultExcludes>
                     <excludes>
-                        <exclude>**/pom.xml</exclude>
+                        <exclude>**/pom*.xml</exclude>
                         <exclude>**/COPYING*</exclude>
                         <exclude>src/main/config/**</exclude>
                         <exclude>**/resources/**</exclude>
@@ -303,6 +305,10 @@
                 <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
             <plugin>
+                <artifactId>maven-linkcheck-plugin</artifactId>
+                <version>1.2</version>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.3</version>
@@ -363,7 +369,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.2.3</version>
+            <version>2.2.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
