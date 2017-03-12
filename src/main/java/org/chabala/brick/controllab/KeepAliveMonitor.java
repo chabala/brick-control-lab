@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.*;
 
 /**
@@ -32,6 +33,7 @@ class KeepAliveMonitor implements Closeable {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final SerialPort serialPort;
     private final ScheduledExecutorService executor;
+    private final long keepAlivePeriodMs;
     private static final byte KEEP_ALIVE_COMMAND = 0x02;
     /** Slightly less than two seconds. */
     private static final int KEEP_ALIVE_PERIOD_MS = 1800;
@@ -45,7 +47,12 @@ class KeepAliveMonitor implements Closeable {
      * @param serialPort the port to receive keep alive messages
      */
     KeepAliveMonitor(SerialPort serialPort) {
+        this(serialPort, Duration.ofMillis(KEEP_ALIVE_PERIOD_MS));
+    }
+
+    KeepAliveMonitor(SerialPort serialPort, Duration keepAlivePeriod) {
         this.serialPort = serialPort;
+        this.keepAlivePeriodMs = keepAlivePeriod.toMillis();
         executor = Executors.newSingleThreadScheduledExecutor(
                 new NamedDaemonThreadFactory(
                         "KeepAlive " + serialPort.getPortName()));
@@ -71,7 +78,7 @@ class KeepAliveMonitor implements Closeable {
             } catch (IOException e) {
                 LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
             }
-        }, KEEP_ALIVE_PERIOD_MS, KEEP_ALIVE_PERIOD_MS, TimeUnit.MILLISECONDS);
+        }, keepAlivePeriodMs, keepAlivePeriodMs, TimeUnit.MILLISECONDS);
     }
 
     private void sendCommand(byte b) throws IOException {

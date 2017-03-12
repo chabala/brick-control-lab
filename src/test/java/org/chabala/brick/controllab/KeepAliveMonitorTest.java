@@ -24,7 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import javax.management.timer.Timer;
+import java.time.Duration;
 
 import static org.mockito.Mockito.*;
 
@@ -33,7 +33,9 @@ import static org.mockito.Mockito.*;
  */
 public class KeepAliveMonitorTest {
 
-    private final long twoSeconds = Timer.ONE_SECOND * 2;
+    private final Duration keepAliveDuration = Duration.ofMillis(300);
+    private final Duration nineTenthsDuration = keepAliveDuration.multipliedBy(9).dividedBy(10);
+    private final long keepAliveDurationMs = keepAliveDuration.toMillis();
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -44,11 +46,11 @@ public class KeepAliveMonitorTest {
     @Test
     public void testMonitorSendsKeepAlives() throws Exception {
         when(serialPort.isOpen()).thenReturn(true);
-        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort)) {
-            Thread.sleep(twoSeconds);
+        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
+            Thread.sleep(keepAliveDurationMs);
             verify(serialPort, times(1)).isOpen();
             verify(serialPort, times(1)).write(anyByte());
-            Thread.sleep(twoSeconds);
+            Thread.sleep(keepAliveDurationMs);
             verify(serialPort, times(2)).isOpen();
             verify(serialPort, times(2)).write(anyByte());
         }
@@ -56,13 +58,13 @@ public class KeepAliveMonitorTest {
 
     @Test
     public void testResetPreventsKeepAlives() throws Exception {
-        long oneAndAHalfSeconds = Timer.ONE_SECOND / 2 * 3;
-        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort)) {
-            Thread.sleep(oneAndAHalfSeconds);
+        long threeQuartersDurationMs = keepAliveDuration.multipliedBy(3).dividedBy(4).toMillis();
+        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
+            Thread.sleep(threeQuartersDurationMs);
             verify(serialPort, never()).isOpen();
             verify(serialPort, never()).write(anyByte());
             monitor.reset();
-            Thread.sleep(oneAndAHalfSeconds);
+            Thread.sleep(threeQuartersDurationMs);
             verify(serialPort, never()).isOpen();
             verify(serialPort, never()).write(anyByte());
         }
@@ -70,12 +72,11 @@ public class KeepAliveMonitorTest {
 
     @Test
     public void testClosePreventsKeepAlives() throws Exception {
-        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort)) {
+        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
             monitor.close();
         }
-        Thread.sleep(twoSeconds);
+        Thread.sleep(keepAliveDurationMs);
         verify(serialPort, never()).isOpen();
         verify(serialPort, never()).write(anyByte());
     }
-
 }
