@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
  */
 public class KeepAliveMonitorTest {
 
-    private final Duration keepAliveDuration = Duration.ofMillis(300);
+    private final Duration keepAliveDuration = Duration.ofMillis(500);
     private final Duration nineTenthsDuration = keepAliveDuration.multipliedBy(9).dividedBy(10);
     private final long keepAliveDurationMs = keepAliveDuration.toMillis();
 
