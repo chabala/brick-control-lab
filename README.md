@@ -5,10 +5,9 @@ Library for controlling the [LEGO® control lab interface][1].
 [![Build Status][2]][3]
 [![Coverage Status][7]][8]
 [![Codacy Badge][5]][6]
-[![License: GNU LGPL 3.0][4]](http://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![License: GNU LGPL 3.0][4]](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 [![Maven Central][16]][17]
-[![Dependency Status][12]][13]
 
 ### What is the control lab?
 
@@ -66,27 +65,25 @@ Some good examples of usage can be found in the
 Run ```mvn clean verify``` to clean, compile, test, and produce the artifact.
 
 ### Licensing
-Licensed under [GNU Lesser General Public License 3.0](http://www.gnu.org/licenses/lgpl-3.0.en.html)
+Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 ### References
 
 * <http://www.lgauge.com/technic/LEGOInterfaceB/9751.htm>
 * <http://www.blockcad.net/dacta/>
-* <http://web.archive.org/web/20071130212114/http://troyda.eas.muohio.edu/paper2.html>
+* <https://web.archive.org/web/20071130212114/http://troyda.eas.muohio.edu/paper2.html>
 
 [1]: http://www.peeron.com/inv/sets/9751-1
 [2]: https://travis-ci.org/chabala/brick-control-lab.svg?branch=master
 [3]: https://travis-ci.org/chabala/brick-control-lab
-[4]: http://img.shields.io/badge/license-GNU_LGPL_3.0-brightgreen.svg
+[4]: https://img.shields.io/badge/license-GNU_LGPL_3.0-brightgreen.svg
 [5]: https://api.codacy.com/project/badge/Grade/f05f0d18f49a48659b1066884a7fef68
 [6]: https://www.codacy.com/app/chabala/brick-control-lab
 [7]: https://coveralls.io/repos/github/chabala/brick-control-lab/badge.svg?branch=master
 [8]: https://coveralls.io/github/chabala/brick-control-lab?branch=master
-[9]: http://www.bricklink.com/SL/9751-1.jpg
-[10]: http://www.bricklink.com/catalogItemPic.asp?S=9751-1
+[9]: https://www.bricklink.com/SL/9751-1.jpg
+[10]: https://www.bricklink.com/catalogItemPic.asp?S=9751-1
 [11]: https://en.wikipedia.org/wiki/Lego_Mindstorms#RCX
-[12]: https://www.versioneye.com/user/projects/575c4fd77757a0003bd4c053/badge.svg?style=flat
-[13]: https://www.versioneye.com/user/projects/575c4fd77757a0003bd4c053
 [14]: https://en.wikibooks.org/wiki/Serial_Programming/Serial_Java
 [15]: https://github.com/scream3r/java-simple-serial-connector
 [16]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab/badge.svg
