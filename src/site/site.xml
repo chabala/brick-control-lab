@@ -21,17 +21,16 @@
 -->
 <project xmlns="http://maven.apache.org/DECORATION/1.8.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd"
-         name="brick-control-lab">
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
     <bannerLeft>
-        <name>brick-control-lab</name>
+        <name>${project.artifactId}</name>
     </bannerLeft>
     <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
     <publishDate />
     <version />
     <body>
         <links>
-            <item name="brick-control-lab" href="./" />
+            <item name="${project.artifactId}" href="${ghPagesUrl}" />
         </links>
         <menu ref="parent" />
         <menu ref="reports" />
