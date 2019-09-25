@@ -28,12 +28,22 @@ package org.chabala.brick.controllab;
  * in order for it to work. They are colored blue on the control lab.
  */
 public enum Input {
-    /** Input 1. */ I1,
-    /** Input 2. */ I2,
-    /** Input 3. */ I3,
-    /** Input 4. */ I4,
-    /** Input 5. */ I5,
-    /** Input 6. */ I6,
-    /** Input 7. */ I7,
-    /** Input 8. */ I8
+    /** Input 1. */ I1(InputType.PASSIVE),
+    /** Input 2. */ I2(InputType.PASSIVE),
+    /** Input 3. */ I3(InputType.PASSIVE),
+    /** Input 4. */ I4(InputType.PASSIVE),
+    /** Input 5. */ I5(InputType.ACTIVE),
+    /** Input 6. */ I6(InputType.ACTIVE),
+    /** Input 7. */ I7(InputType.ACTIVE),
+    /** Input 8. */ I8(InputType.ACTIVE);
+
+    private final InputType inputType;
+
+    Input(InputType inputType) {
+        this.inputType = inputType;
+    }
+
+    public InputType getInputType() {
+        return inputType;
+    }
 }
