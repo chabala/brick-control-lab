@@ -89,5 +89,11 @@ Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licen
 [16]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab/badge.svg
 [17]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab
 
+<!---
+Potential replacements for maven-badges.herokuapp.com
+[16]: https://img.shields.io/maven-central/v/org.chabala.brick/brick-control-lab.svg
+[17]: https://mvnrepository.com/artifact/org.chabala.brick/brick-control-lab
+-->
+
 LEGO®, DACTA®, TECHNIC®, and MINDSTORMS® are trademarks and/or copyrights of the LEGO Group,
 which does not sponsor, authorize or endorse this software.
