@@ -32,9 +32,10 @@ public interface StopButtonListener extends EventListener {
      * a flashing LED next to the stop button to indicate a paused state.
      * <p>
      * While the OEM implementation of the control lab software would halt
-     * program operation in this state, the hardware does not hamper output
-     * control or the flow of input data, so actual behavior is left to the
-     * implementor of the interface.
+     * program operation in this state, the hardware does not hamper the flow
+     * of input data and continues to track output commands, only the physical
+     * outputs are prevented from receiving power. Actual behavior is left to
+     * the implementor of the interface.
      * <p>
      * The default implementation is no-op.
      *
@@ -46,7 +47,9 @@ public interface StopButtonListener extends EventListener {
     /**
      * Invoked when the stop button is disengaged. The hardware will have
      * an unlit LED next to the stop button to indicate the computer is
-     * connected.
+     * connected. Any outputs that were powered prior to the stop button
+     * being pressed will return to their prior state. Any output commands
+     * issued while in the stopped state will also take effect.
      * <p>
      * The default implementation is no-op.
      *
