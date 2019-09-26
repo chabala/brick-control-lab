@@ -18,8 +18,6 @@
  */
 package org.chabala.brick.controllab.sensor;
 
-import org.chabala.brick.controllab.SensorValue;
-
 /**
  * The listener interface for receiving sensor input events from touch sensors.
  */

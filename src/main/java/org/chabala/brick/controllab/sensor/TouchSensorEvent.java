@@ -19,7 +19,6 @@
 package org.chabala.brick.controllab.sensor;
 
 import org.chabala.brick.controllab.Input;
-import org.chabala.brick.controllab.SensorValue;
 
 /**
  * The event triggered by receiving a {@link SensorValue} from an {@link Input}

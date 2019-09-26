@@ -19,7 +19,6 @@
 package org.chabala.brick.controllab.sensor;
 
 import org.chabala.brick.controllab.Input;
-import org.chabala.brick.controllab.SensorValue;
 
 import java.util.EventObject;
 import java.util.function.Function;

@@ -16,12 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
-package org.chabala.brick.controllab;
+package org.chabala.brick.controllab.sensor;
+
+import org.chabala.brick.controllab.Input;
 
 /**
  * The values obtained from reading an {@link Input}.
  */
 public interface SensorValue {
+
+    static SensorValue newSensorValue(byte high, byte low) {
+        return new SensorValueImpl(high, low);
+    }
 
     /**
      * Analog value returned by sensor, in the range of 0 to 1023.

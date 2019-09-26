@@ -20,6 +20,7 @@ package org.chabala.brick.controllab;
 
 import org.chabala.brick.controllab.sensor.SensorEvent;
 import org.chabala.brick.controllab.sensor.SensorListener;
+import org.chabala.brick.controllab.sensor.SensorValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -188,7 +189,8 @@ class SerialListener implements SerialPortEventListener {
         byte[] newValue = {high, low};
         byte[] oldValue = sensorData.put(input, newValue);
         if (!Arrays.equals(newValue, oldValue)) {
-            SensorEvent<SensorValue> event = new SensorEvent<>(input, oldValue, newValue, new SensorValueImpl(high, low));
+            SensorEvent<SensorValue> event =
+                    new SensorEvent<>(input, oldValue, newValue, SensorValue.newSensorValue(high, low));
             synchronized (sensorListeners) {
                 for (SensorListener listener : sensorListeners.get(input)) {
                     listener.sensorEventReceived(event);
