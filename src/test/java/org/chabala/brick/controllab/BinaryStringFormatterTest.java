@@ -20,18 +20,21 @@ package org.chabala.brick.controllab;
 
 import org.junit.Test;
 
+import static org.chabala.brick.controllab.BinaryStringFormatter.printByteInBinary;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-public class SerialListenerTest {
+/**
+ * Testing {@link BinaryStringFormatter}.
+ */
+public class BinaryStringFormatterTest {
 
     @Test
     public void testPrintByteInBinary() throws Exception {
-        SerialListener listener = new SerialListener(null);
-        assertThat(listener.printByteInBinary(0b00000000), is("00000000"));
-        assertThat(listener.printByteInBinary(0b00000001), is("00000001"));
-        assertThat(listener.printByteInBinary(0b10000000), is("10000000"));
-        assertThat(listener.printByteInBinary(0b10000001), is("10000001"));
-        assertThat(listener.printByteInBinary(0b10110111), is("10110111"));
+        assertThat(printByteInBinary(0b00000000), is("00000000"));
+        assertThat(printByteInBinary(0b00000001), is("00000001"));
+        assertThat(printByteInBinary(0b10000000), is("10000000"));
+        assertThat(printByteInBinary(0b10000001), is("10000001"));
+        assertThat(printByteInBinary(0b10110111), is("10110111"));
     }
 }
