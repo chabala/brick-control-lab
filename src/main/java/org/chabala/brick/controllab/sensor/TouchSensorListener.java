@@ -19,15 +19,12 @@
 package org.chabala.brick.controllab.sensor;
 
 import org.chabala.brick.controllab.SensorValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The listener interface for receiving sensor input events from touch sensors.
  */
+@FunctionalInterface
 public interface TouchSensorListener extends SensorListener {
-
-    Logger log = LoggerFactory.getLogger(TouchSensorListener.class);
 
     /** {@inheritDoc} */
     @Override
@@ -39,7 +36,5 @@ public interface TouchSensorListener extends SensorListener {
      * Callback for handling touch sensor input events.
      * @param sensorEvent a touch sensor event
      */
-    default void touchSensorEventReceived(TouchSensorEvent sensorEvent) {
-        log.info("{}", sensorEvent);
-    }
+    void touchSensorEventReceived(TouchSensorEvent sensorEvent);
 }

@@ -25,6 +25,7 @@ import java.util.EventListener;
  *
  * @see StopButtonEvent
  */
+@FunctionalInterface
 public interface StopButtonListener extends EventListener {
 
     /**
@@ -36,13 +37,10 @@ public interface StopButtonListener extends EventListener {
      * of input data and continues to track output commands, only the physical
      * outputs are prevented from receiving power. Actual behavior is left to
      * the implementor of the interface.
-     * <p>
-     * The default implementation is no-op.
      *
      * @param stopButtonEvent The event that triggered this callback.
      */
-    default void stopButtonPressed(StopButtonEvent stopButtonEvent) {
-    }
+    void stopButtonPressed(StopButtonEvent stopButtonEvent);
 
     /**
      * Invoked when the stop button is disengaged. The hardware will have

@@ -19,6 +19,7 @@
 package org.chabala.brick.controllab;
 
 import jssc.SerialPortEvent;
+import org.chabala.brick.controllab.sensor.SensorListener;
 
 /**
  * SerialPortEventListener.
@@ -43,4 +44,8 @@ interface SerialPortEventListener extends jssc.SerialPortEventListener {
     void addStopButtonListener(StopButtonListener listener);
 
     void removeStopButtonListener(StopButtonListener listener);
+
+    void addSensorListener(Input input, SensorListener listener);
+
+    void removeSensorListener(Input input, SensorListener listener);
 }

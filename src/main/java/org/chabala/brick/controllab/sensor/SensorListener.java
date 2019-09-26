@@ -19,8 +19,6 @@
 package org.chabala.brick.controllab.sensor;
 
 import org.chabala.brick.controllab.SensorValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.EventListener;
 
@@ -29,16 +27,13 @@ import java.util.EventListener;
  *
  * @see SensorEvent
  */
+@FunctionalInterface
 public interface SensorListener extends EventListener {
-
-    Logger log = LoggerFactory.getLogger(SensorListener.class);
 
     /**
      * This is the entrypoint for raw sensor data events. Sensor specific listener
      * interfaces override this and delegate to more specific callbacks.
      * @param sensorEvent a sensor event containing a raw sensor value
      */
-    default void sensorEventReceived(SensorEvent<SensorValue> sensorEvent) {
-        log.info("{}", sensorEvent);
-    }
+    void sensorEventReceived(SensorEvent<SensorValue> sensorEvent);
 }

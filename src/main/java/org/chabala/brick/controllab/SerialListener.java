@@ -18,6 +18,8 @@
  */
 package org.chabala.brick.controllab;
 
+import org.chabala.brick.controllab.sensor.SensorEvent;
+import org.chabala.brick.controllab.sensor.SensorListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +38,7 @@ class SerialListener implements SerialPortEventListener {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final SerialPort serialPort;
     private final Map<Input, byte[]> sensorData;
+    private final Map<Input, Set<SensorListener>> sensorListeners;
     private final Set<StopButtonListener> stopButtonListeners = Collections.synchronizedSet(new HashSet<>(2));
     private final List<Input> frameInputOrder =
             Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);
@@ -48,7 +51,11 @@ class SerialListener implements SerialPortEventListener {
     SerialListener(SerialPort serialPort) {
         this.serialPort = serialPort;
         sensorData = Collections.synchronizedMap(new EnumMap<>(Input.class));
-        Arrays.stream(Input.values()).forEach(i -> sensorData.put(i, new byte[] {0, 0}));
+        sensorListeners = Collections.synchronizedMap(new EnumMap<>(Input.class));
+        Arrays.stream(Input.values()).forEach(i -> {
+            sensorData.put(i, new byte[] {0, 0});
+            sensorListeners.put(i, Collections.synchronizedSet(new HashSet<>(2)));
+        });
         ignoreBadHandshake = Boolean.valueOf(
                 System.getProperty("brick-control-lab.ignoreBadHandshake", "false"));
     }
@@ -113,6 +120,16 @@ class SerialListener implements SerialPortEventListener {
         stopButtonListeners.remove(listener);
     }
 
+    @Override
+    public void addSensorListener(Input input, SensorListener listener) {
+        sensorListeners.get(input).add(listener);
+    }
+
+    @Override
+    public void removeSensorListener(Input input, SensorListener listener) {
+        sensorListeners.get(input).remove(listener);
+    }
+
     /**
      * Expects 19 bytes of data.
      * @param inputFrame byte array of 19 bytes
@@ -171,8 +188,12 @@ class SerialListener implements SerialPortEventListener {
         byte[] newValue = {high, low};
         byte[] oldValue = sensorData.put(input, newValue);
         if (!Arrays.equals(newValue, oldValue)) {
-            log.info("{} value changed: {} -> {} aka {}", input,
-                    printInBinary(oldValue), printInBinary(newValue), new SensorValueImpl(high, low));
+            SensorEvent<SensorValue> event = new SensorEvent<>(input, oldValue, newValue, new SensorValueImpl(high, low));
+            synchronized (sensorListeners) {
+                for (SensorListener listener : sensorListeners.get(input)) {
+                    listener.sensorEventReceived(event);
+                }
+            }
         }
     }
 
@@ -182,13 +203,5 @@ class SerialListener implements SerialPortEventListener {
             checksum += Byte.toUnsignedInt(b);
         }
         return (checksum & 0xFF) == 0xFF;
-    }
-
-    private String printInBinary(byte[] highLow) {
-        return printByteInBinary(highLow[0]) + printByteInBinary(highLow[1]);
-    }
-
-    String printByteInBinary(int data) {
-        return Integer.toBinaryString((data & 0xFF) + 0x100).substring(1);
     }
 }

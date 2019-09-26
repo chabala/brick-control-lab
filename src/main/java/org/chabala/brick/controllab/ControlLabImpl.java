@@ -18,6 +18,7 @@
  */
 package org.chabala.brick.controllab;
 
+import org.chabala.brick.controllab.sensor.SensorListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,6 +140,22 @@ class ControlLabImpl implements ControlLab {
     public void removeStopButtonListener(StopButtonListener listener) {
         if (serialListener != null) {
             serialListener.removeStopButtonListener(listener);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addSensorListener(Input input, SensorListener listener) {
+        if (serialListener != null) {
+            serialListener.addSensorListener(input, listener);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeSensorListener(Input input, SensorListener listener) {
+        if (serialListener != null) {
+            serialListener.removeSensorListener(input, listener);
         }
     }
 
