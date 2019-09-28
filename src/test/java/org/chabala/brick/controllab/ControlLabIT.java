@@ -196,6 +196,7 @@ public class ControlLabIT {
      * level, then changes the direction and increases back to maximum. This continues until a touch sensor
      * on Input 1 is pressed. It can be used to test an output device to see how it behaves under different
      * power supply levels.
+     * @throws Exception on any issue with the test
      */
     @Ignore
     @Test

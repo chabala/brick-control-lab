@@ -18,45 +18,29 @@
  */
 package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.sensor.SensorEvent;
-import org.chabala.brick.controllab.sensor.SensorListener;
-import org.chabala.brick.controllab.sensor.SensorValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static org.chabala.brick.controllab.Protocol.HANDSHAKE_RESPONSE;
 
 /**
  * Handles serial events.
  */
 class SerialListener implements SerialPortEventListener {
 
-    private static final int FRAME_SIZE = 19;
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final SerialPort serialPort;
-    private final Map<Input, byte[]> sensorData;
-    private final Map<Input, Set<SensorListener>> sensorListeners;
-    private final Set<StopButtonListener> stopButtonListeners = Collections.synchronizedSet(new HashSet<>(2));
-    private final List<Input> frameInputOrder =
-            Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);
+    private final InputManager inputManager;
     private final boolean ignoreBadHandshake;
 
     private boolean handshakeSeen = false;
-    private boolean stopDepressed = false;
     private String handshake = "";
 
-    SerialListener(SerialPort serialPort) {
+    SerialListener(SerialPort serialPort, InputManager inputManager) {
         this.serialPort = serialPort;
-        sensorData = Collections.synchronizedMap(new EnumMap<>(Input.class));
-        sensorListeners = Collections.synchronizedMap(new EnumMap<>(Input.class));
-        Arrays.stream(Input.values()).forEach(i -> {
-            sensorData.put(i, new byte[] {0, 0});
-            sensorListeners.put(i, Collections.synchronizedSet(new HashSet<>(2)));
-        });
+        this.inputManager = inputManager;
         ignoreBadHandshake = Boolean.valueOf(
                 System.getProperty("brick-control-lab.ignoreBadHandshake", "false"));
     }
@@ -72,10 +56,10 @@ class SerialListener implements SerialPortEventListener {
         if (!handshakeSeen) {
             processHandshake(availableBytes);
         } else {
-            if (availableBytes >= FRAME_SIZE) {
+            if (availableBytes >= Protocol.FRAME_SIZE) {
                 try {
-                    byte[] buffer = serialPort.readBytes(FRAME_SIZE);
-                    processInputSensors(buffer);
+                    byte[] buffer = serialPort.readBytes(Protocol.FRAME_SIZE);
+                    inputManager.processInputSensors(buffer);
                 } catch (IOException e) {
                     log.error(e.getMessage(), e);
                 }
@@ -89,11 +73,11 @@ class SerialListener implements SerialPortEventListener {
                 availableBytes--;
                 String newChar = new String(serialPort.readBytes(1), ISO_8859_1);
                 handshake += newChar;
-                if (handshake.endsWith(HANDSHAKE_RESPONSE)) {
+                if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {
                     handshakeSeen = true;
                     log.info(handshake);
                     handshake = "";
-                } else if (handshake.length() >= HANDSHAKE_RESPONSE.length()) {
+                } else if (handshake.length() >= Protocol.HANDSHAKE_RESPONSE.length()) {
                     log.error("Bad handshake: {}", handshake);
                     if (ignoreBadHandshake) {
                         handshakeSeen = true;
@@ -109,101 +93,5 @@ class SerialListener implements SerialPortEventListener {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void addStopButtonListener(StopButtonListener listener) {
-        stopButtonListeners.add(listener);
-    }
-
-    @Override
-    public void removeStopButtonListener(StopButtonListener listener) {
-        stopButtonListeners.remove(listener);
-    }
-
-    @Override
-    public void addSensorListener(Input input, SensorListener listener) {
-        sensorListeners.get(input).add(listener);
-    }
-
-    @Override
-    public void removeSensorListener(Input input, SensorListener listener) {
-        sensorListeners.get(input).remove(listener);
-    }
-
-    /**
-     * Expects 19 bytes of data.
-     * @param inputFrame byte array of 19 bytes
-     */
-    private void processInputSensors(byte[] inputFrame) throws IOException {
-        int frameIndex = 0;
-        if (inputFrame.length != FRAME_SIZE) {
-            StringBuilder sb = new StringBuilder();
-            for (byte b : inputFrame) {
-                sb.append(String.format("0x%02X ", b));
-            }
-            throw new IOException(
-                    "Expected 19 bytes, got " + inputFrame.length +
-                    " - " + sb.toString());
-        }
-        if (!isChecksumValid(inputFrame)) {
-            log.warn("Bad checksum received");
-            return;
-        }
-        processStopButton(inputFrame[frameIndex++]);
-        int lastCommandIndex = frameIndex++;
-        if (0x00 != inputFrame[lastCommandIndex]) {
-            log.info("Ports affected by last command {}",
-                    Output.decodeByteToSet(inputFrame[lastCommandIndex]));
-        }
-        for (Input in : frameInputOrder) {
-            setSensorValue(in, inputFrame[frameIndex++], inputFrame[frameIndex++]);
-        }
-    }
-
-    private void processStopButton(byte b) {
-        if (0x00 != b) {
-            if (!stopDepressed) {
-                synchronized (stopButtonListeners) {
-                    for (StopButtonListener listener : stopButtonListeners) {
-                        listener.stopButtonPressed(new StopButtonEvent(this, b));
-                    }
-                }
-                log.info("Stop button depressed {}", String.format("0x%02X", b));
-                stopDepressed = true;
-            }
-        } else {
-            if (stopDepressed) {
-                synchronized (stopButtonListeners) {
-                    for (StopButtonListener listener : stopButtonListeners) {
-                        listener.stopButtonReleased(new StopButtonEvent(this, b));
-                    }
-                }
-                log.info("Stop button released {}", String.format("0x%02X", b));
-                stopDepressed = false;
-            }
-        }
-    }
-
-    private void setSensorValue(Input input, byte high, byte low) {
-        byte[] newValue = {high, low};
-        byte[] oldValue = sensorData.put(input, newValue);
-        if (!Arrays.equals(newValue, oldValue)) {
-            SensorEvent<SensorValue> event =
-                    new SensorEvent<>(input, oldValue, newValue, SensorValue.newSensorValue(high, low));
-            synchronized (sensorListeners) {
-                for (SensorListener listener : sensorListeners.get(input)) {
-                    listener.sensorEventReceived(event);
-                }
-            }
-        }
-    }
-
-    private boolean isChecksumValid(byte[] inputFrame) {
-        int checksum = 0;
-        for (byte b : inputFrame) {
-            checksum += Byte.toUnsignedInt(b);
-        }
-        return (checksum & 0xFF) == 0xFF;
     }
 }

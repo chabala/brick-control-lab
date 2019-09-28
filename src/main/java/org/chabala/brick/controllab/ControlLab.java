@@ -18,9 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.sensor.SensorEvent;
-import org.chabala.brick.controllab.sensor.SensorListener;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +41,7 @@ import java.util.Set;
  *   }
  *       }</pre>
  */
-public interface ControlLab extends Closeable {
+public interface ControlLab extends Closeable, MutatesInputListeners {
 
     /**
      * Returns a new ControlLab instance.
@@ -100,38 +97,6 @@ public interface ControlLab extends Closeable {
      * @throws IOException if any number of possible communication issues occurs
      */
     void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException;
-
-    /**
-     * Attach a listener for {@link StopButtonEvent}s.
-     *
-     * <p>Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
-     * @param listener listener to add
-     */
-    void addStopButtonListener(StopButtonListener listener);
-
-    /**
-     * Remove a listener for {@link StopButtonEvent}s.
-     * @param listener listener to remove
-     */
-    void removeStopButtonListener(StopButtonListener listener);
-
-    /**
-     * Attach a listener for {@link SensorEvent}s.
-     *
-     * <p>Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
-     * @param input    input to add the listener to
-     * @param listener listener to add
-     */
-    void addSensorListener(Input input, SensorListener listener);
-
-    /**
-     * Remove a listener for {@link SensorEvent}s.
-     * @param input    input to remove the listener from
-     * @param listener listener to remove
-     */
-    void removeSensorListener(Input input, SensorListener listener);
 
     /**
      * Disconnects from the control lab and releases any resources.

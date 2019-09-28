@@ -30,6 +30,8 @@ final class Protocol {
     static final byte OUTPUT_OFF = (byte) 0b10010000;
     static final byte OUTPUT_ON =  (byte) 0b10010001;
 
+    static final int FRAME_SIZE = 19;
+
     private Protocol() {
         throw new UnsupportedOperationException();
     }

@@ -24,7 +24,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
@@ -52,6 +51,9 @@ public class ControlLabTest {
     private SerialPortFactory portFactory;
 
     @Mock
+    private InputManager inputManager;
+
+    @Mock
     private SerialPort serialPort;
 
     @Mock
@@ -61,7 +63,7 @@ public class ControlLabTest {
 
     @Before
     public void setUp() throws Exception {
-        controlLab = new ControlLabImpl(portFactory, sp -> listener);
+        controlLab = new ControlLabImpl(portFactory, inputManager, (sp, inputManager) -> listener);
     }
 
     @After
@@ -83,12 +85,9 @@ public class ControlLabTest {
         AtomicBoolean handshakeSeen = new AtomicBoolean(false);
         when(portFactory.getSerialPort(portName)).thenReturn(serialPort);
         when(serialPort.getPortName()).thenReturn(portName);
-        when(serialPort.write(Protocol.HANDSHAKE_CHALLENGE.getBytes())).thenAnswer(new Answer<Boolean>() {
-            @Override
-            public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                handshakeSeen.set(true);
-                return true;
-            }
+        when(serialPort.write(Protocol.HANDSHAKE_CHALLENGE.getBytes())).thenAnswer((Answer<Boolean>) invocation -> {
+            handshakeSeen.set(true);
+            return true;
         });
         when(listener.isHandshakeSeen()).thenAnswer(i -> handshakeSeen.get());
         controlLab.open(portName);
