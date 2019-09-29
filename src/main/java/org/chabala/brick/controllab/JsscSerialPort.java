@@ -18,7 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import java.io.IOException;

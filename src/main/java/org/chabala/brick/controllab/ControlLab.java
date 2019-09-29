@@ -41,7 +41,7 @@ import java.util.Set;
  *   }
  *       }</pre>
  */
-public interface ControlLab extends Closeable {
+public interface ControlLab extends Closeable, MutatesInputListeners {
 
     /**
      * Returns a new ControlLab instance.
@@ -97,21 +97,6 @@ public interface ControlLab extends Closeable {
      * @throws IOException if any number of possible communication issues occurs
      */
     void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException;
-
-    /**
-     * Attach a listener for {@link StopButtonEvent}s.
-     *
-     * <p>Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
-     * @param listener listener to add
-     */
-    void addStopButtonListener(StopButtonListener listener);
-
-    /**
-     * Remove a listener for {@link StopButtonEvent}s.
-     * @param listener listener to remove
-     */
-    void removeStopButtonListener(StopButtonListener listener);
 
     /**
      * Disconnects from the control lab and releases any resources.

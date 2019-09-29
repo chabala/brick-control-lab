@@ -18,25 +18,18 @@
  */
 package org.chabala.brick.controllab;
 
-import jssc.SerialPortEvent;
-
 /**
- * SerialPortEventListener.
+ * Identifiers for the type of sensor allowed on a particular input port.
  */
-interface SerialPortEventListener extends jssc.SerialPortEventListener {
-
-    @Override
-    default void serialEvent(SerialPortEvent event) {
-        if (event.isRXCHAR()) {
-            serialEventRXCHAR(event.getEventValue());
-        }
-    }
-
+public enum InputType {
     /**
-     * This event happens when data is available to be read from the port.
-     * @param availableBytes count of bytes available on the serial port
+     * Passive inputs read the resistence of the sensor connected to them. They
+     * are colored yellow on the control lab.
      */
-    void serialEventRXCHAR(int availableBytes);
-
-    boolean isHandshakeSeen();
+    PASSIVE,
+    /**
+     * Active inputs supply power to the connected sensor in order for it to work.
+     * They are colored blue on the control lab.
+     */
+    ACTIVE
 }

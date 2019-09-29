@@ -18,8 +18,6 @@
  */
 package org.chabala.brick.controllab.sensor;
 
-import org.chabala.brick.controllab.SensorValue;
-
 /**
  * Temperature sensor.
  */

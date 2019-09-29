@@ -18,7 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import org.junit.Before;
 import org.junit.Rule;

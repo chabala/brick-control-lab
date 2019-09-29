@@ -16,27 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
-package org.chabala.brick.controllab;
-
-import jssc.SerialPortEvent;
+package org.chabala.brick.controllab.sensor;
 
 /**
- * SerialPortEventListener.
+ * The listener interface for receiving sensor input events from touch sensors.
  */
-interface SerialPortEventListener extends jssc.SerialPortEventListener {
+@FunctionalInterface
+public interface TouchSensorListener extends SensorListener {
 
+    /** {@inheritDoc} */
     @Override
-    default void serialEvent(SerialPortEvent event) {
-        if (event.isRXCHAR()) {
-            serialEventRXCHAR(event.getEventValue());
-        }
+    default void sensorEventReceived(SensorEvent<SensorValue> sensorEvent) {
+        touchSensorEventReceived(new TouchSensorEvent(sensorEvent));
     }
 
     /**
-     * This event happens when data is available to be read from the port.
-     * @param availableBytes count of bytes available on the serial port
+     * Callback for handling touch sensor input events.
+     * @param sensorEvent a touch sensor event
      */
-    void serialEventRXCHAR(int availableBytes);
-
-    boolean isHandshakeSeen();
+    void touchSensorEventReceived(TouchSensorEvent sensorEvent);
 }

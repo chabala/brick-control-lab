@@ -18,6 +18,7 @@
  */
 package org.chabala.brick.controllab;
 
+import org.chabala.brick.controllab.sensor.SensorListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
@@ -37,20 +38,22 @@ class ControlLabImpl implements ControlLab {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final SerialPortFactory portFactory;
     private SerialPort serialPort;
-    private SerialPortEventListener serialListener = null;
     private KeepAliveMonitor keepAliveMonitor;
-    private final Function<SerialPort, SerialPortEventListener> listenerFactory;
+    private final InputManager inputManager;
+    private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
 
     /**
      * Default constructor using jSSC serial implementation.
      */
     ControlLabImpl() {
-        this(new JsscSerialPortFactory(), SerialListener::new);
+        this(new JsscSerialPortFactory(), new InputManager(), SerialListener::new);
     }
 
     ControlLabImpl(SerialPortFactory portFactory,
-                   Function<SerialPort, SerialPortEventListener> listenerFactory) {
+                   InputManager inputManager,
+                   BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory) {
         this.portFactory = portFactory;
+        this.inputManager = inputManager;
         this.listenerFactory = listenerFactory;
     }
 
@@ -59,7 +62,7 @@ class ControlLabImpl implements ControlLab {
         serialPort = portFactory.getSerialPort(portName);
         log.info("Opening port {}", serialPort.getPortName());
         serialPort.openPort();
-        serialListener = listenerFactory.apply(serialPort);
+        SerialPortEventListener serialListener = listenerFactory.apply(serialPort, inputManager);
         serialPort.addEventListener(serialListener);
 
         sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
@@ -129,17 +132,25 @@ class ControlLabImpl implements ControlLab {
     /** {@inheritDoc} */
     @Override
     public void addStopButtonListener(StopButtonListener listener) {
-        if (serialListener != null) {
-            serialListener.addStopButtonListener(listener);
-        }
+        inputManager.addStopButtonListener(listener);
     }
 
     /** {@inheritDoc} */
     @Override
     public void removeStopButtonListener(StopButtonListener listener) {
-        if (serialListener != null) {
-            serialListener.removeStopButtonListener(listener);
-        }
+        inputManager.removeStopButtonListener(listener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addSensorListener(Input input, SensorListener listener) {
+        inputManager.addSensorListener(input, listener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeSensorListener(Input input, SensorListener listener) {
+        inputManager.removeSensorListener(input, listener);
     }
 
     /** {@inheritDoc} */
