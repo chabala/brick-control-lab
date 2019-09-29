@@ -20,7 +20,10 @@ package org.chabala.brick.controllab;
 
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.arrayWithSize;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -31,5 +34,21 @@ public class InputTest {
     @Test
     public void testThereAreEightInputs() throws Exception {
         assertThat(Input.values(), arrayWithSize(8));
+    }
+
+    @Test
+    public void testThereAreFourPassiveInputs() throws Exception {
+        assertThat(Arrays.stream(Input.values())
+                   .map(Input::getInputType)
+                   .filter(InputType.PASSIVE::equals)
+                   .collect(Collectors.toList()), hasSize(4));
+    }
+
+    @Test
+    public void testThereAreFourActiveInputs() throws Exception {
+        assertThat(Arrays.stream(Input.values())
+                   .map(Input::getInputType)
+                   .filter(InputType.ACTIVE::equals)
+                   .collect(Collectors.toList()), hasSize(4));
     }
 }
