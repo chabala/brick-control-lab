@@ -91,6 +91,11 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.6.1.1688</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
