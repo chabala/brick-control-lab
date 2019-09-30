@@ -65,7 +65,7 @@ public enum Output {
         Output[] enums = Output.class.getEnumConstants();
         Set<Output> enumSet = EnumSet.noneOf(Output.class);
         for (int bit = 0; bit < Byte.SIZE; bit++) {
-            if ((b & 1 << bit) > 0) {
+            if ((b & 0xFF & 1 << bit) > 0) {
                 enumSet.add(enums[bit]);
             }
         }
