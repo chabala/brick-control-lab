@@ -43,7 +43,7 @@ import static org.junit.Assume.assumeThat;
  * <p>These tests require a connection to the hardware. There's no way to validate
  * the behavior other than observing the control lab, so there are no assertions.
  */
-@SuppressWarnings("squid:S2699")
+@SuppressWarnings({"squid:S2699","squid:S2925"})
 public class ControlLabIT {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

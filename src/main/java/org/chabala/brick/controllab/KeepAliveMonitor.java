@@ -77,6 +77,7 @@ class KeepAliveMonitor implements Closeable {
         }, keepAlivePeriodMs, keepAlivePeriodMs, TimeUnit.MILLISECONDS);
     }
 
+    @SuppressWarnings("squid:S2629")
     private void sendCommand(byte b) {
         try {
             log.info("TX -> {}", String.format("0x%02X", b));
