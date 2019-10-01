@@ -95,6 +95,7 @@ class InputManager implements MutatesInputListeners {
         processStopButton(inputFrame[frameIndex++]);
         int lastCommandIndex = frameIndex++;
         if (0x00 != inputFrame[lastCommandIndex]) {
+            //TODO: make event listener for output feedback
             log.info("Ports affected by last command {}",
                     Output.decodeByteToSet(inputFrame[lastCommandIndex]));
         }
