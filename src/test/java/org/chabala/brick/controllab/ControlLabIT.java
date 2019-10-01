@@ -25,11 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static javax.management.timer.Timer.ONE_SECOND;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNoException;
@@ -41,8 +43,9 @@ import static org.junit.Assume.assumeThat;
  * <p>These tests require a connection to the hardware. There's no way to validate
  * the behavior other than observing the control lab, so there are no assertions.
  */
+@SuppressWarnings("squid:S2699")
 public class ControlLabIT {
-    private static final Logger log = LoggerFactory.getLogger(ControlLabIT.class);
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String choosePort(ControlLab controlLab) {
         List<String> availablePorts = controlLab.getAvailablePorts();
@@ -99,7 +102,7 @@ public class ControlLabIT {
         }
     }
 
-    @Ignore
+    @Ignore("Requires interaction with stop button to complete, only run manually")
     @Test
     public void testControlLabInputs() throws Exception {
         AtomicBoolean stop = new AtomicBoolean(false);
@@ -139,11 +142,8 @@ public class ControlLabIT {
             controlLab.addSensorListener(Input.I6, lightSensorListener);
             controlLab.addSensorListener(Input.I7, lightSensorListener);
             controlLab.addSensorListener(Input.I8, lightSensorListener);
-            Thread.sleep(ONE_SECOND);
 
-            while (!stop.get()) {
-                Thread.sleep(ONE_SECOND);
-            }
+            await().forever().until(stop::get);
         }
     }
 
@@ -174,7 +174,7 @@ public class ControlLabIT {
         }
     }
 
-    @Ignore
+    @Ignore("Requires interaction with stop button to complete, only run manually")
     @Test
     public void testRunUntilStopButtonPressed() throws Exception {
         AtomicBoolean stop = new AtomicBoolean(false);
@@ -185,9 +185,7 @@ public class ControlLabIT {
                 assumeNoException(e);
             }
             controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
-            while (!stop.get()) {
-                Thread.sleep(ONE_SECOND / 2);
-            }
+            await().forever().until(stop::get);
         }
     }
 
@@ -198,7 +196,7 @@ public class ControlLabIT {
      * power supply levels.
      * @throws Exception on any issue with the test
      */
-    @Ignore
+    @Ignore("Requires interaction with Input 1 to complete, only run manually")
     @Test
     public void testMotorInBothDirections() throws Exception {
         AtomicBoolean stop = new AtomicBoolean(false);

@@ -71,19 +71,19 @@ class KeepAliveMonitor implements Closeable {
 
     private void scheduleTask() {
         task = executor.scheduleAtFixedRate(() -> {
-            try {
-                if (serialPort.isOpen()) {
-                    sendCommand(KEEP_ALIVE_COMMAND);
-                }
-            } catch (IOException e) {
-                LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
+            if (serialPort.isOpen()) {
+                sendCommand(KEEP_ALIVE_COMMAND);
             }
         }, keepAlivePeriodMs, keepAlivePeriodMs, TimeUnit.MILLISECONDS);
     }
 
-    private void sendCommand(byte b) throws IOException {
-        log.info("TX -> {}", String.format("0x%02X", b));
-        serialPort.write(b);
+    private void sendCommand(byte b) {
+        try {
+            log.info("TX -> {}", String.format("0x%02X", b));
+            serialPort.write(b);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**
