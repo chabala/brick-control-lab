@@ -36,7 +36,7 @@ class SerialListener implements SerialPortEventListener {
     private final boolean ignoreBadHandshake;
 
     private boolean handshakeSeen = false;
-    private String handshake = "";
+    private StringBuilder handshakeBuilder = new StringBuilder();
 
     SerialListener(SerialPort serialPort, InputManager inputManager) {
         this.serialPort = serialPort;
@@ -71,24 +71,27 @@ class SerialListener implements SerialPortEventListener {
         try {
             while (!handshakeSeen && availableBytes > 0) {
                 availableBytes--;
-                String newChar = new String(serialPort.readBytes(1), ISO_8859_1);
-                handshake += newChar;
-                if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {
-                    handshakeSeen = true;
-                    log.info(handshake);
-                    handshake = "";
-                } else if (handshake.length() >= Protocol.HANDSHAKE_RESPONSE.length()) {
-                    log.error("Bad handshake: {}", handshake);
-                    if (ignoreBadHandshake) {
+                handshakeBuilder.append(new String(serialPort.readBytes(1), ISO_8859_1));
+                if (handshakeBuilder.length() >= Protocol.HANDSHAKE_RESPONSE.length()) {
+                    String handshake = handshakeBuilder.toString();
+                    if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {
                         handshakeSeen = true;
-                        handshake = "";
+                        log.info(handshake);
+                        handshakeBuilder = null;
                     } else {
-                        serialPort.close();
+                        log.error("Bad handshake: {}", handshake);
+                        if (ignoreBadHandshake) {
+                            handshakeSeen = true;
+                            handshakeBuilder = null;
+                        } else {
+                            serialPort.close();
+                            return;
+                        }
                     }
                 }
             }
             if (!handshakeSeen) {
-                log.debug(handshake);
+                log.debug("Current handshake: {}", handshakeBuilder);
             }
         } catch (IOException e) {
             log.error(e.getMessage(), e);

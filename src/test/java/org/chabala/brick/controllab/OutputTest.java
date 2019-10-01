@@ -57,6 +57,11 @@ public class OutputTest {
     }
 
     @Test
+    public void testByteWithEvenBitsSetDecodesToOutputsBDFH() throws Exception {
+        assertThat(Output.decodeByteToSet((byte) 0b10101010), is(EnumSet.of(Output.B, Output.D, Output.F, Output.H)));
+    }
+
+    @Test
     public void testByteWithHighBitSetDecodesToOutputH() throws Exception {
         assertThat(Output.decodeByteToSet((byte) 0b10000000), is(EnumSet.of(Output.H)));
     }

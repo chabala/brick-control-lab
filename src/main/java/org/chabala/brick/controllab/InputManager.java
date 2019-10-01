@@ -111,6 +111,7 @@ class InputManager implements MutatesInputListeners {
         return (checksum & 0xFF) == 0xFF;
     }
 
+    @SuppressWarnings("squid:S2629")
     private void processStopButton(byte b) {
         if (0x00 != b) {
             if (!stopDepressed) {

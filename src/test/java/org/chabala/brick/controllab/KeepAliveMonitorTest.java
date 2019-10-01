@@ -45,13 +45,12 @@ public class KeepAliveMonitorTest {
 
     @Test
     public void testMonitorSendsKeepAlives() throws Exception {
+        when(serialPort.getPortName()).thenReturn("COM#");
         when(serialPort.isOpen()).thenReturn(true);
         try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
-            Thread.sleep(keepAliveDurationMs);
-            verify(serialPort, times(1)).isOpen();
+            verify(serialPort, after(keepAliveDurationMs).times(1)).isOpen();
             verify(serialPort, times(1)).write(anyByte());
-            Thread.sleep(keepAliveDurationMs);
-            verify(serialPort, times(2)).isOpen();
+            verify(serialPort, after(keepAliveDurationMs).times(2)).isOpen();
             verify(serialPort, times(2)).write(anyByte());
         }
     }
@@ -60,13 +59,12 @@ public class KeepAliveMonitorTest {
     public void testResetPreventsKeepAlives() throws Exception {
         long threeQuartersDurationMs = keepAliveDuration.multipliedBy(3).dividedBy(4).toMillis();
         try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
-            Thread.sleep(threeQuartersDurationMs);
-            verify(serialPort, never()).isOpen();
+            verify(serialPort, after(threeQuartersDurationMs).never()).isOpen();
             verify(serialPort, never()).write(anyByte());
             monitor.reset();
-            Thread.sleep(threeQuartersDurationMs);
-            verify(serialPort, never()).isOpen();
+            verify(serialPort, after(threeQuartersDurationMs).never()).isOpen();
             verify(serialPort, never()).write(anyByte());
+            verify(serialPort, only()).getPortName();
         }
     }
 
@@ -74,9 +72,7 @@ public class KeepAliveMonitorTest {
     public void testClosePreventsKeepAlives() throws Exception {
         try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
             monitor.close();
+            verify(serialPort, after(keepAliveDuration.multipliedBy(2).toMillis()).only()).getPortName();
         }
-        Thread.sleep(keepAliveDurationMs);
-        verify(serialPort, never()).isOpen();
-        verify(serialPort, never()).write(anyByte());
     }
 }
