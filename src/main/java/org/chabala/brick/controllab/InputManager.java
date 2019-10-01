@@ -97,7 +97,7 @@ class InputManager implements MutatesInputListeners {
         if (0x00 != inputFrame[lastCommandIndex]) {
             //TODO: make event listener for output feedback
             log.info("Ports affected by last command {}",
-                    Output.decodeByteToSet(inputFrame[lastCommandIndex]));
+                    OutputId.decodeByteToSet(inputFrame[lastCommandIndex]));
         }
         for (Input in : frameInputOrder) {
             setSensorValue(in, inputFrame[frameIndex++], inputFrame[frameIndex++]);

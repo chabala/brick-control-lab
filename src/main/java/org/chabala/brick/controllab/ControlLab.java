@@ -71,14 +71,14 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
      * @param outputs outputs to stop
      * @throws IOException if any number of possible communication issues occurs
      */
-    void turnOutputOff(Set<Output> outputs) throws IOException;
+    void turnOutputOff(Set<OutputId> outputs) throws IOException;
 
     /**
      * Starts sending power to the specified outputs.
      * @param outputs outputs to start
      * @throws IOException if any number of possible communication issues occurs
      */
-    void turnOutputOn(Set<Output> outputs) throws IOException;
+    void turnOutputOn(Set<OutputId> outputs) throws IOException;
 
     /**
      * Sets the {@link Direction} of the specified outputs. Direction may be changed
@@ -87,7 +87,7 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
      * @param outputs which outputs to change
      * @throws IOException if any number of possible communication issues occurs
      */
-    void setOutputDirection(Direction direction, Set<Output> outputs) throws IOException;
+    void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException;
 
     /**
      * Sets the {@link PowerLevel} of the specified outputs. Power level may be changed
@@ -96,7 +96,7 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
      * @param outputs which outputs to change
      * @throws IOException if any number of possible communication issues occurs
      */
-    void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException;
+    void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException;
 
     /**
      * Disconnects from the control lab and releases any resources.

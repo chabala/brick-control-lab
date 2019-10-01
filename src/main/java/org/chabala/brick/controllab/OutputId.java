@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Identifiers for the output ports on the control lab.
  */
-public enum Output {
+public enum OutputId {
     /** Output A. */ A,
     /** Output B. */ B,
     /** Output C. */ C,
@@ -38,14 +38,14 @@ public enum Output {
     /**
      * Convenience constant for specifying all output ports.
      */
-    public static final Set<Output> ALL = Collections.unmodifiableSet(EnumSet.allOf(Output.class));
+    public static final Set<OutputId> ALL = Collections.unmodifiableSet(EnumSet.allOf(OutputId.class));
 
     /**
      * Encodes values from a {@link Set} of {@link Enum}s to a byte. Uses the
      * ordinal of the Enum as the position of the bit in the byte to set high.
      *
      * @param set set of values to be encoded
-     * @param <T> type of Enum, only used with {@link Output} internally
+     * @param <T> type of Enum, only used with {@link OutputId} internally
      * @return a byte with high bits relating to the values in the set
      */
     public static <T extends Enum<T>> byte encodeSetToByte(Set<T> set) {
@@ -57,13 +57,13 @@ public enum Output {
     }
 
     /**
-     * Decodes a byte into a {@link Set} of {@link Output}s.
+     * Decodes a byte into a {@link Set} of {@link OutputId}s.
      * @param b byte where each bit corresponds to the ordinal of an Output
      * @return a Set containing the desired Outputs
      */
-    public static Set<Output> decodeByteToSet(byte b) {
-        Output[] enums = Output.class.getEnumConstants();
-        Set<Output> enumSet = EnumSet.noneOf(Output.class);
+    public static Set<OutputId> decodeByteToSet(byte b) {
+        OutputId[] enums = OutputId.class.getEnumConstants();
+        Set<OutputId> enumSet = EnumSet.noneOf(OutputId.class);
         for (int bit = 0; bit < Byte.SIZE; bit++) {
             if ((b & 0xFF & 1 << bit) > 0) {
                 enumSet.add(enums[bit]);

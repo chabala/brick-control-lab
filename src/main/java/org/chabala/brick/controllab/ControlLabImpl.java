@@ -101,26 +101,26 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
-    public void turnOutputOff(Set<Output> outputs) throws IOException {
-        sendCommand(Protocol.OUTPUT_OFF, Output.encodeSetToByte(outputs));
+    public void turnOutputOff(Set<OutputId> outputs) throws IOException {
+        sendCommand(Protocol.OUTPUT_OFF, OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void turnOutputOn(Set<Output> outputs) throws IOException {
-        sendCommand(Protocol.OUTPUT_ON, Output.encodeSetToByte(outputs));
+    public void turnOutputOn(Set<OutputId> outputs) throws IOException {
+        sendCommand(Protocol.OUTPUT_ON, OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setOutputDirection(Direction direction, Set<Output> outputs) throws IOException {
-        sendCommand(direction.getCode(), Output.encodeSetToByte(outputs));
+    public void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException {
+        sendCommand(direction.getCode(), OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException {
-        sendCommand(powerLevel.getCode(), Output.encodeSetToByte(outputs));
+    public void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException {
+        sendCommand(powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */

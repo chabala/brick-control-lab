@@ -27,47 +27,47 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 /**
- * Test the encoding and decoding methods of {@link Output}.
+ * Test the encoding and decoding methods of {@link OutputId}.
  */
-public class OutputTest {
+public class OutputIdTest {
 
     @Test
     public void testAllOutputSetEncodesByteWithAllBitsSet() throws Exception {
-        assertThat(Output.encodeSetToByte(Output.ALL), is((byte) 0b11111111));
+        assertThat(OutputId.encodeSetToByte(OutputId.ALL), is((byte) 0b11111111));
     }
 
     @Test
     public void testOutputAEncodesByteWithLowBitSet() throws Exception {
-        assertThat(Output.encodeSetToByte(EnumSet.of(Output.A)), is((byte) 0b00000001));
+        assertThat(OutputId.encodeSetToByte(EnumSet.of(OutputId.A)), is((byte) 0b00000001));
     }
 
     @Test
     public void testOutputHEncodesByteWithHighBitSet() throws Exception {
-        assertThat(Output.encodeSetToByte(EnumSet.of(Output.H)), is((byte) 0b10000000));
+        assertThat(OutputId.encodeSetToByte(EnumSet.of(OutputId.H)), is((byte) 0b10000000));
     }
 
     @Test
     public void testByteWithAllBitsSetDecodesToAllOutputs() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b11111111), is(Output.ALL));
+        assertThat(OutputId.decodeByteToSet((byte) 0b11111111), is(OutputId.ALL));
     }
 
     @Test
     public void testByteWithLowBitSetDecodesToOutputA() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b00000001), is(EnumSet.of(Output.A)));
+        assertThat(OutputId.decodeByteToSet((byte) 0b00000001), is(EnumSet.of(OutputId.A)));
     }
 
     @Test
     public void testByteWithEvenBitsSetDecodesToOutputsBDFH() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b10101010), is(EnumSet.of(Output.B, Output.D, Output.F, Output.H)));
+        assertThat(OutputId.decodeByteToSet((byte) 0b10101010), is(EnumSet.of(OutputId.B, OutputId.D, OutputId.F, OutputId.H)));
     }
 
     @Test
     public void testByteWithHighBitSetDecodesToOutputH() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b10000000), is(EnumSet.of(Output.H)));
+        assertThat(OutputId.decodeByteToSet((byte) 0b10000000), is(EnumSet.of(OutputId.H)));
     }
 
     @Test
     public void testThereAreEightOutputs() throws Exception {
-        assertThat(Output.values(), arrayWithSize(8));
+        assertThat(OutputId.values(), arrayWithSize(8));
     }
 }

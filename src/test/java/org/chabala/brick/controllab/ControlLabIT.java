@@ -63,9 +63,9 @@ public class ControlLabIT {
                 assumeNoException(e);
             }
             Thread.sleep(ONE_SECOND * 3);
-            controlLab.turnOutputOn(Output.ALL);
+            controlLab.turnOutputOn(OutputId.ALL);
             Thread.sleep(ONE_SECOND * 3);
-            controlLab.turnOutputOff(EnumSet.range(Output.A, Output.D));
+            controlLab.turnOutputOff(EnumSet.range(OutputId.A, OutputId.D));
             Thread.sleep(ONE_SECOND * 3);
         }
     }
@@ -80,24 +80,24 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
 
-            controlLab.turnOutputOn(Output.ALL);
+            controlLab.turnOutputOn(OutputId.ALL);
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(Output.E, Output.F));
+            controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(OutputId.E, OutputId.F));
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.REVERSE, EnumSet.of(Output.E, Output.F, Output.G, Output.H));
+            controlLab.setOutputDirection(Direction.REVERSE, EnumSet.of(OutputId.E, OutputId.F, OutputId.G, OutputId.H));
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.RIGHT, EnumSet.of(Output.H));
+            controlLab.setOutputDirection(Direction.RIGHT, EnumSet.of(OutputId.H));
             Thread.sleep(ONE_SECOND);
 
-            for (Output o : Arrays.asList(Output.H, Output.G, Output.F, Output.E)) {
+            for (OutputId o : Arrays.asList(OutputId.H, OutputId.G, OutputId.F, OutputId.E)) {
                 controlLab.turnOutputOff(EnumSet.of(o));
                 Thread.sleep(ONE_SECOND);
             }
 
-            controlLab.turnOutputOff(EnumSet.range(Output.A, Output.D));
+            controlLab.turnOutputOff(EnumSet.range(OutputId.A, OutputId.D));
             Thread.sleep(ONE_SECOND * 5);
         }
     }
@@ -157,19 +157,19 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputPowerLevel(PowerLevel.P1, EnumSet.of(Output.A));
-            controlLab.turnOutputOn(EnumSet.of(Output.A));
+            controlLab.setOutputPowerLevel(PowerLevel.P1, EnumSet.of(OutputId.A));
+            controlLab.turnOutputOn(EnumSet.of(OutputId.A));
             Thread.sleep(ONE_SECOND);
 
             for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
-                controlLab.setOutputPowerLevel(p, EnumSet.of(Output.A));
+                controlLab.setOutputPowerLevel(p, EnumSet.of(OutputId.A));
                 Thread.sleep(ONE_SECOND);
             }
 
-            controlLab.setOutputPowerLevel(PowerLevel.P0, EnumSet.of(Output.A));
+            controlLab.setOutputPowerLevel(PowerLevel.P0, EnumSet.of(OutputId.A));
             Thread.sleep(ONE_SECOND);
 
-            controlLab.turnOutputOn(EnumSet.of(Output.A));
+            controlLab.turnOutputOn(EnumSet.of(OutputId.A));
             Thread.sleep(ONE_SECOND);
         }
     }
@@ -208,7 +208,7 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
             controlLab.addSensorListener(Input.I1, (TouchSensorListener) sensorEvent -> stop.set(true));
-            Set<Output> outputSet = Output.ALL;
+            Set<OutputId> outputSet = OutputId.ALL;
             while (!stop.get()) {
                 controlLab.setOutputPowerLevel(PowerLevel.P8, outputSet);
                 controlLab.setOutputDirection(Direction.RIGHT, outputSet);
