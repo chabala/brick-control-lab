@@ -114,12 +114,10 @@ public class ControlLabIT {
             }
             controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
             Map<Input, String> lastTouchValues = Collections.synchronizedMap(new EnumMap<>(Input.class));
-            List<Input> touchInputs = Arrays.stream(Input.values())
-                                            .filter(i -> i.getInputType().equals(InputType.PASSIVE))
-                                            .collect(Collectors.toList());
-            for (Input i : touchInputs) {
-                lastTouchValues.put(i, "");
-            }
+            List<Input> passiveInputs = Arrays.stream(Input.values())
+                                              .filter(i -> i.getInputType().equals(InputType.PASSIVE))
+                                              .collect(Collectors.toList());
+            passiveInputs.forEach(i -> lastTouchValues.put(i, ""));
             TouchSensorListener touchSensorListener = sensorEvent -> {
                 Input input = sensorEvent.getInput();
                 String newValue = sensorEvent.getValue().touchStatus();
@@ -131,17 +129,34 @@ public class ControlLabIT {
                     log.info("{} value changed: {}", input, newValue);
                 }
             };
-            for (Input i : touchInputs) {
-                controlLab.addSensorListener(i, touchSensorListener);
-            }
+            passiveInputs.forEach(i -> controlLab.addSensorListener(i, touchSensorListener));
             LightSensorListener lightSensorListener = sensorEvent -> {
                 Input input = sensorEvent.getInput();
                 log.info("{} value changed: {}", input, sensorEvent.getValue());
             };
-            controlLab.addSensorListener(Input.I5, lightSensorListener);
-            controlLab.addSensorListener(Input.I6, lightSensorListener);
-            controlLab.addSensorListener(Input.I7, lightSensorListener);
-            controlLab.addSensorListener(Input.I8, lightSensorListener);
+            Arrays.stream(Input.values())
+                  .filter(i -> i.getInputType().equals(InputType.ACTIVE))
+                  .forEach(i -> controlLab.addSensorListener(i, lightSensorListener));
+
+            await().forever().until(stop::get);
+        }
+    }
+
+    @Ignore("Requires interaction with stop button to complete, only run manually")
+    @Test
+    public void testControlLabInputsRaw() throws Exception {
+        AtomicBoolean stop = new AtomicBoolean(false);
+        try (ControlLab controlLab = ControlLab.newControlLab()) {
+            try {
+                controlLab.open(choosePort(controlLab));
+            } catch (IOException e) {
+                assumeNoException(e);
+            }
+            controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
+            SensorListener sensorListener = sensorEvent ->
+                    log.info("{} value changed: {}", sensorEvent.getInput(), sensorEvent.getValue());
+            Arrays.stream(Input.values())
+                  .forEach(i -> controlLab.addSensorListener(i, sensorListener));
 
             await().forever().until(stop::get);
         }
