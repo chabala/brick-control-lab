@@ -70,19 +70,19 @@ public class StopButton {
         if (0x00 != b) {
             if (!stopDepressed) {
                 StopButtonEvent event = new StopButtonEvent(this, b);
+                log.info("Stop button depressed {}", String.format("0x%02X", b));
                 synchronized (stopButtonListeners) {
                     stopButtonListeners.forEach(l -> l.stopButtonPressed(event));
                 }
-                log.info("Stop button depressed {}", String.format("0x%02X", b));
                 stopDepressed = true;
             }
         } else {
             if (stopDepressed) {
                 StopButtonEvent event = new StopButtonEvent(this, b);
+                log.info("Stop button released {}", String.format("0x%02X", b));
                 synchronized (stopButtonListeners) {
                     stopButtonListeners.forEach(l -> l.stopButtonReleased(event));
                 }
-                log.info("Stop button released {}", String.format("0x%02X", b));
                 stopDepressed = false;
             }
         }
