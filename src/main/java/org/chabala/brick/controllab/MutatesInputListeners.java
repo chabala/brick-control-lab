@@ -34,12 +34,12 @@ public interface MutatesInputListeners {
      * @param input    input to add the listener to
      * @param listener listener to add
      */
-    void addSensorListener(Input input, SensorListener listener);
+    void addSensorListener(InputId input, SensorListener listener);
 
     /**
      * Remove a listener for {@link SensorEvent}s.
      * @param input    input to remove the listener from
      * @param listener listener to remove
      */
-    void removeSensorListener(Input input, SensorListener listener);
+    void removeSensorListener(InputId input, SensorListener listener);
 }

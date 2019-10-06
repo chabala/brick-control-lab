@@ -34,16 +34,17 @@ import java.util.*;
 class InputManager implements MutatesInputListeners {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Map<Input, byte[]> sensorData;
-    private final Map<Input, Set<SensorListener>> sensorListeners;
-    private final List<Input> frameInputOrder =
-            Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);
+    private final Map<InputId, byte[]> sensorData;
+    private final Map<InputId, Set<SensorListener>> sensorListeners;
+    private final List<InputId> frameInputOrder =
+            Arrays.asList(InputId.I4, InputId.I8, InputId.I3, InputId.I7,
+                          InputId.I2, InputId.I6, InputId.I1, InputId.I5);
     private ByteConsumer processStopButton = null;
 
     InputManager() {
-        sensorData = Collections.synchronizedMap(new EnumMap<>(Input.class));
-        sensorListeners = Collections.synchronizedMap(new EnumMap<>(Input.class));
-        Arrays.stream(Input.values()).forEach(i -> {
+        sensorData = Collections.synchronizedMap(new EnumMap<>(InputId.class));
+        sensorListeners = Collections.synchronizedMap(new EnumMap<>(InputId.class));
+        Arrays.stream(InputId.values()).forEach(i -> {
             sensorData.put(i, new byte[] {0, 0});
             sensorListeners.put(i, Collections.synchronizedSet(new HashSet<>(2)));
         });
@@ -51,13 +52,13 @@ class InputManager implements MutatesInputListeners {
 
     /** {@inheritDoc} */
     @Override
-    public void addSensorListener(Input input, SensorListener listener) {
+    public void addSensorListener(InputId input, SensorListener listener) {
         sensorListeners.get(input).add(listener);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeSensorListener(Input input, SensorListener listener) {
+    public void removeSensorListener(InputId input, SensorListener listener) {
         sensorListeners.get(input).remove(listener);
     }
 
@@ -85,7 +86,7 @@ class InputManager implements MutatesInputListeners {
             log.info("Ports affected by last command {}",
                     OutputId.decodeByteToSet(inputFrame[lastCommandIndex]));
         }
-        for (Input in : frameInputOrder) {
+        for (InputId in : frameInputOrder) {
             setSensorValue(in, inputFrame[frameIndex++], inputFrame[frameIndex++]);
         }
     }
@@ -104,7 +105,7 @@ class InputManager implements MutatesInputListeners {
         }
     }
 
-    private void setSensorValue(Input input, byte high, byte low) {
+    private void setSensorValue(InputId input, byte high, byte low) {
         byte[] newValue = {high, low};
         byte[] oldValue = sensorData.put(input, newValue);
         if (!Arrays.equals(newValue, oldValue)) {

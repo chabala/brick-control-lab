@@ -27,27 +27,27 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
- * Testing {@link Input}.
+ * Testing {@link InputId}.
  */
-public class InputTest {
+public class InputIdTest {
 
     @Test
     public void testThereAreEightInputs() throws Exception {
-        assertThat(Input.values(), arrayWithSize(8));
+        assertThat(InputId.values(), arrayWithSize(8));
     }
 
     @Test
     public void testThereAreFourPassiveInputs() throws Exception {
-        assertThat(Arrays.stream(Input.values())
-                   .map(Input::getInputType)
+        assertThat(Arrays.stream(InputId.values())
+                   .map(InputId::getInputType)
                    .filter(InputType.PASSIVE::equals)
                    .collect(Collectors.toList()), hasSize(4));
     }
 
     @Test
     public void testThereAreFourActiveInputs() throws Exception {
-        assertThat(Arrays.stream(Input.values())
-                   .map(Input::getInputType)
+        assertThat(Arrays.stream(InputId.values())
+                   .map(InputId::getInputType)
                    .filter(InputType.ACTIVE::equals)
                    .collect(Collectors.toList()), hasSize(4));
     }

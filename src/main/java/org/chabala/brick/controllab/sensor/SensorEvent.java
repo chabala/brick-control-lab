@@ -18,7 +18,7 @@
  */
 package org.chabala.brick.controllab.sensor;
 
-import org.chabala.brick.controllab.Input;
+import org.chabala.brick.controllab.InputId;
 
 import java.util.EventObject;
 import java.util.function.Function;
@@ -26,7 +26,7 @@ import java.util.function.Function;
 import static org.chabala.brick.controllab.BinaryStringFormatter.printInBinary;
 
 /**
- * The event triggered by receiving a {@link SensorValue} from an {@link Input}.
+ * The event triggered by receiving a {@link SensorValue} from an {@link InputId}.
  */
 public class SensorEvent<T extends SensorValue> extends EventObject {
 
@@ -42,7 +42,7 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
      * @param newValue The new value from this input, as a two byte array.
      * @param value    The new value wrapped in the SensorValue class.
      */
-    public SensorEvent(Input input, byte[] oldValue, byte[] newValue, T value) {
+    public SensorEvent(InputId input, byte[] oldValue, byte[] newValue, T value) {
         super(input);
         this.oldValue = oldValue;
         this.newValue = newValue;
@@ -66,8 +66,8 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
      * The input port that triggered this event.
      * @return the input port that triggered this event.
      */
-    public Input getInput() {
-        return (Input) getSource();
+    public InputId getInput() {
+        return (InputId) getSource();
     }
 
     /**

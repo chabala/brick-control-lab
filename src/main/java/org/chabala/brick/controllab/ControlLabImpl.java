@@ -150,13 +150,13 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
-    public void addSensorListener(Input input, SensorListener listener) {
+    public void addSensorListener(InputId input, SensorListener listener) {
         inputManager.addSensorListener(input, listener);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeSensorListener(Input input, SensorListener listener) {
+    public void removeSensorListener(InputId input, SensorListener listener) {
         inputManager.removeSensorListener(input, listener);
     }
 

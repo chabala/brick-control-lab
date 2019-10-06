@@ -27,7 +27,7 @@ package org.chabala.brick.controllab;
  * Inputs 5-8 are active, they supply power to the connected sensor
  * in order for it to work. They are colored blue on the control lab.
  */
-public enum Input {
+public enum InputId {
     /** Input 1. */ I1(InputType.PASSIVE),
     /** Input 2. */ I2(InputType.PASSIVE),
     /** Input 3. */ I3(InputType.PASSIVE),
@@ -39,7 +39,7 @@ public enum Input {
 
     private final InputType inputType;
 
-    Input(InputType inputType) {
+    InputId(InputType inputType) {
         this.inputType = inputType;
     }
 
