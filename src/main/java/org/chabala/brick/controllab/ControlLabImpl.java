@@ -43,6 +43,7 @@ class ControlLabImpl implements ControlLab {
     private final InputManager inputManager;
     private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
     private final Map<OutputId, Output> outputMap;
+    private final StopButton stopButton;
 
     /**
      * Default constructor using jSSC serial implementation.
@@ -60,6 +61,7 @@ class ControlLabImpl implements ControlLab {
         outputMap = Collections.unmodifiableMap(new EnumMap<>(
                 Arrays.stream(OutputId.values()).collect(
                         Collectors.toMap(Function.identity(), id -> new Output(this, id)))));
+        stopButton = new StopButton(inputManager);
     }
 
     @Override
@@ -136,20 +138,14 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
+    public StopButton getStopButton() {
+        return stopButton;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public List<String> getAvailablePorts() {
         return portFactory.getAvailablePorts();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addStopButtonListener(StopButtonListener listener) {
-        inputManager.addStopButtonListener(listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeStopButtonListener(StopButtonListener listener) {
-        inputManager.removeStopButtonListener(listener);
     }
 
     /** {@inheritDoc} */

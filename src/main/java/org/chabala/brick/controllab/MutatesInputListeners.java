@@ -22,7 +22,7 @@ import org.chabala.brick.controllab.sensor.SensorEvent;
 import org.chabala.brick.controllab.sensor.SensorListener;
 
 /**
- * Implementors of this interface can add or remove listeners for input and stop button events.
+ * Implementors of this interface can add or remove listeners for input events.
  */
 public interface MutatesInputListeners {
 
@@ -42,19 +42,4 @@ public interface MutatesInputListeners {
      * @param listener listener to remove
      */
     void removeSensorListener(Input input, SensorListener listener);
-
-    /**
-     * Attach a listener for {@link StopButtonEvent}s.
-     *
-     * <p>Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
-     * @param listener listener to add
-     */
-    void addStopButtonListener(StopButtonListener listener);
-
-    /**
-     * Remove a listener for {@link StopButtonEvent}s.
-     * @param listener listener to remove
-     */
-    void removeStopButtonListener(StopButtonListener listener);
 }

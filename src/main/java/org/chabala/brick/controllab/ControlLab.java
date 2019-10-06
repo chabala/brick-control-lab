@@ -106,6 +106,12 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
     Output getOutput(OutputId outputId);
 
     /**
+     * Return a handle for the stop button on this control lab instance.
+     * @return handle for the stop button on this control lab instance
+     */
+    StopButton getStopButton();
+
+    /**
      * Disconnects from the control lab and releases any resources.
      * @throws IOException if any number of possible communication issues occurs
      */

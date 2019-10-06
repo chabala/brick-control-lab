@@ -129,7 +129,7 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
+            controlLab.getStopButton().addListener(stopButtonEvent -> stop.set(true));
             Map<Input, String> lastTouchValues = Collections.synchronizedMap(new EnumMap<>(Input.class));
             List<Input> passiveInputs = Arrays.stream(Input.values())
                                               .filter(i -> i.getInputType().equals(InputType.PASSIVE))
@@ -169,7 +169,7 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
+            controlLab.getStopButton().addListener(stopButtonEvent -> stop.set(true));
             SensorListener sensorListener = sensorEvent ->
                     log.info("{} value changed: {}", sensorEvent.getInput(), sensorEvent.getValue());
             Arrays.stream(Input.values())
@@ -189,19 +189,19 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputPowerLevel(PowerLevel.P1, EnumSet.of(OutputId.A));
-            controlLab.turnOutputOn(EnumSet.of(OutputId.A));
+            Output output = controlLab.getOutput(OutputId.A);
+            output.setPowerLevel(PowerLevel.P1).turnOn();
             Thread.sleep(ONE_SECOND);
 
             for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
-                controlLab.setOutputPowerLevel(p, EnumSet.of(OutputId.A));
+                output.setPowerLevel(p);
                 Thread.sleep(ONE_SECOND);
             }
 
-            controlLab.setOutputPowerLevel(PowerLevel.P0, EnumSet.of(OutputId.A));
+            output.setPowerLevel(PowerLevel.P0);
             Thread.sleep(ONE_SECOND);
 
-            controlLab.turnOutputOn(EnumSet.of(OutputId.A));
+            output.turnOn();
             Thread.sleep(ONE_SECOND);
         }
     }
@@ -216,7 +216,7 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
+            controlLab.getStopButton().addListener(stopButtonEvent -> stop.set(true));
             await().forever().until(stop::get);
         }
     }

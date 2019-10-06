@@ -28,39 +28,25 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Manages registration of input and stop button event listeners, and parsing input
+ * Manages registration of input event listeners, and parsing input
  * data into events for those listeners.
  */
 class InputManager implements MutatesInputListeners {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Set<StopButtonListener> stopButtonListeners;
     private final Map<Input, byte[]> sensorData;
     private final Map<Input, Set<SensorListener>> sensorListeners;
     private final List<Input> frameInputOrder =
             Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);
-    private boolean stopDepressed = false;
+    private ByteConsumer processStopButton = null;
 
     InputManager() {
-        stopButtonListeners = Collections.synchronizedSet(new HashSet<>(2));
         sensorData = Collections.synchronizedMap(new EnumMap<>(Input.class));
         sensorListeners = Collections.synchronizedMap(new EnumMap<>(Input.class));
         Arrays.stream(Input.values()).forEach(i -> {
             sensorData.put(i, new byte[] {0, 0});
             sensorListeners.put(i, Collections.synchronizedSet(new HashSet<>(2)));
         });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addStopButtonListener(StopButtonListener listener) {
-        stopButtonListeners.add(listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeStopButtonListener(StopButtonListener listener) {
-        stopButtonListeners.remove(listener);
     }
 
     /** {@inheritDoc} */
@@ -112,26 +98,9 @@ class InputManager implements MutatesInputListeners {
         return (checksum & 0xFF) == 0xFF;
     }
 
-    @SuppressWarnings("squid:S2629")
     private void processStopButton(byte b) {
-        if (0x00 != b) {
-            if (!stopDepressed) {
-                StopButtonEvent event = new StopButtonEvent(this, b);
-                synchronized (stopButtonListeners) {
-                    stopButtonListeners.forEach(l -> l.stopButtonPressed(event));
-                }
-                log.info("Stop button depressed {}", String.format("0x%02X", b));
-                stopDepressed = true;
-            }
-        } else {
-            if (stopDepressed) {
-                StopButtonEvent event = new StopButtonEvent(this, b);
-                synchronized (stopButtonListeners) {
-                    stopButtonListeners.forEach(l -> l.stopButtonReleased(event));
-                }
-                log.info("Stop button released {}", String.format("0x%02X", b));
-                stopDepressed = false;
-            }
+        if (processStopButton != null) {
+            processStopButton.accept(b);
         }
     }
 
@@ -145,5 +114,20 @@ class InputManager implements MutatesInputListeners {
                 sensorListeners.get(input).forEach(l -> l.sensorEventReceived(event));
             }
         }
+    }
+
+    void setStopButtonCallback(ByteConsumer processStopButton) {
+        this.processStopButton = processStopButton;
+    }
+
+    @FunctionalInterface
+    public interface ByteConsumer {
+
+        /**
+         * Performs this operation on the given argument.
+         *
+         * @param value the input argument
+         */
+        void accept(byte value);
     }
 }
