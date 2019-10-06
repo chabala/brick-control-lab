@@ -29,21 +29,19 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-
 /**
  * Object to represent interacting with the LEGO® control lab interface.
  */
 class ControlLabImpl implements ControlLab {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(ControlLab.class);
     private final SerialPortFactory portFactory;
     private SerialPort serialPort;
-    private KeepAliveMonitor keepAliveMonitor;
     private final InputManager inputManager;
     private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
     private final Map<OutputId, Output> outputMap;
     private final StopButton stopButton;
     private final Map<InputId, Input> inputMap;
+    private SerialPortWriter serialPortWriter;
 
     /**
      * Default constructor using jSSC serial implementation.
@@ -75,62 +73,38 @@ class ControlLabImpl implements ControlLab {
         SerialPortEventListener serialListener = listenerFactory.apply(serialPort, inputManager);
         serialPort.addEventListener(serialListener);
 
-        sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
+        serialPortWriter = new SerialPortWriter(serialPort, log);
+        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
         LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(1));
         if (!serialListener.isHandshakeSeen()) {
             close();
             throw new IOException("No response to handshake");
         }
-        keepAliveMonitor = new KeepAliveMonitor(serialPort);
-    }
-
-    private void sendCommand(byte[] bytes) throws IOException {
-        if (serialPort == null) {
-            throw new IOException("Not connected to control lab");
-        }
-        if (keepAliveMonitor != null) {
-            keepAliveMonitor.reset();
-        }
-        if (log.isInfoEnabled()) {
-            if (bytes.length > 10) {
-                log.info("TX -> {}", new String(bytes, ISO_8859_1));
-            } else {
-                StringBuilder sb = new StringBuilder();
-                for (byte b : bytes) {
-                    sb.append(String.format("0x%02X ", b));
-                }
-                log.info("TX -> {}", sb);
-            }
-        }
-        serialPort.write(bytes);
-    }
-
-    private void sendCommand(byte b1, byte b2) throws IOException {
-        sendCommand(new byte[]{b1, b2});
+        serialPortWriter.startKeepAlives();
     }
 
     /** {@inheritDoc} */
     @Override
     public void turnOutputOff(Set<OutputId> outputs) throws IOException {
-        sendCommand(Protocol.OUTPUT_OFF, OutputId.encodeSetToByte(outputs));
+        serialPortWriter.sendCommand(Protocol.OUTPUT_OFF, OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
     public void turnOutputOn(Set<OutputId> outputs) throws IOException {
-        sendCommand(Protocol.OUTPUT_ON, OutputId.encodeSetToByte(outputs));
+        serialPortWriter.sendCommand(Protocol.OUTPUT_ON, OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
     public void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException {
-        sendCommand(direction.getCode(), OutputId.encodeSetToByte(outputs));
+        serialPortWriter.sendCommand(direction.getCode(), OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
     public void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException {
-        sendCommand(powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
+        serialPortWriter.sendCommand(powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
@@ -160,16 +134,14 @@ class ControlLabImpl implements ControlLab {
     /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
-        if (keepAliveMonitor != null) {
-            keepAliveMonitor.close();
-            keepAliveMonitor = null;
-        }
         if (serialPort != null) {
-            if (serialPort.isOpen()) {
-                serialPort.write(Protocol.DISCONNECT);
-            }
+            serialPortWriter.sendCommand(Protocol.DISCONNECT);
             serialPort.close();
             serialPort = null;
+        }
+        if (serialPortWriter != null) {
+            serialPortWriter.close();
+            serialPortWriter = null;
         }
     }
 }

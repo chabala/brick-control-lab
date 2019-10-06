@@ -85,6 +85,7 @@ public class ControlLabTest {
         AtomicBoolean handshakeSeen = new AtomicBoolean(false);
         when(portFactory.getSerialPort(portName)).thenReturn(serialPort);
         when(serialPort.getPortName()).thenReturn(portName);
+        when(serialPort.isOpen()).thenReturn(true);
         when(serialPort.write(Protocol.HANDSHAKE_CHALLENGE.getBytes())).thenAnswer((Answer<Boolean>) invocation -> {
             handshakeSeen.set(true);
             return true;

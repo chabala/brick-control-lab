@@ -31,7 +31,7 @@ import java.util.concurrent.*;
  */
 class KeepAliveMonitor implements Closeable {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final SerialPort serialPort;
+    private final SerialPortWriter serialPortWriter;
     private final ScheduledExecutorService executor;
     private final long keepAlivePeriodMs;
     private static final byte KEEP_ALIVE_COMMAND = 0x02;
@@ -40,22 +40,22 @@ class KeepAliveMonitor implements Closeable {
     private ScheduledFuture<?> task;
 
     /**
-     * Creates a keep alive monitor for the specified serial port. As soon
-     * as it's constructed, will send a keep alive message to the serial
-     * port with a frequency just under two seconds, as long as the port
+     * Creates a keep alive monitor for the serial port managed by the specified
+     * writer. As soon as it's constructed, will send a keep alive message to the
+     * serial port with a frequency just under two seconds, as long as the port
      * is open.
-     * @param serialPort the port to receive keep alive messages
+     * @param serialPortWriter the port writer to receive keep alive messages
      */
-    KeepAliveMonitor(SerialPort serialPort) {
-        this(serialPort, Duration.ofMillis(KEEP_ALIVE_PERIOD_MS));
+    KeepAliveMonitor(SerialPortWriter serialPortWriter) {
+        this(serialPortWriter, Duration.ofMillis(KEEP_ALIVE_PERIOD_MS));
     }
 
-    KeepAliveMonitor(SerialPort serialPort, Duration keepAlivePeriod) {
-        this.serialPort = serialPort;
+    KeepAliveMonitor(SerialPortWriter serialPortWriter, Duration keepAlivePeriod) {
+        this.serialPortWriter = serialPortWriter;
         this.keepAlivePeriodMs = keepAlivePeriod.toMillis();
         executor = Executors.newSingleThreadScheduledExecutor(
                 new NamedDaemonThreadFactory(
-                        "KeepAlive " + serialPort.getPortName()));
+                        "KeepAlive " + serialPortWriter.getPortName()));
         scheduleTask();
     }
 
@@ -70,18 +70,13 @@ class KeepAliveMonitor implements Closeable {
     }
 
     private void scheduleTask() {
-        task = executor.scheduleAtFixedRate(() -> {
-            if (serialPort.isOpen()) {
-                sendCommand(KEEP_ALIVE_COMMAND);
-            }
-        }, keepAlivePeriodMs, keepAlivePeriodMs, TimeUnit.MILLISECONDS);
+        task = executor.scheduleAtFixedRate(() -> sendCommand(KEEP_ALIVE_COMMAND),
+                keepAlivePeriodMs, keepAlivePeriodMs, TimeUnit.MILLISECONDS);
     }
 
-    @SuppressWarnings("squid:S2629")
     private void sendCommand(byte b) {
         try {
-            log.info("TX -> {}", String.format("0x%02X", b));
-            serialPort.write(b);
+            serialPortWriter.sendCommand(b, log);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }

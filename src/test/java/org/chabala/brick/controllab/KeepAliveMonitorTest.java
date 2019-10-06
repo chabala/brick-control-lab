@@ -41,38 +41,33 @@ public class KeepAliveMonitorTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
-    private SerialPort serialPort;
+    private SerialPortWriter serialPortWriter;
 
     @Test
     public void testMonitorSendsKeepAlives() throws Exception {
-        when(serialPort.getPortName()).thenReturn("COM#");
-        when(serialPort.isOpen()).thenReturn(true);
-        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
-            verify(serialPort, after(keepAliveDurationMs).times(1)).isOpen();
-            verify(serialPort, times(1)).write(anyByte());
-            verify(serialPort, after(keepAliveDurationMs).times(2)).isOpen();
-            verify(serialPort, times(2)).write(anyByte());
+        when(serialPortWriter.getPortName()).thenReturn("COM#");
+        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPortWriter, nineTenthsDuration)) {
+            verify(serialPortWriter, after(keepAliveDurationMs).times(1)).sendCommand(anyByte(), any());
+            verify(serialPortWriter, after(keepAliveDurationMs).times(2)).sendCommand(anyByte(), any());
         }
     }
 
     @Test
     public void testResetPreventsKeepAlives() throws Exception {
         long threeQuartersDurationMs = keepAliveDuration.multipliedBy(3).dividedBy(4).toMillis();
-        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
-            verify(serialPort, after(threeQuartersDurationMs).never()).isOpen();
-            verify(serialPort, never()).write(anyByte());
+        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPortWriter, nineTenthsDuration)) {
+            verify(serialPortWriter, after(threeQuartersDurationMs).never()).sendCommand(anyByte(), any());
             monitor.reset();
-            verify(serialPort, after(threeQuartersDurationMs).never()).isOpen();
-            verify(serialPort, never()).write(anyByte());
-            verify(serialPort, only()).getPortName();
+            verify(serialPortWriter, after(threeQuartersDurationMs).never()).sendCommand(anyByte(), any());
+            verify(serialPortWriter, only()).getPortName();
         }
     }
 
     @Test
     public void testClosePreventsKeepAlives() throws Exception {
-        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPort, nineTenthsDuration)) {
+        try (KeepAliveMonitor monitor = new KeepAliveMonitor(serialPortWriter, nineTenthsDuration)) {
             monitor.close();
-            verify(serialPort, after(keepAliveDuration.multipliedBy(2).toMillis()).only()).getPortName();
+            verify(serialPortWriter, after(keepAliveDuration.multipliedBy(2).toMillis()).only()).getPortName();
         }
     }
 }
