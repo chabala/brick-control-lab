@@ -99,6 +99,13 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
     void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException;
 
     /**
+     * Return a handle for the output specified on this control lab instance.
+     * @param outputId identifier of the desired output port
+     * @return handle for the output specific to this control lab instance
+     */
+    Output getOutput(OutputId outputId);
+
+    /**
      * Disconnects from the control lab and releases any resources.
      * @throws IOException if any number of possible communication issues occurs
      */

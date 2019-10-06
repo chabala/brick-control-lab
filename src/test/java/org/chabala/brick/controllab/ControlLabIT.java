@@ -102,6 +102,23 @@ public class ControlLabIT {
         }
     }
 
+    @Test
+    public void testFluentOutputControl() throws Exception {
+        try (ControlLab controlLab = ControlLab.newControlLab()) {
+            try {
+                controlLab.open(choosePort(controlLab));
+            } catch (IOException e) {
+                assumeNoException(e);
+            }
+            Output output = controlLab.getOutput(OutputId.A);
+            output.setDirection(Direction.LEFT).setPowerLevel(PowerLevel.P2).turnOn();
+            Thread.sleep(ONE_SECOND * 5);
+
+            output.reverseDirection().setPowerLevel(PowerLevel.P8);
+            Thread.sleep(ONE_SECOND * 5);
+        }
+    }
+
     @Ignore("Requires interaction with stop button to complete, only run manually")
     @Test
     public void testControlLabInputs() throws Exception {

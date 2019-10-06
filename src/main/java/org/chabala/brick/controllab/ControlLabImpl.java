@@ -23,11 +23,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
@@ -41,6 +42,7 @@ class ControlLabImpl implements ControlLab {
     private KeepAliveMonitor keepAliveMonitor;
     private final InputManager inputManager;
     private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
+    private final Map<OutputId, Output> outputMap;
 
     /**
      * Default constructor using jSSC serial implementation.
@@ -55,6 +57,9 @@ class ControlLabImpl implements ControlLab {
         this.portFactory = portFactory;
         this.inputManager = inputManager;
         this.listenerFactory = listenerFactory;
+        outputMap = Collections.unmodifiableMap(new EnumMap<>(
+                Arrays.stream(OutputId.values()).collect(
+                        Collectors.toMap(Function.identity(), id -> new Output(this, id)))));
     }
 
     @Override
@@ -121,6 +126,12 @@ class ControlLabImpl implements ControlLab {
     @Override
     public void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException {
         sendCommand(powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Output getOutput(OutputId outputId) {
+        return outputMap.get(outputId);
     }
 
     /** {@inheritDoc} */
