@@ -18,7 +18,6 @@
  */
 package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.sensor.SensorListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +43,7 @@ class ControlLabImpl implements ControlLab {
     private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
     private final Map<OutputId, Output> outputMap;
     private final StopButton stopButton;
+    private final Map<InputId, Input> inputMap;
 
     /**
      * Default constructor using jSSC serial implementation.
@@ -62,6 +62,9 @@ class ControlLabImpl implements ControlLab {
                 Arrays.stream(OutputId.values()).collect(
                         Collectors.toMap(Function.identity(), id -> new Output(this, id)))));
         stopButton = new StopButton(inputManager);
+        inputMap = Collections.unmodifiableMap(new EnumMap<>(
+                Arrays.stream(InputId.values()).collect(
+                        Collectors.toMap(Function.identity(), id -> new Input(inputManager, id)))));
     }
 
     @Override
@@ -144,20 +147,14 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
+    public Input getInput(InputId inputId) {
+        return inputMap.get(inputId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public List<String> getAvailablePorts() {
         return portFactory.getAvailablePorts();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addSensorListener(InputId input, SensorListener listener) {
-        inputManager.addSensorListener(input, listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeSensorListener(InputId input, SensorListener listener) {
-        inputManager.removeSensorListener(input, listener);
     }
 
     /** {@inheritDoc} */

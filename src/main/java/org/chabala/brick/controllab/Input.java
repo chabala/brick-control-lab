@@ -22,24 +22,33 @@ import org.chabala.brick.controllab.sensor.SensorEvent;
 import org.chabala.brick.controllab.sensor.SensorListener;
 
 /**
- * Implementors of this interface can add or remove listeners for input events.
+ * Handle for an input port on a specific control lab instance. Obtain via {@link ControlLab#getInput(InputId)}.
  */
-public interface MutatesInputListeners {
+public class Input {
+    private final InputManager inputManager;
+    private final InputId inputId;
+
+    Input(InputManager inputManager, InputId inputId) {
+        this.inputManager = inputManager;
+        this.inputId = inputId;
+    }
 
     /**
      * Attach a listener for {@link SensorEvent}s.
      *
      * <p>Multiple listeners are allowed. A listener instance will only be registered
      * once even if it is added multiple times.
-     * @param input    input to add the listener to
      * @param listener listener to add
      */
-    void addSensorListener(InputId input, SensorListener listener);
+    public void addListener(SensorListener listener) {
+        inputManager.addSensorListener(inputId, listener);
+    }
 
     /**
      * Remove a listener for {@link SensorEvent}s.
-     * @param input    input to remove the listener from
      * @param listener listener to remove
      */
-    void removeSensorListener(InputId input, SensorListener listener);
+    public void removeListener(SensorListener listener) {
+        inputManager.removeSensorListener(inputId, listener);
+    }
 }

@@ -146,14 +146,17 @@ public class ControlLabIT {
                     log.info("{} value changed: {}", input, newValue);
                 }
             };
-            passiveInputs.forEach(i -> controlLab.addSensorListener(i, touchSensorListener));
+            for (InputId passiveInput : passiveInputs) {
+                controlLab.getInput(passiveInput).addListener(touchSensorListener);
+            }
             LightSensorListener lightSensorListener = sensorEvent -> {
                 InputId input = sensorEvent.getInput();
                 log.info("{} value changed: {}", input, sensorEvent.getValue());
             };
             Arrays.stream(InputId.values())
                   .filter(i -> i.getInputType().equals(InputType.ACTIVE))
-                  .forEach(i -> controlLab.addSensorListener(i, lightSensorListener));
+                  .map(controlLab::getInput)
+                  .forEach(i -> i.addListener(lightSensorListener));
 
             await().forever().until(stop::get);
         }
@@ -173,7 +176,8 @@ public class ControlLabIT {
             SensorListener sensorListener = sensorEvent ->
                     log.info("{} value changed: {}", sensorEvent.getInput(), sensorEvent.getValue());
             Arrays.stream(InputId.values())
-                  .forEach(i -> controlLab.addSensorListener(i, sensorListener));
+                  .map(controlLab::getInput)
+                  .forEach(i -> i.addListener(sensorListener));
 
             await().forever().until(stop::get);
         }
@@ -239,7 +243,7 @@ public class ControlLabIT {
                 assumeNoException(e);
             }
             Thread.sleep(ONE_SECOND);
-            controlLab.addSensorListener(InputId.I1, (TouchSensorListener) sensorEvent -> stop.set(true));
+            controlLab.getInput(InputId.I1).addListener((TouchSensorListener) sensorEvent -> stop.set(true));
             Set<OutputId> outputSet = OutputId.ALL;
             while (!stop.get()) {
                 controlLab.setOutputPowerLevel(PowerLevel.P8, outputSet);

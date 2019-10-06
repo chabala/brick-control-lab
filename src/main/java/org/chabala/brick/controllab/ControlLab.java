@@ -41,7 +41,7 @@ import java.util.Set;
  *   }
  *       }</pre>
  */
-public interface ControlLab extends Closeable, MutatesInputListeners {
+public interface ControlLab extends Closeable {
 
     /**
      * Returns a new ControlLab instance.
@@ -110,6 +110,13 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
      * @return handle for the stop button on this control lab instance
      */
     StopButton getStopButton();
+
+    /**
+     * Return a handle for the input specified on this control lab instance.
+     * @param inputId identifier of the desired input port
+     * @return handle for the input specific to this control lab instance
+     */
+    Input getInput(InputId inputId);
 
     /**
      * Disconnects from the control lab and releases any resources.

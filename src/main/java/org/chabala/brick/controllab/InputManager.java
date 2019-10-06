@@ -31,7 +31,7 @@ import java.util.*;
  * Manages registration of input event listeners, and parsing input
  * data into events for those listeners.
  */
-class InputManager implements MutatesInputListeners {
+class InputManager {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<InputId, byte[]> sensorData;
@@ -50,15 +50,24 @@ class InputManager implements MutatesInputListeners {
         });
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void addSensorListener(InputId input, SensorListener listener) {
+    /**
+     * Attach a listener for {@link SensorEvent}s.
+     *
+     * <p>Multiple listeners are allowed. A listener instance will only be registered
+     * once even if it is added multiple times.
+     * @param input    input to add the listener to
+     * @param listener listener to add
+     */
+    void addSensorListener(InputId input, SensorListener listener) {
         sensorListeners.get(input).add(listener);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void removeSensorListener(InputId input, SensorListener listener) {
+    /**
+     * Remove a listener for {@link SensorEvent}s.
+     * @param input    input to remove the listener from
+     * @param listener listener to remove
+     */
+    void removeSensorListener(InputId input, SensorListener listener) {
         sensorListeners.get(input).remove(listener);
     }
 
