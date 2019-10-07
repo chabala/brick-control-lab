@@ -115,6 +115,12 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
+    public Output getOutputGroup(Set<OutputId> outputs) {
+        return new Output(this, outputs);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public StopButton getStopButton() {
         return stopButton;
     }

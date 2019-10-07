@@ -23,7 +23,8 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Handle for an output port on a specific control lab instance. Obtain via {@link ControlLab#getOutput(OutputId)}.
+ * Handle for an output port (or group of ports) on a specific control lab instance.
+ * Obtain via {@link ControlLab#getOutput(OutputId)} or {@link ControlLab#getOutputGroup(Set)}.
  */
 public class Output {
 
@@ -31,8 +32,12 @@ public class Output {
     private final Set<OutputId> outputIdSet;
 
     Output(ControlLab controlLab, OutputId outputId) {
+        this(controlLab, EnumSet.of(outputId));
+    }
+
+    Output(ControlLab controlLab, Set<OutputId> outputIdSet) {
         this.controlLab = controlLab;
-        outputIdSet = EnumSet.of(outputId);
+        this.outputIdSet = outputIdSet;
     }
 
     public Output turnOff() throws IOException {

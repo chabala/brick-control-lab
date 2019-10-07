@@ -79,14 +79,14 @@ public class ControlLabIT {
             controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(OutputId.E, OutputId.F));
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.REVERSE, EnumSet.of(OutputId.E, OutputId.F, OutputId.G, OutputId.H));
+            controlLab.getOutputGroup(EnumSet.range(OutputId.E, OutputId.H)).reverseDirection();
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.RIGHT, EnumSet.of(OutputId.H));
+            controlLab.getOutput(OutputId.H).setDirection(Direction.RIGHT);
             Thread.sleep(ONE_SECOND);
 
-            for (OutputId o : Arrays.asList(OutputId.H, OutputId.G, OutputId.F, OutputId.E)) {
-                controlLab.turnOutputOff(EnumSet.of(o));
+            for (OutputId o : descendingRange(OutputId.H, OutputId.E)) {
+                controlLab.getOutput(o).turnOff();
                 Thread.sleep(ONE_SECOND);
             }
 
@@ -237,32 +237,30 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
             controlLab.getInput(InputId.I1).addListener((TouchSensorListener) sensorEvent -> stop.set(true));
-            Set<OutputId> outputSet = OutputId.ALL;
+            Output outputs = controlLab.getOutputGroup(OutputId.ALL);
             while (!stop.get()) {
-                controlLab.setOutputPowerLevel(PowerLevel.P8, outputSet);
-                controlLab.setOutputDirection(Direction.RIGHT, outputSet);
-                controlLab.turnOutputOn(outputSet);
+                outputs.setPowerLevel(PowerLevel.P8).setDirection(Direction.RIGHT).turnOn();
                 Thread.sleep(ONE_SECOND);
                 if (stop.get()) {
                     return;
                 }
 
-                for (PowerLevel p : descendingRange(PowerLevel.P1, PowerLevel.P7)) {
-                    controlLab.setOutputPowerLevel(p, outputSet);
+                for (PowerLevel p : descendingRange(PowerLevel.P7, PowerLevel.P1)) {
+                    outputs.setPowerLevel(p);
                     Thread.sleep(ONE_SECOND);
                     if (stop.get()) {
                         return;
                     }
                 }
 
-                controlLab.setOutputDirection(Direction.REVERSE, outputSet);
+                outputs.reverseDirection();
                 Thread.sleep(ONE_SECOND);
                 if (stop.get()) {
                     return;
                 }
 
                 for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
-                    controlLab.setOutputPowerLevel(p, outputSet);
+                    outputs.setPowerLevel(p);
                     Thread.sleep(ONE_SECOND);
                     if (stop.get()) {
                         return;

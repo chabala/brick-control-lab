@@ -106,6 +106,13 @@ public interface ControlLab extends Closeable {
     Output getOutput(OutputId outputId);
 
     /**
+     * Return a handle for multiple outputs on this control lab instance.
+     * @param outputs identifiers of the desired output ports
+     * @return handle for the outputs specific to this control lab instance
+     */
+    Output getOutputGroup(Set<OutputId> outputs);
+
+    /**
      * Return a handle for the stop button on this control lab instance.
      * @return handle for the stop button on this control lab instance
      */
