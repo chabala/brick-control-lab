@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.chabala.brick.controllab.Protocol.STOP_RELEASED;
+
 /**
  * Handle for stop button on a specific control lab instance. Obtain via {@link ControlLab#getStopButton()}.
  */
@@ -67,7 +69,7 @@ public class StopButton {
 
     @SuppressWarnings("squid:S2629")
     private void processStopButton(byte b) {
-        if (0x00 != b) {
+        if (STOP_RELEASED != b) {
             if (!stopDepressed) {
                 StopButtonEvent event = new StopButtonEvent(this, b);
                 log.info("Stop button depressed {}", String.format("0x%02X", b));

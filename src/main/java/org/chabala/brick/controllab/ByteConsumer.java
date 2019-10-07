@@ -18,37 +18,16 @@
  */
 package org.chabala.brick.controllab;
 
-import java.util.EventObject;
-
 /**
- * The event triggered by interacting with the red stop button on the control
- * lab.
+ * Like {@link java.util.function.IntConsumer}, but for {@link Byte}s.
  */
-public class StopButtonEvent extends EventObject {
-
-    private final byte rawValue;
+@FunctionalInterface
+public interface ByteConsumer {
 
     /**
-     * Constructs a StopButtonEvent.
+     * Performs this operation on the given argument.
      *
-     * @param source The object on which the Event initially occurred.
-     * @param rawValue The raw data that signaled this event.
-     * @throws IllegalArgumentException if source is null.
+     * @param value the input argument
      */
-    public StopButtonEvent(Object source, byte rawValue) {
-        super(source);
-        this.rawValue = rawValue;
-    }
-
-    public byte getRawValue() {
-        return rawValue;
-    }
-
-    @Override
-    public String toString() {
-        return "StopButtonEvent{" +
-                "source=" + source +
-                ", rawValue=" + String.format("0x%02X ", rawValue) +
-                '}';
-    }
+    void accept(byte value);
 }

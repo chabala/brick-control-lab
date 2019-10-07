@@ -129,15 +129,4 @@ class InputManager {
     void setStopButtonCallback(ByteConsumer processStopButton) {
         this.processStopButton = processStopButton;
     }
-
-    @FunctionalInterface
-    public interface ByteConsumer {
-
-        /**
-         * Performs this operation on the given argument.
-         *
-         * @param value the input argument
-         */
-        void accept(byte value);
-    }
 }
