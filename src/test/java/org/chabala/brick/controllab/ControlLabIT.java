@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 
 import static javax.management.timer.Timer.ONE_SECOND;
 import static org.awaitility.Awaitility.await;
+import static org.chabala.brick.controllab.PortChooser.choosePort;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNoException;
-import static org.junit.Assume.assumeThat;
 
 /**
  * Integration tests for the {@link ControlLab}.
@@ -46,13 +46,6 @@ import static org.junit.Assume.assumeThat;
 @SuppressWarnings({"squid:S2699","squid:S2925"})
 public class ControlLabIT {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private String choosePort(ControlLab controlLab) {
-        List<String> availablePorts = controlLab.getAvailablePorts();
-        assumeThat("a serial port should be available", availablePorts, is(not(empty())));
-        log.debug("Available ports: {}", String.join(", ", availablePorts));
-        return availablePorts.get(0);
-    }
 
     @Test
     public void testTurnOutputOff() throws Exception {
