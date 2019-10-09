@@ -23,8 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -75,7 +73,6 @@ class ControlLabImpl implements ControlLab {
 
         serialPortWriter = new SerialPortWriter(serialPort, log);
         serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
-        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(1));
         if (!serialListener.isHandshakeSeen()) {
             close();
             throw new IOException("No response to handshake");
@@ -116,6 +113,9 @@ class ControlLabImpl implements ControlLab {
     /** {@inheritDoc} */
     @Override
     public Output getOutputGroup(Set<OutputId> outputs) {
+        if (outputs.size() == 1) {
+            return getOutput(outputs.iterator().next());
+        }
         return new Output(this, outputs);
     }
 
