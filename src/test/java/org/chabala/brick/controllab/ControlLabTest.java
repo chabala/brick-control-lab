@@ -29,11 +29,13 @@ import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -57,12 +59,15 @@ public class ControlLabTest {
     private SerialPort serialPort;
 
     @Mock
+    private jssc.SerialPort innerSerialPort;
+
+    @Mock
     private SerialPortEventListener listener;
 
     private ControlLab controlLab;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         controlLab = new ControlLabImpl(portFactory, inputManager, (sp, inputManager) -> listener);
     }
 
@@ -94,5 +99,58 @@ public class ControlLabTest {
         controlLab.open(portName);
         verify(serialPort, times(1)).openPort();
         verify(serialPort, times(1)).addEventListener(listener);
+    }
+
+    @Test
+    public void testGetOutput() {
+        OutputId outputId = OutputId.A;
+        Output output = controlLab.getOutput(outputId);
+        assertThat(output.getOutputIdSet(), contains(outputId));
+    }
+
+    @Test
+    public void testGetOutputGroupDelegatesInTheSingleCase() {
+        OutputId outputId = OutputId.B;
+        Output output = controlLab.getOutput(outputId);
+        assumeThat(output.getOutputIdSet(), contains(outputId));
+        Output outputGroup = controlLab.getOutputGroup(EnumSet.of(outputId));
+        assertThat(outputGroup.getOutputIdSet(), contains(outputId));
+        assertThat(outputGroup, is(output));
+    }
+
+    @Test
+    public void testGetOutputGroup() {
+        Output outputGroup = controlLab.getOutputGroup(EnumSet.of(OutputId.C, OutputId.F));
+        assertThat(outputGroup.getOutputIdSet(), contains(OutputId.C, OutputId.F));
+    }
+
+    @Test
+    public void testGetConnectedPortNameWhenNotConnected() {
+        assertThat(controlLab.getConnectedPortName(), is(""));
+    }
+
+    @Test
+    public void testGetConnectedPortNameWhenConnected() throws Exception {
+        final String portName = "two";
+        when(portFactory.getSerialPort(portName)).thenReturn(serialPort);
+        when(serialPort.getPortName()).thenReturn(portName);
+        when(listener.isHandshakeSeen()).thenAnswer(i -> true);
+        controlLab.open(portName);
+        assertThat(controlLab.getConnectedPortName(), is(portName));
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(controlLab + "", containsString("Port=null"));
+    }
+
+    @Test
+    public void testToStringWhenConnected() throws Exception {
+        final String portName = "cool_port_1";
+        when(portFactory.getSerialPort(portName)).thenReturn(new JsscSerialPort(innerSerialPort));
+        when(innerSerialPort.getPortName()).thenReturn(portName);
+        when(listener.isHandshakeSeen()).thenAnswer(i -> true);
+        controlLab.open(portName);
+        assertThat(controlLab + "", containsString(portName));
     }
 }

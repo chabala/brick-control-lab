@@ -22,7 +22,8 @@ import org.chabala.brick.controllab.sensor.SensorEvent;
 import org.chabala.brick.controllab.sensor.SensorListener;
 
 /**
- * Handle for an input port on a specific control lab instance. Obtain via {@link ControlLab#getInput(InputId)}.
+ * Handle for an input port on a specific control lab instance. Obtain
+ * via {@link ControlLab#getInput(InputId)}.
  */
 public class Input {
     private final InputManager inputManager;
@@ -50,5 +51,13 @@ public class Input {
      */
     public void removeListener(SensorListener listener) {
         inputManager.removeSensorListener(inputId, listener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Input{" +
+                "inputId=" + inputId +
+                '}';
     }
 }

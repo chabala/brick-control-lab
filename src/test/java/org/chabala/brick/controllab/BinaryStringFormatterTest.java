@@ -31,10 +31,10 @@ public class BinaryStringFormatterTest {
 
     @Test
     public void testPrintByteInBinary() throws Exception {
-        assertThat(printByteInBinary(0b00000000), is("00000000"));
-        assertThat(printByteInBinary(0b00000001), is("00000001"));
-        assertThat(printByteInBinary(0b10000000), is("10000000"));
-        assertThat(printByteInBinary(0b10000001), is("10000001"));
-        assertThat(printByteInBinary(0b10110111), is("10110111"));
+        assertThat(printByteInBinary((byte) 0b00000000), is("00000000"));
+        assertThat(printByteInBinary((byte) 0b00000001), is("00000001"));
+        assertThat(printByteInBinary((byte) 0b10000000), is("10000000"));
+        assertThat(printByteInBinary((byte) 0b10000001), is("10000001"));
+        assertThat(printByteInBinary((byte) 0b10110111), is("10110111"));
     }
 }

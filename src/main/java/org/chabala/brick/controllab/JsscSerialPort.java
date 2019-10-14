@@ -139,4 +139,13 @@ class JsscSerialPort implements SerialPort {
             throw new IOException(e);
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "JsscSerialPort{" +
+                "portName='" + getPortName() + '\'' +
+                ", open=" + isOpen() +
+                '}';
+    }
 }

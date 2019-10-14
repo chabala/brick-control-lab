@@ -27,6 +27,7 @@ import static org.chabala.brick.controllab.BinaryStringFormatter.printInBinary;
 
 /**
  * The event triggered by receiving a {@link SensorValue} from an {@link InputId}.
+ * @param <T> specific {@link SensorValue} subclass contained in this event
  */
 public class SensorEvent<T extends SensorValue> extends EventObject {
 

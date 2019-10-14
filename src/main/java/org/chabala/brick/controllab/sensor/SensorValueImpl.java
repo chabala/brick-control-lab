@@ -45,14 +45,19 @@ class SensorValueImpl implements SensorValue {
         return statusCode;
     }
 
+    /** Analog value is 10 bits, so we steal 2 bits from the low byte. */
+    private static final int HIGH_SHIFT = 2;
+    private static final int LOW_SHIFT = Byte.SIZE - HIGH_SHIFT;
+    private static final int STATUS_MASK = (1 << LOW_SHIFT) - 1;
+
     private int extractValue(byte b1, byte b2) {
-        int high = (b1 & 0xFF) << 2; //000000xxxxxxxx00
-        int low = (b2 & 0xFF) >> 6;  //00000000000000xx
+        int high = Byte.toUnsignedInt(b1) << HIGH_SHIFT; //000000xxxxxxxx00
+        int low = Byte.toUnsignedInt(b2) >>> LOW_SHIFT;  //00000000000000xx
         return high + low;
     }
 
     private int extractStatus(byte b2) {
-        return b2 & 0x3F;
+        return b2 & STATUS_MASK;
     }
 
     @Override

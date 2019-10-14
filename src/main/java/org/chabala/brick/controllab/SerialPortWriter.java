@@ -30,6 +30,12 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
  * and ownership of the keep alive monitor for the port.
  */
 class SerialPortWriter implements Closeable {
+    /**
+     * When sending commands longer than this threshold, log them as strings
+     * instead of hex values. In practice, this is only needed for the initial
+     * handshake, which makes more sense to show as a string.
+     */
+    private static final int STRING_LOGGING_THRESHOLD = 10;
     private final Logger log;
     private final SerialPort serialPort;
     private KeepAliveMonitor keepAliveMonitor;
@@ -56,7 +62,7 @@ class SerialPortWriter implements Closeable {
         }
         if (serialPort.isOpen()) {
             if (log.isInfoEnabled()) {
-                if (bytes.length > 10) {
+                if (bytes.length > STRING_LOGGING_THRESHOLD) {
                     log.info("TX -> {}", new String(bytes, ISO_8859_1));
                 } else {
                     StringBuilder sb = new StringBuilder();

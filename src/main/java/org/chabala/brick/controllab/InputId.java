@@ -43,6 +43,11 @@ public enum InputId {
         this.inputType = inputType;
     }
 
+    /**
+     * Returns an {@link InputType} to indicate if this {@link InputId} is
+     * active or passive.
+     * @return the input type for this input ID
+     */
     public InputType getInputType() {
         return inputType;
     }

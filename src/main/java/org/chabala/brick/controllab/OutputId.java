@@ -56,17 +56,19 @@ public enum OutputId {
         return r;
     }
 
+    private static final OutputId[] ENUM_VALUES = values();
+
     /**
      * Decodes a byte into a {@link Set} of {@link OutputId}s.
      * @param b byte where each bit corresponds to the ordinal of an Output
      * @return a Set containing the desired Outputs
      */
     public static Set<OutputId> decodeByteToSet(byte b) {
-        OutputId[] enums = OutputId.class.getEnumConstants();
         Set<OutputId> enumSet = EnumSet.noneOf(OutputId.class);
+        int byteAsInt = Byte.toUnsignedInt(b);
         for (int bit = 0; bit < Byte.SIZE; bit++) {
-            if ((b & 0xFF & 1 << bit) > 0) {
-                enumSet.add(enums[bit]);
+            if ((byteAsInt & 1 << bit) > 0) {
+                enumSet.add(ENUM_VALUES[bit]);
             }
         }
         return enumSet;

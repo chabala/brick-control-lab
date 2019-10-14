@@ -67,6 +67,13 @@ public interface ControlLab extends Closeable {
     void open(String portName) throws IOException;
 
     /**
+     * Returns the system specific serial port identifier the control lab is
+     * connected to, or empty string if not connected.
+     * @return system specific serial port identifier or empty string
+     */
+    String getConnectedPortName();
+
+    /**
      * Stops sending power to the specified outputs.
      * @param outputs outputs to stop
      * @throws IOException if any number of possible communication issues occurs

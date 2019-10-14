@@ -139,6 +139,16 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
+    public String getConnectedPortName() {
+        if (serialPort != null) {
+            return serialPort.getPortName();
+        } else {
+            return "";
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void close() throws IOException {
         if (serialPort != null) {
             serialPortWriter.sendCommand(Protocol.DISCONNECT);
@@ -149,5 +159,13 @@ class ControlLabImpl implements ControlLab {
             serialPortWriter.close();
             serialPortWriter = null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ControlLabImpl{" +
+                "serialPort=" + serialPort +
+                "}@" +
+                System.identityHashCode(this);
     }
 }
