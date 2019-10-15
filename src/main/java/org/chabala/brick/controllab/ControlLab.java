@@ -18,8 +18,11 @@
  */
 package org.chabala.brick.controllab;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +51,8 @@ public interface ControlLab extends Closeable {
      * @return a new ControlLab instance
      */
     static ControlLab newControlLab() {
-        return new ControlLabImpl();
+        return new ControlLabImpl(
+                LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()));
     }
 
     /**

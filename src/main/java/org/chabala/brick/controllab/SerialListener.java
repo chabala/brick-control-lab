@@ -50,12 +50,14 @@ class SerialListener implements SerialPortEventListener {
 
     @Override
     public boolean isHandshakeSeen() {
+        boolean returnedEarly = false;
         try {
-            handshakeLatch.await(1, TimeUnit.SECONDS);
+            returnedEarly = handshakeLatch.await(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
+            Thread.currentThread().interrupt();
         }
-        return handshakeSeen;
+        return handshakeSeen || returnedEarly;
     }
 
     private void setHandshakeSeen() {

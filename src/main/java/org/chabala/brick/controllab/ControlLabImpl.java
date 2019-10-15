@@ -19,7 +19,6 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  * Object to represent interacting with the LEGO® control lab interface.
  */
 class ControlLabImpl implements ControlLab {
-    private final Logger log = LoggerFactory.getLogger(ControlLab.class);
+    private final Logger log;
     private final SerialPortFactory portFactory;
     private SerialPort serialPort;
     private final InputManager inputManager;
@@ -44,13 +43,15 @@ class ControlLabImpl implements ControlLab {
     /**
      * Default constructor using jSSC serial implementation.
      */
-    ControlLabImpl() {
-        this(new JsscSerialPortFactory(), new InputManager(), SerialListener::new);
+    ControlLabImpl(Logger log) {
+        this(log, new JsscSerialPortFactory(), new InputManager(), SerialListener::new);
     }
 
-    ControlLabImpl(SerialPortFactory portFactory,
+    ControlLabImpl(Logger log,
+                   SerialPortFactory portFactory,
                    InputManager inputManager,
                    BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory) {
+        this.log = log;
         this.portFactory = portFactory;
         this.inputManager = inputManager;
         this.listenerFactory = listenerFactory;
@@ -150,14 +151,16 @@ class ControlLabImpl implements ControlLab {
     /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
-        if (serialPort != null) {
-            serialPortWriter.sendCommand(Protocol.DISCONNECT);
-            serialPort.close();
-            serialPort = null;
-        }
         if (serialPortWriter != null) {
+            if (serialPort != null) {
+                serialPortWriter.sendCommand(Protocol.DISCONNECT);
+            }
             serialPortWriter.close();
             serialPortWriter = null;
+        }
+        if (serialPort != null) {
+            serialPort.close();
+            serialPort = null;
         }
     }
 

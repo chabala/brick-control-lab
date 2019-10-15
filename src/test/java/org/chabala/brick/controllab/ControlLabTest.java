@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -64,11 +65,14 @@ public class ControlLabTest {
     @Mock
     private SerialPortEventListener listener;
 
+    @Mock
+    private Logger log;
+
     private ControlLab controlLab;
 
     @Before
     public void setUp() {
-        controlLab = new ControlLabImpl(portFactory, inputManager, (sp, inputManager) -> listener);
+        controlLab = new ControlLabImpl(log, portFactory, inputManager, (sp, inputManager) -> listener);
     }
 
     @After
