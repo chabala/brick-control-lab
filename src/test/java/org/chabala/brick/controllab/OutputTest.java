@@ -18,56 +18,93 @@
  */
 package org.chabala.brick.controllab;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.util.EnumSet;
+import java.util.Set;
 
-import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
- * Test the encoding and decoding methods of {@link Output}.
+ * Testing {@link Output}.
  */
 public class OutputTest {
 
-    @Test
-    public void testAllOutputSetEncodesByteWithAllBitsSet() throws Exception {
-        assertThat(Output.encodeSetToByte(Output.ALL), is((byte) 0b11111111));
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Mock
+    private ControlLab controlLab;
+
+    private OutputId outputId;
+    private Set<OutputId> outputIdSet;
+    private Output output;
+
+    private RandomEnum randomEnum = new RandomEnum();
+
+    @Before
+    public void setUp() {
+        outputId = randomEnum.get(OutputId.class);
+        outputIdSet = EnumSet.of(outputId);
+        output = new Output(controlLab, outputId);
+    }
+
+    @After
+    public void tearDown() {
+        output = null;
+        outputIdSet = null;
+        outputId = null;
     }
 
     @Test
-    public void testOutputAEncodesByteWithLowBitSet() throws Exception {
-        assertThat(Output.encodeSetToByte(EnumSet.of(Output.A)), is((byte) 0b00000001));
+    public void testGetOutputIdSet() {
+        Set<OutputId> outputIds = output.getOutputIdSet();
+        assertThat(outputIds, contains(outputId));
+
+        thrown.expect(UnsupportedOperationException.class);
+        outputIds.add(randomEnum.get(OutputId.class));
     }
 
     @Test
-    public void testOutputHEncodesByteWithHighBitSet() throws Exception {
-        assertThat(Output.encodeSetToByte(EnumSet.of(Output.H)), is((byte) 0b10000000));
+    public void testTurnOff() throws Exception {
+        Output newOutput = output.turnOff();
+        assertThat(newOutput, is(output));
+        verify(controlLab, times(1)).turnOutputOff(outputIdSet);
     }
 
     @Test
-    public void testByteWithAllBitsSetDecodesToAllOutputs() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b11111111), is(Output.ALL));
+    public void testTurnOn() throws Exception {
+        Output newOutput = output.turnOn();
+        assertThat(newOutput, is(output));
+        verify(controlLab, times(1)).turnOutputOn(outputIdSet);
     }
 
     @Test
-    public void testByteWithLowBitSetDecodesToOutputA() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b00000001), is(EnumSet.of(Output.A)));
+    public void testReverseDirection() throws Exception {
+        Output newOutput = output.reverseDirection();
+        assertThat(newOutput, is(output));
+        verify(controlLab, times(1)).setOutputDirection(Direction.REVERSE, outputIdSet);
     }
 
     @Test
-    public void testByteWithEvenBitsSetDecodesToOutputsBDFH() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b10101010), is(EnumSet.of(Output.B, Output.D, Output.F, Output.H)));
+    public void testSetPowerLevel() throws Exception {
+        final PowerLevel powerLevel = randomEnum.get(PowerLevel.class);
+        Output newOutput = output.setPowerLevel(powerLevel);
+        assertThat(newOutput, is(output));
+        verify(controlLab, times(1)).setOutputPowerLevel(powerLevel, outputIdSet);
     }
 
     @Test
-    public void testByteWithHighBitSetDecodesToOutputH() throws Exception {
-        assertThat(Output.decodeByteToSet((byte) 0b10000000), is(EnumSet.of(Output.H)));
-    }
-
-    @Test
-    public void testThereAreEightOutputs() throws Exception {
-        assertThat(Output.values(), arrayWithSize(8));
+    public void testToString() {
+        assertThat(output + "", containsString("outputIdSet=[" + outputId.name() + "]"));
     }
 }

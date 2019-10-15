@@ -18,10 +18,10 @@
  */
 package org.chabala.brick.controllab.sensor;
 
-import org.chabala.brick.controllab.Input;
+import org.chabala.brick.controllab.InputId;
 
 /**
- * The values obtained from reading an {@link Input}.
+ * The values obtained from reading an {@link InputId}.
  */
 public interface SensorValue {
 

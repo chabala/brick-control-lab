@@ -39,8 +39,8 @@ public final class BinaryStringFormatter {
      * @param data a single byte of data
      * @return an eight character string of zeros and ones
      */
-    public static String printByteInBinary(int data) {
-        return Integer.toBinaryString((data & 0xFF) + 0x100).substring(1);
+    public static String printByteInBinary(byte data) {
+        return Integer.toBinaryString(Byte.toUnsignedInt(data) + 0x100).substring(1);
     }
 
     private BinaryStringFormatter() {

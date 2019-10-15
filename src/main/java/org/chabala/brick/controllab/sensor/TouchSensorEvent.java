@@ -18,13 +18,18 @@
  */
 package org.chabala.brick.controllab.sensor;
 
-import org.chabala.brick.controllab.Input;
+import org.chabala.brick.controllab.InputId;
 
 /**
- * The event triggered by receiving a {@link SensorValue} from an {@link Input}
+ * The event triggered by receiving a {@link SensorValue} from an {@link InputId}
  * that is known to be a {@link TouchSensor}.
  */
 public class TouchSensorEvent extends SensorEvent<TouchSensor> {
+    /**
+     * Creates a TouchSensorEvent from a generic {@link SensorEvent}, and wraps
+     * the {@link SensorValue} in the appropriate subclass.
+     * @param sensorEvent generic sensor event
+     */
     public TouchSensorEvent(SensorEvent<SensorValue> sensorEvent) {
         super(sensorEvent, TouchSensor::new);
     }

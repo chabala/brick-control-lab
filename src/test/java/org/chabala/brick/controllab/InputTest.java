@@ -18,37 +18,69 @@
  */
 package org.chabala.brick.controllab;
 
+import org.chabala.brick.controllab.sensor.SensorListener;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing {@link Input}.
  */
 public class InputTest {
 
-    @Test
-    public void testThereAreEightInputs() throws Exception {
-        assertThat(Input.values(), arrayWithSize(8));
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Mock
+    private InputManager inputManager;
+
+    @Mock
+    private SensorListener listener;
+
+    private InputId inputId;
+
+    private Input input;
+
+    private RandomEnum randomEnum = new RandomEnum();
+
+    @Before
+    public void setUp() {
+        inputId = randomEnum.get(InputId.class);
+        input = new Input(inputManager, inputId);
+    }
+
+    @After
+    public void tearDown() {
+        input = null;
+        inputId = null;
     }
 
     @Test
-    public void testThereAreFourPassiveInputs() throws Exception {
-        assertThat(Arrays.stream(Input.values())
-                   .map(Input::getInputType)
-                   .filter(InputType.PASSIVE::equals)
-                   .collect(Collectors.toList()), hasSize(4));
+    public void testAddListener() {
+        input.addListener(listener);
+        verify(inputManager, times(1)).addSensorListener(inputId, listener);
     }
 
     @Test
-    public void testThereAreFourActiveInputs() throws Exception {
-        assertThat(Arrays.stream(Input.values())
-                   .map(Input::getInputType)
-                   .filter(InputType.ACTIVE::equals)
-                   .collect(Collectors.toList()), hasSize(4));
+    public void testRemoveListener() {
+        input.removeListener(listener);
+        verify(inputManager, times(1)).removeSensorListener(inputId, listener);
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(input + "", containsString("inputId=" + inputId.name()));
     }
 }

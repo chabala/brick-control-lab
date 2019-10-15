@@ -16,21 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
-package org.chabala.brick.controllab.sensor;
-
-import org.chabala.brick.controllab.InputId;
+package org.chabala.brick.controllab;
 
 /**
- * The event triggered by receiving a {@link SensorValue} from an {@link InputId}
- * that is known to be a {@link LightSensor}.
+ * Like {@link java.util.function.IntConsumer}, but for {@link Byte}s.
  */
-public class LightSensorEvent extends SensorEvent<LightSensor> {
+@FunctionalInterface
+public interface ByteConsumer {
+
     /**
-     * Creates a LightSensorEvent from a generic {@link SensorEvent}, and wraps
-     * the {@link SensorValue} in the appropriate subclass.
-     * @param sensorEvent generic sensor event
+     * Performs this operation on the given argument.
+     *
+     * @param value the input argument
      */
-    public LightSensorEvent(SensorEvent<SensorValue> sensorEvent) {
-        super(sensorEvent, LightSensor::new);
-    }
+    void accept(byte value);
 }

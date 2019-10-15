@@ -18,32 +18,46 @@
  */
 package org.chabala.brick.controllab;
 
+import org.chabala.brick.controllab.sensor.SensorEvent;
+import org.chabala.brick.controllab.sensor.SensorListener;
+
 /**
- * Identifiers for the input ports on the control lab.
- * <p>
- * Inputs 1-4 are passive, they read the resistence of the sensor
- * connected to them. They are colored yellow on the control lab.
- * <p>
- * Inputs 5-8 are active, they supply power to the connected sensor
- * in order for it to work. They are colored blue on the control lab.
+ * Handle for an input port on a specific control lab instance. Obtain
+ * via {@link ControlLab#getInput(InputId)}.
  */
-public enum Input {
-    /** Input 1. */ I1(InputType.PASSIVE),
-    /** Input 2. */ I2(InputType.PASSIVE),
-    /** Input 3. */ I3(InputType.PASSIVE),
-    /** Input 4. */ I4(InputType.PASSIVE),
-    /** Input 5. */ I5(InputType.ACTIVE),
-    /** Input 6. */ I6(InputType.ACTIVE),
-    /** Input 7. */ I7(InputType.ACTIVE),
-    /** Input 8. */ I8(InputType.ACTIVE);
+public class Input {
+    private final InputManager inputManager;
+    private final InputId inputId;
 
-    private final InputType inputType;
-
-    Input(InputType inputType) {
-        this.inputType = inputType;
+    Input(InputManager inputManager, InputId inputId) {
+        this.inputManager = inputManager;
+        this.inputId = inputId;
     }
 
-    public InputType getInputType() {
-        return inputType;
+    /**
+     * Attach a listener for {@link SensorEvent}s.
+     *
+     * <p>Multiple listeners are allowed. A listener instance will only be registered
+     * once even if it is added multiple times.
+     * @param listener listener to add
+     */
+    public void addListener(SensorListener listener) {
+        inputManager.addSensorListener(inputId, listener);
+    }
+
+    /**
+     * Remove a listener for {@link SensorEvent}s.
+     * @param listener listener to remove
+     */
+    public void removeListener(SensorListener listener) {
+        inputManager.removeSensorListener(inputId, listener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Input{" +
+                "inputId=" + inputId +
+                '}';
     }
 }

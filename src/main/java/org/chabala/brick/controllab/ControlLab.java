@@ -18,8 +18,11 @@
  */
 package org.chabala.brick.controllab;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
 
@@ -41,14 +44,15 @@ import java.util.Set;
  *   }
  *       }</pre>
  */
-public interface ControlLab extends Closeable, MutatesInputListeners {
+public interface ControlLab extends Closeable {
 
     /**
      * Returns a new ControlLab instance.
      * @return a new ControlLab instance
      */
     static ControlLab newControlLab() {
-        return new ControlLabImpl();
+        return new ControlLabImpl(
+                LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()));
     }
 
     /**
@@ -67,18 +71,25 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
     void open(String portName) throws IOException;
 
     /**
+     * Returns the system specific serial port identifier the control lab is
+     * connected to, or empty string if not connected.
+     * @return system specific serial port identifier or empty string
+     */
+    String getConnectedPortName();
+
+    /**
      * Stops sending power to the specified outputs.
      * @param outputs outputs to stop
      * @throws IOException if any number of possible communication issues occurs
      */
-    void turnOutputOff(Set<Output> outputs) throws IOException;
+    void turnOutputOff(Set<OutputId> outputs) throws IOException;
 
     /**
      * Starts sending power to the specified outputs.
      * @param outputs outputs to start
      * @throws IOException if any number of possible communication issues occurs
      */
-    void turnOutputOn(Set<Output> outputs) throws IOException;
+    void turnOutputOn(Set<OutputId> outputs) throws IOException;
 
     /**
      * Sets the {@link Direction} of the specified outputs. Direction may be changed
@@ -87,7 +98,7 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
      * @param outputs which outputs to change
      * @throws IOException if any number of possible communication issues occurs
      */
-    void setOutputDirection(Direction direction, Set<Output> outputs) throws IOException;
+    void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException;
 
     /**
      * Sets the {@link PowerLevel} of the specified outputs. Power level may be changed
@@ -96,7 +107,34 @@ public interface ControlLab extends Closeable, MutatesInputListeners {
      * @param outputs which outputs to change
      * @throws IOException if any number of possible communication issues occurs
      */
-    void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException;
+    void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException;
+
+    /**
+     * Return a handle for the output specified on this control lab instance.
+     * @param outputId identifier of the desired output port
+     * @return handle for the output specific to this control lab instance
+     */
+    Output getOutput(OutputId outputId);
+
+    /**
+     * Return a handle for multiple outputs on this control lab instance.
+     * @param outputs identifiers of the desired output ports
+     * @return handle for the outputs specific to this control lab instance
+     */
+    Output getOutputGroup(Set<OutputId> outputs);
+
+    /**
+     * Return a handle for the stop button on this control lab instance.
+     * @return handle for the stop button on this control lab instance
+     */
+    StopButton getStopButton();
+
+    /**
+     * Return a handle for the input specified on this control lab instance.
+     * @param inputId identifier of the desired input port
+     * @return handle for the input specific to this control lab instance
+     */
+    Input getInput(InputId inputId);
 
     /**
      * Disconnects from the control lab and releases any resources.

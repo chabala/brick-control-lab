@@ -18,43 +18,50 @@
  */
 package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.sensor.SensorListener;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
+import java.util.*;
 import java.util.function.BiFunction;
-
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Object to represent interacting with the LEGO® control lab interface.
  */
 class ControlLabImpl implements ControlLab {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log;
     private final SerialPortFactory portFactory;
     private SerialPort serialPort;
-    private KeepAliveMonitor keepAliveMonitor;
     private final InputManager inputManager;
     private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
+    private final Map<OutputId, Output> outputMap;
+    private final StopButton stopButton;
+    private final Map<InputId, Input> inputMap;
+    private SerialPortWriter serialPortWriter;
 
     /**
      * Default constructor using jSSC serial implementation.
      */
-    ControlLabImpl() {
-        this(new JsscSerialPortFactory(), new InputManager(), SerialListener::new);
+    ControlLabImpl(Logger log) {
+        this(log, new JsscSerialPortFactory(), new InputManager(), SerialListener::new);
     }
 
-    ControlLabImpl(SerialPortFactory portFactory,
+    ControlLabImpl(Logger log,
+                   SerialPortFactory portFactory,
                    InputManager inputManager,
                    BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory) {
+        this.log = log;
         this.portFactory = portFactory;
         this.inputManager = inputManager;
         this.listenerFactory = listenerFactory;
+        outputMap = Collections.unmodifiableMap(new EnumMap<>(
+                Arrays.stream(OutputId.values()).collect(
+                        Collectors.toMap(Function.identity(), id -> new Output(this, id)))));
+        stopButton = new StopButton(inputManager);
+        inputMap = Collections.unmodifiableMap(new EnumMap<>(
+                Arrays.stream(InputId.values()).collect(
+                        Collectors.toMap(Function.identity(), id -> new Input(inputManager, id)))));
     }
 
     @Override
@@ -65,62 +72,64 @@ class ControlLabImpl implements ControlLab {
         SerialPortEventListener serialListener = listenerFactory.apply(serialPort, inputManager);
         serialPort.addEventListener(serialListener);
 
-        sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
-        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(1));
+        serialPortWriter = new SerialPortWriter(serialPort, log);
+        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
         if (!serialListener.isHandshakeSeen()) {
             close();
             throw new IOException("No response to handshake");
         }
-        keepAliveMonitor = new KeepAliveMonitor(serialPort);
+        serialPortWriter.startKeepAlives();
     }
 
-    private void sendCommand(byte[] bytes) throws IOException {
-        if (serialPort == null) {
-            throw new IOException("Not connected to control lab");
+    /** {@inheritDoc} */
+    @Override
+    public void turnOutputOff(Set<OutputId> outputs) throws IOException {
+        serialPortWriter.sendCommand(Protocol.OUTPUT_OFF, OutputId.encodeSetToByte(outputs));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void turnOutputOn(Set<OutputId> outputs) throws IOException {
+        serialPortWriter.sendCommand(Protocol.OUTPUT_ON, OutputId.encodeSetToByte(outputs));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException {
+        serialPortWriter.sendCommand(direction.getCode(), OutputId.encodeSetToByte(outputs));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException {
+        serialPortWriter.sendCommand(powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Output getOutput(OutputId outputId) {
+        return outputMap.get(outputId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Output getOutputGroup(Set<OutputId> outputs) {
+        if (outputs.size() == 1) {
+            return getOutput(outputs.iterator().next());
         }
-        if (keepAliveMonitor != null) {
-            keepAliveMonitor.reset();
-        }
-        if (log.isInfoEnabled()) {
-            if (bytes.length > 10) {
-                log.info("TX -> {}", new String(bytes, ISO_8859_1));
-            } else {
-                StringBuilder sb = new StringBuilder();
-                for (byte b : bytes) {
-                    sb.append(String.format("0x%02X ", b));
-                }
-                log.info("TX -> {}", sb);
-            }
-        }
-        serialPort.write(bytes);
-    }
-
-    private void sendCommand(byte b1, byte b2) throws IOException {
-        sendCommand(new byte[]{b1, b2});
+        return new Output(this, outputs);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void turnOutputOff(Set<Output> outputs) throws IOException {
-        sendCommand(Protocol.OUTPUT_OFF, Output.encodeSetToByte(outputs));
+    public StopButton getStopButton() {
+        return stopButton;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void turnOutputOn(Set<Output> outputs) throws IOException {
-        sendCommand(Protocol.OUTPUT_ON, Output.encodeSetToByte(outputs));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setOutputDirection(Direction direction, Set<Output> outputs) throws IOException {
-        sendCommand(direction.getCode(), Output.encodeSetToByte(outputs));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setOutputPowerLevel(PowerLevel powerLevel, Set<Output> outputs) throws IOException {
-        sendCommand(powerLevel.getCode(), Output.encodeSetToByte(outputs));
+    public Input getInput(InputId inputId) {
+        return inputMap.get(inputId);
     }
 
     /** {@inheritDoc} */
@@ -131,41 +140,35 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
-    public void addStopButtonListener(StopButtonListener listener) {
-        inputManager.addStopButtonListener(listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeStopButtonListener(StopButtonListener listener) {
-        inputManager.removeStopButtonListener(listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addSensorListener(Input input, SensorListener listener) {
-        inputManager.addSensorListener(input, listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeSensorListener(Input input, SensorListener listener) {
-        inputManager.removeSensorListener(input, listener);
+    public String getConnectedPortName() {
+        if (serialPort != null) {
+            return serialPort.getPortName();
+        } else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
-        if (keepAliveMonitor != null) {
-            keepAliveMonitor.close();
-            keepAliveMonitor = null;
+        if (serialPortWriter != null) {
+            if (serialPort != null) {
+                serialPortWriter.sendCommand(Protocol.DISCONNECT);
+            }
+            serialPortWriter.close();
+            serialPortWriter = null;
         }
         if (serialPort != null) {
-            if (serialPort.isOpen()) {
-                serialPort.write(Protocol.DISCONNECT);
-            }
             serialPort.close();
             serialPort = null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ControlLabImpl{" +
+                "serialPort=" + serialPort +
+                "}@" +
+                System.identityHashCode(this);
     }
 }

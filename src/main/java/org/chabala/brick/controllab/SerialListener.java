@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
@@ -36,6 +38,7 @@ class SerialListener implements SerialPortEventListener {
     private final boolean ignoreBadHandshake;
 
     private boolean handshakeSeen = false;
+    private CountDownLatch handshakeLatch = new CountDownLatch(1);
     private StringBuilder handshakeBuilder = new StringBuilder();
 
     SerialListener(SerialPort serialPort, InputManager inputManager) {
@@ -47,7 +50,20 @@ class SerialListener implements SerialPortEventListener {
 
     @Override
     public boolean isHandshakeSeen() {
-        return handshakeSeen;
+        boolean returnedEarly = false;
+        try {
+            returnedEarly = handshakeLatch.await(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+            Thread.currentThread().interrupt();
+        }
+        return handshakeSeen || returnedEarly;
+    }
+
+    private void setHandshakeSeen() {
+        handshakeSeen = true;
+        handshakeLatch.countDown();
+        handshakeBuilder = null;
     }
 
     /** {@inheritDoc} */
@@ -75,14 +91,12 @@ class SerialListener implements SerialPortEventListener {
                 if (handshakeBuilder.length() >= Protocol.HANDSHAKE_RESPONSE.length()) {
                     String handshake = handshakeBuilder.toString();
                     if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {
-                        handshakeSeen = true;
                         log.info(handshake);
-                        handshakeBuilder = null;
+                        setHandshakeSeen();
                     } else {
                         log.error("Bad handshake: {}", handshake);
                         if (ignoreBadHandshake) {
-                            handshakeSeen = true;
-                            handshakeBuilder = null;
+                            setHandshakeSeen();
                         } else {
                             serialPort.close();
                             return;

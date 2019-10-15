@@ -40,7 +40,20 @@ public class StopButtonEvent extends EventObject {
         this.rawValue = rawValue;
     }
 
+    /**
+     * The raw data that signaled this event.
+     * @return The raw data that signaled this event.
+     */
     public byte getRawValue() {
         return rawValue;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "StopButtonEvent{" +
+                "source=" + source +
+                ", rawValue=" + String.format("0x%02X ", rawValue) +
+                '}';
     }
 }

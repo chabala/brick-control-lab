@@ -16,21 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
-package org.chabala.brick.controllab.sensor;
+package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.InputId;
+import java.util.Random;
 
 /**
- * The event triggered by receiving a {@link SensorValue} from an {@link InputId}
- * that is known to be a {@link LightSensor}.
+ * Helper for choosing random enum instances for tests.
  */
-public class LightSensorEvent extends SensorEvent<LightSensor> {
-    /**
-     * Creates a LightSensorEvent from a generic {@link SensorEvent}, and wraps
-     * the {@link SensorValue} in the appropriate subclass.
-     * @param sensorEvent generic sensor event
-     */
-    public LightSensorEvent(SensorEvent<SensorValue> sensorEvent) {
-        super(sensorEvent, LightSensor::new);
+public class RandomEnum {
+
+    private Random random = new Random();
+
+    public <T extends Enum<?>> T get(Class<T> clazz) {
+        T[] enumValues = clazz.getEnumConstants();
+        int ordinal = random.nextInt(enumValues.length);
+        return enumValues[ordinal];
     }
 }

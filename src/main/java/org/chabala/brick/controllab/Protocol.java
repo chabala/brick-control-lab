@@ -30,6 +30,9 @@ final class Protocol {
     static final byte OUTPUT_OFF = (byte) 0b10010000;
     static final byte OUTPUT_ON =  (byte) 0b10010001;
 
+    static final byte STOP_DEPRESSED = (byte) 0x10;
+    static final byte STOP_RELEASED =  (byte) 0x00;
+
     static final int FRAME_SIZE = 19;
 
     private Protocol() {

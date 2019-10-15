@@ -18,57 +18,112 @@
  */
 package org.chabala.brick.controllab;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Identifiers for the output ports on the control lab.
+ * Handle for an output port (or group of ports) on a specific control lab instance.
+ * Obtain via {@link ControlLab#getOutput(OutputId)} or {@link ControlLab#getOutputGroup(Set)}.
  */
-public enum Output {
-    /** Output A. */ A,
-    /** Output B. */ B,
-    /** Output C. */ C,
-    /** Output D. */ D,
-    /** Output E. */ E,
-    /** Output F. */ F,
-    /** Output G. */ G,
-    /** Output H. */ H;
+public class Output {
+
+    private final ControlLab controlLab;
+    private final Set<OutputId> outputIdSet;
 
     /**
-     * Convenience constant for specifying all output ports.
+     * Called internally by {@link ControlLab#getOutput(OutputId)}.
+     * @param controlLab the control lab this output is a handle to
+     * @param outputId the output port ID on that control lab
      */
-    public static final Set<Output> ALL = Collections.unmodifiableSet(EnumSet.allOf(Output.class));
-
-    /**
-     * Encodes values from a {@link Set} of {@link Enum}s to a byte. Uses the
-     * ordinal of the Enum as the position of the bit in the byte to set high.
-     *
-     * @param set set of values to be encoded
-     * @param <T> type of Enum, only used with {@link Output} internally
-     * @return a byte with high bits relating to the values in the set
-     */
-    public static <T extends Enum<T>> byte encodeSetToByte(Set<T> set) {
-        byte r = 0;
-        for (T value : set) {
-            r |= 1 << value.ordinal();
-        }
-        return r;
+    Output(ControlLab controlLab, OutputId outputId) {
+        this(controlLab, EnumSet.of(outputId));
     }
 
     /**
-     * Decodes a byte into a {@link Set} of {@link Output}s.
-     * @param b byte where each bit corresponds to the ordinal of an Output
-     * @return a Set containing the desired Outputs
+     * Called internally by {@link ControlLab#getOutputGroup(Set)}.
+     * @param controlLab the control lab this output is a handle to
+     * @param outputIdSet the output IDs this output should reference
      */
-    public static Set<Output> decodeByteToSet(byte b) {
-        Output[] enums = Output.class.getEnumConstants();
-        Set<Output> enumSet = EnumSet.noneOf(Output.class);
-        for (int bit = 0; bit < Byte.SIZE; bit++) {
-            if ((b & 0xFF & 1 << bit) > 0) {
-                enumSet.add(enums[bit]);
-            }
-        }
-        return enumSet;
+    Output(ControlLab controlLab, Set<OutputId> outputIdSet) {
+        this.controlLab = controlLab;
+        this.outputIdSet = outputIdSet;
+    }
+
+    /**
+     * Returns set of {@link OutputId}s this {@link Output} relates to. In normal
+     * usage, this is unlikely to be called as one would obtain the {@link Output}
+     * from {@link ControlLab#getOutput(OutputId)} and immediately chain one of the
+     * fluent method calls. But it can useful to inspect the {@link OutputId}s if the
+     * {@link Output} reference is retained and seperated from the creation site.
+     * @return set of {@link OutputId}s this {@link Output} relates to
+     */
+    public Set<OutputId> getOutputIdSet() {
+        return Collections.unmodifiableSet(outputIdSet);
+    }
+
+    /**
+     * Stops sending power to this output.
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output turnOff() throws IOException {
+        controlLab.turnOutputOff(outputIdSet);
+        return this;
+    }
+
+    /**
+     * Starts sending power to this output.
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output turnOn() throws IOException {
+        controlLab.turnOutputOn(outputIdSet);
+        return this;
+    }
+
+    /**
+     * Sets the {@link Direction} of this output. Direction may be changed
+     * while the output is powered or unpowered.
+     * @param direction desired direction
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output setDirection(Direction direction) throws IOException {
+        controlLab.setOutputDirection(direction, outputIdSet);
+        return this;
+    }
+
+    /**
+     * Reverses the {@link Direction} of this output. This is a convenience method
+     * that is the same as
+     * {@link Output#setDirection(Direction) setDirection(}{@link Direction#REVERSE Direction.REVERSE)}.
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output reverseDirection() throws IOException {
+        return setDirection(Direction.REVERSE);
+    }
+
+    /**
+     * Sets the {@link PowerLevel} of this output. Power level may be changed
+     * while the output is powered or unpowered.
+     * @param powerLevel desired power level
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output setPowerLevel(PowerLevel powerLevel) throws IOException {
+        controlLab.setOutputPowerLevel(powerLevel, outputIdSet);
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Output{" +
+                "controlLab=" + controlLab +
+                ", outputIdSet=" + outputIdSet +
+                '}';
     }
 }

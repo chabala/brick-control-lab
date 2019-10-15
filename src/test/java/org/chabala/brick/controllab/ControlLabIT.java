@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 
 import static javax.management.timer.Timer.ONE_SECOND;
 import static org.awaitility.Awaitility.await;
+import static org.chabala.brick.controllab.PortChooser.choosePort;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNoException;
-import static org.junit.Assume.assumeThat;
 
 /**
  * Integration tests for the {@link ControlLab}.
@@ -47,13 +47,6 @@ import static org.junit.Assume.assumeThat;
 public class ControlLabIT {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private String choosePort(ControlLab controlLab) {
-        List<String> availablePorts = controlLab.getAvailablePorts();
-        assumeThat("a serial port should be available", availablePorts, is(not(empty())));
-        log.debug("Available ports: {}", String.join(", ", availablePorts));
-        return availablePorts.get(0);
-    }
-
     @Test
     public void testTurnOutputOff() throws Exception {
         try (ControlLab controlLab = ControlLab.newControlLab()) {
@@ -63,9 +56,9 @@ public class ControlLabIT {
                 assumeNoException(e);
             }
             Thread.sleep(ONE_SECOND * 3);
-            controlLab.turnOutputOn(Output.ALL);
+            controlLab.turnOutputOn(OutputId.ALL);
             Thread.sleep(ONE_SECOND * 3);
-            controlLab.turnOutputOff(EnumSet.range(Output.A, Output.D));
+            controlLab.turnOutputOff(EnumSet.range(OutputId.A, OutputId.D));
             Thread.sleep(ONE_SECOND * 3);
         }
     }
@@ -80,24 +73,41 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
 
-            controlLab.turnOutputOn(Output.ALL);
+            controlLab.turnOutputOn(OutputId.ALL);
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(Output.E, Output.F));
+            controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(OutputId.E, OutputId.F));
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.REVERSE, EnumSet.of(Output.E, Output.F, Output.G, Output.H));
+            controlLab.getOutputGroup(EnumSet.range(OutputId.E, OutputId.H)).reverseDirection();
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputDirection(Direction.RIGHT, EnumSet.of(Output.H));
+            controlLab.getOutput(OutputId.H).setDirection(Direction.RIGHT);
             Thread.sleep(ONE_SECOND);
 
-            for (Output o : Arrays.asList(Output.H, Output.G, Output.F, Output.E)) {
-                controlLab.turnOutputOff(EnumSet.of(o));
+            for (OutputId o : descendingRange(OutputId.H, OutputId.E)) {
+                controlLab.getOutput(o).turnOff();
                 Thread.sleep(ONE_SECOND);
             }
 
-            controlLab.turnOutputOff(EnumSet.range(Output.A, Output.D));
+            controlLab.turnOutputOff(EnumSet.range(OutputId.A, OutputId.D));
+            Thread.sleep(ONE_SECOND * 5);
+        }
+    }
+
+    @Test
+    public void testFluentOutputControl() throws Exception {
+        try (ControlLab controlLab = ControlLab.newControlLab()) {
+            try {
+                controlLab.open(choosePort(controlLab));
+            } catch (IOException e) {
+                assumeNoException(e);
+            }
+            Output output = controlLab.getOutput(OutputId.A);
+            output.setDirection(Direction.LEFT).setPowerLevel(PowerLevel.P2).turnOn();
+            Thread.sleep(ONE_SECOND * 5);
+
+            output.reverseDirection().setPowerLevel(PowerLevel.P8);
             Thread.sleep(ONE_SECOND * 5);
         }
     }
@@ -112,16 +122,14 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
-            Map<Input, String> lastTouchValues = Collections.synchronizedMap(new EnumMap<>(Input.class));
-            List<Input> touchInputs = Arrays.stream(Input.values())
-                                            .filter(i -> i.getInputType().equals(InputType.PASSIVE))
-                                            .collect(Collectors.toList());
-            for (Input i : touchInputs) {
-                lastTouchValues.put(i, "");
-            }
+            controlLab.getStopButton().addListener(stopButtonEvent -> stop.set(true));
+            Map<InputId, String> lastTouchValues = Collections.synchronizedMap(new EnumMap<>(InputId.class));
+            List<InputId> passiveInputs = Arrays.stream(InputId.values())
+                                                .filter(i -> i.getInputType().equals(InputType.PASSIVE))
+                                                .collect(Collectors.toList());
+            passiveInputs.forEach(i -> lastTouchValues.put(i, ""));
             TouchSensorListener touchSensorListener = sensorEvent -> {
-                Input input = sensorEvent.getInput();
+                InputId input = sensorEvent.getInput();
                 String newValue = sensorEvent.getValue().touchStatus();
                 if ("".equals(newValue)) {
                     return;
@@ -131,17 +139,38 @@ public class ControlLabIT {
                     log.info("{} value changed: {}", input, newValue);
                 }
             };
-            for (Input i : touchInputs) {
-                controlLab.addSensorListener(i, touchSensorListener);
+            for (InputId passiveInput : passiveInputs) {
+                controlLab.getInput(passiveInput).addListener(touchSensorListener);
             }
             LightSensorListener lightSensorListener = sensorEvent -> {
-                Input input = sensorEvent.getInput();
+                InputId input = sensorEvent.getInput();
                 log.info("{} value changed: {}", input, sensorEvent.getValue());
             };
-            controlLab.addSensorListener(Input.I5, lightSensorListener);
-            controlLab.addSensorListener(Input.I6, lightSensorListener);
-            controlLab.addSensorListener(Input.I7, lightSensorListener);
-            controlLab.addSensorListener(Input.I8, lightSensorListener);
+            Arrays.stream(InputId.values())
+                  .filter(i -> i.getInputType().equals(InputType.ACTIVE))
+                  .map(controlLab::getInput)
+                  .forEach(i -> i.addListener(lightSensorListener));
+
+            await().forever().until(stop::get);
+        }
+    }
+
+    @Ignore("Requires interaction with stop button to complete, only run manually")
+    @Test
+    public void testControlLabInputsRaw() throws Exception {
+        AtomicBoolean stop = new AtomicBoolean(false);
+        try (ControlLab controlLab = ControlLab.newControlLab()) {
+            try {
+                controlLab.open(choosePort(controlLab));
+            } catch (IOException e) {
+                assumeNoException(e);
+            }
+            controlLab.getStopButton().addListener(stopButtonEvent -> stop.set(true));
+            SensorListener sensorListener = sensorEvent ->
+                    log.info("{} value changed: {}", sensorEvent.getInput(), sensorEvent.getValue());
+            Arrays.stream(InputId.values())
+                  .map(controlLab::getInput)
+                  .forEach(i -> i.addListener(sensorListener));
 
             await().forever().until(stop::get);
         }
@@ -157,19 +186,19 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
 
-            controlLab.setOutputPowerLevel(PowerLevel.P1, EnumSet.of(Output.A));
-            controlLab.turnOutputOn(EnumSet.of(Output.A));
+            Output output = controlLab.getOutput(OutputId.A);
+            output.setPowerLevel(PowerLevel.P1).turnOn();
             Thread.sleep(ONE_SECOND);
 
             for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
-                controlLab.setOutputPowerLevel(p, EnumSet.of(Output.A));
+                output.setPowerLevel(p);
                 Thread.sleep(ONE_SECOND);
             }
 
-            controlLab.setOutputPowerLevel(PowerLevel.P0, EnumSet.of(Output.A));
+            output.setPowerLevel(PowerLevel.P0);
             Thread.sleep(ONE_SECOND);
 
-            controlLab.turnOutputOn(EnumSet.of(Output.A));
+            output.turnOn();
             Thread.sleep(ONE_SECOND);
         }
     }
@@ -184,7 +213,7 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            controlLab.addStopButtonListener(stopButtonEvent -> stop.set(true));
+            controlLab.getStopButton().addListener(stopButtonEvent -> stop.set(true));
             await().forever().until(stop::get);
         }
     }
@@ -207,33 +236,31 @@ public class ControlLabIT {
                 assumeNoException(e);
             }
             Thread.sleep(ONE_SECOND);
-            controlLab.addSensorListener(Input.I1, (TouchSensorListener) sensorEvent -> stop.set(true));
-            Set<Output> outputSet = Output.ALL;
+            controlLab.getInput(InputId.I1).addListener((TouchSensorListener) sensorEvent -> stop.set(true));
+            Output outputs = controlLab.getOutputGroup(OutputId.ALL);
             while (!stop.get()) {
-                controlLab.setOutputPowerLevel(PowerLevel.P8, outputSet);
-                controlLab.setOutputDirection(Direction.RIGHT, outputSet);
-                controlLab.turnOutputOn(outputSet);
+                outputs.setPowerLevel(PowerLevel.P8).setDirection(Direction.RIGHT).turnOn();
                 Thread.sleep(ONE_SECOND);
                 if (stop.get()) {
                     return;
                 }
 
-                for (PowerLevel p : descendingRange(PowerLevel.P1, PowerLevel.P7)) {
-                    controlLab.setOutputPowerLevel(p, outputSet);
+                for (PowerLevel p : descendingRange(PowerLevel.P7, PowerLevel.P1)) {
+                    outputs.setPowerLevel(p);
                     Thread.sleep(ONE_SECOND);
                     if (stop.get()) {
                         return;
                     }
                 }
 
-                controlLab.setOutputDirection(Direction.REVERSE, outputSet);
+                outputs.reverseDirection();
                 Thread.sleep(ONE_SECOND);
                 if (stop.get()) {
                     return;
                 }
 
                 for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
-                    controlLab.setOutputPowerLevel(p, outputSet);
+                    outputs.setPowerLevel(p);
                     Thread.sleep(ONE_SECOND);
                     if (stop.get()) {
                         return;

@@ -18,7 +18,7 @@
  */
 package org.chabala.brick.controllab.sensor;
 
-import org.chabala.brick.controllab.Input;
+import org.chabala.brick.controllab.InputId;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -56,7 +56,7 @@ public class LightSensorListenerTest {
         final byte[] newValue= {};
         when(sensorValue.getAnalogValue()).thenReturn(analogValue);
         when(sensorValue.getStatusCode()).thenReturn(statusCode);
-        SensorEvent<SensorValue> sensorEvent = new SensorEvent<>(Input.I1, oldValue, newValue, sensorValue);
+        SensorEvent<SensorValue> sensorEvent = new SensorEvent<>(InputId.I1, oldValue, newValue, sensorValue);
         LightSensorListener listener = event -> {
             assertThat(event.getValue().getAnalogValue(), is(analogValue));
             assertThat(event.getValue().getStatusCode(), is(statusCode));
