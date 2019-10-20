@@ -18,6 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <ghPagesUrl>https://chabala.github.io/${project.artifactId}/</ghPagesUrl>
+        <slf4j.version>1.7.28</slf4j.version>
     </properties>
 
     <build>
@@ -59,7 +60,7 @@
                         <dependency>
                             <groupId>org.apache.bcel</groupId>
                             <artifactId>bcel</artifactId>
-                            <version>6.2</version>
+                            <version>6.4.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -94,7 +95,7 @@
                         <dependency>
                             <groupId>org.slf4j</groupId>
                             <artifactId>jcl-over-slf4j</artifactId>
-                            <version>1.7.28</version>
+                            <version>${slf4j.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -382,13 +383,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.28</version>
+            <version>${slf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.28</version>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
