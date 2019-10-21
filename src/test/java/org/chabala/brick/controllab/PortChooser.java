@@ -34,7 +34,8 @@ import static org.junit.Assume.assumeThat;
  * default selection doesn't suit your system, you can override it with a system
  * property: {@value OVERRIDE_TEST_PORT_PROPERTY}.
  */
-final class PortChooser {
+@SuppressWarnings("WeakerAccess")
+public final class PortChooser {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /** System property to override the IT serial port with a specific port identifier. */
@@ -45,7 +46,7 @@ final class PortChooser {
      * @param controlLab control lab instance for querying the serial library
      * @return a system specific serial port identifier
      */
-    static String choosePort(ControlLab controlLab) {
+    public static String choosePort(ControlLab controlLab) {
         String overrideTestPort = System.getProperty(OVERRIDE_TEST_PORT_PROPERTY, "");
         if (overrideTestPort.isEmpty()) {
             List<String> availablePorts = controlLab.getAvailablePorts();
