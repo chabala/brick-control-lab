@@ -350,6 +350,9 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
+                <configuration>
+                    <rulesUri>${project.baseUri}/src/main/config/versions-maven-rules.xml</rulesUri>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
