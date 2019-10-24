@@ -62,14 +62,15 @@ class SerialPortWriter implements Closeable {
         }
         if (serialPort.isOpen()) {
             if (log.isInfoEnabled()) {
+                String portName = serialPort.getPortName();
                 if (bytes.length > STRING_LOGGING_THRESHOLD) {
-                    log.info("TX -> {}", new String(bytes, ISO_8859_1));
+                    log.info("{} TX -> {}", portName, new String(bytes, ISO_8859_1));
                 } else {
                     StringBuilder sb = new StringBuilder();
                     for (byte b : bytes) {
                         sb.append(String.format("0x%02X ", b));
                     }
-                    log.info("TX -> {}", sb);
+                    log.info("{} TX -> {}", portName, sb);
                 }
             }
             serialPort.write(bytes);
