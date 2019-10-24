@@ -24,9 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assume.assumeThat;
 
 /**
@@ -37,25 +35,41 @@ import static org.junit.Assume.assumeThat;
 @SuppressWarnings("WeakerAccess")
 public final class PortChooser {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final String TOO_FEW_PORTS_MESSAGE = "as many serial ports as requested should be available";
 
     /** System property to override the IT serial port with a specific port identifier. */
     public static final String OVERRIDE_TEST_PORT_PROPERTY = "brick-control-lab.overrideTestPort";
 
     /**
-     * Picks the first available serial port based on what the serial library finds
+     * Picks the first available serial port based on what the serial library finds.
      * @param controlLab control lab instance for querying the serial library
      * @return a system specific serial port identifier
      */
     public static String choosePort(ControlLab controlLab) {
+        return choosePort(controlLab, 1);
+    }
+
+    /**
+     * Picks the <i>N</i>th available serial port based on what the serial library finds.
+     * @param controlLab control lab instance for querying the serial library
+     * @param position one-based position field for choosing the port
+     * @return a system specific serial port identifier
+     */
+    public static String choosePort(ControlLab controlLab, int position) {
         String overrideTestPort = System.getProperty(OVERRIDE_TEST_PORT_PROPERTY, "");
+        int zeroBasedPosition = position - 1;
+
         if (overrideTestPort.isEmpty()) {
             List<String> availablePorts = controlLab.getAvailablePorts();
             assumeThat("a serial port should be available", availablePorts, is(not(empty())));
             log.debug("Available ports: {}", String.join(", ", availablePorts));
-            return availablePorts.get(0);
+            assumeThat(TOO_FEW_PORTS_MESSAGE, availablePorts, hasSize(greaterThanOrEqualTo(position)));
+            return availablePorts.get(zeroBasedPosition);
         } else {
             log.debug("{} property is defined: {}", OVERRIDE_TEST_PORT_PROPERTY, overrideTestPort);
-            return overrideTestPort;
+            String[] overrideTestPorts = overrideTestPort.split(",");
+            assumeThat(TOO_FEW_PORTS_MESSAGE, overrideTestPorts, arrayWithSize(greaterThanOrEqualTo(position)));
+            return overrideTestPorts[zeroBasedPosition];
         }
     }
 
