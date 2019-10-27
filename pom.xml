@@ -459,6 +459,10 @@
         <system>GitHub</system>
         <url>${project.url}/issues</url>
     </issueManagement>
+    <ciManagement>
+        <system>travis</system>
+        <url>https://travis-ci.org/chabala/${project.artifactId}</url>
+    </ciManagement>
     <licenses>
         <license>
             <name>GNU Lesser General Public License 3.0</name>
