@@ -72,8 +72,8 @@ class ControlLabImpl implements ControlLab {
         SerialPortEventListener serialListener = listenerFactory.apply(serialPort, inputManager);
         serialPort.addEventListener(serialListener);
 
-        serialPortWriter = new SerialPortWriter(serialPort, log);
-        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes());
+        serialPortWriter = new SerialPortWriter(serialPort);
+        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes(), log);
         if (!serialListener.isHandshakeSeen()) {
             close();
             throw new IOException("No response to handshake");

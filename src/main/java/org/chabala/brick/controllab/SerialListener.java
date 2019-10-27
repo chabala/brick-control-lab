@@ -91,7 +91,7 @@ class SerialListener implements SerialPortEventListener {
                 if (handshakeBuilder.length() >= Protocol.HANDSHAKE_RESPONSE.length()) {
                     String handshake = handshakeBuilder.toString();
                     if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {
-                        log.info(handshake);
+                        log.info("RX <- {}", handshake);
                         setHandshakeSeen();
                     } else {
                         log.error("Bad handshake: {}", handshake);

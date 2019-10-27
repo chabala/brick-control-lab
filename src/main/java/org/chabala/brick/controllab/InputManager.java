@@ -92,7 +92,7 @@ class InputManager {
         int lastCommandIndex = frameIndex++;
         if (0x00 != inputFrame[lastCommandIndex]) {
             //TODO: make event listener for output feedback
-            log.info("Ports affected by last command {}",
+            log.debug("Ports affected by last command {}",
                     OutputId.decodeByteToSet(inputFrame[lastCommandIndex]));
         }
         for (InputId in : frameInputOrder) {
