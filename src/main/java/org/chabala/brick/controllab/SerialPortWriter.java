@@ -19,6 +19,7 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -36,13 +37,12 @@ class SerialPortWriter implements Closeable {
      * handshake, which makes more sense to show as a string.
      */
     private static final int STRING_LOGGING_THRESHOLD = 10;
-    private final Logger log;
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final SerialPort serialPort;
     private KeepAliveMonitor keepAliveMonitor;
 
-    SerialPortWriter(SerialPort serialPort, Logger log) {
+    SerialPortWriter(SerialPort serialPort) {
         this.serialPort = serialPort;
-        this.log = log;
     }
 
     void startKeepAlives() {
@@ -63,13 +63,15 @@ class SerialPortWriter implements Closeable {
         if (serialPort.isOpen()) {
             if (log.isInfoEnabled()) {
                 if (bytes.length > STRING_LOGGING_THRESHOLD) {
-                    log.info("TX -> {}", new String(bytes, ISO_8859_1));
-                } else {
+                    String portName = serialPort.getPortName();
+                    log.info("{} TX -> {}", portName, new String(bytes, ISO_8859_1));
+                } else if (log.isDebugEnabled()) {
+                    String portName = serialPort.getPortName();
                     StringBuilder sb = new StringBuilder();
                     for (byte b : bytes) {
                         sb.append(String.format("0x%02X ", b));
                     }
-                    log.info("TX -> {}", sb);
+                    log.debug("{} TX -> {}", portName, sb);
                 }
             }
             serialPort.write(bytes);
