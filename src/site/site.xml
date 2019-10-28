@@ -28,6 +28,11 @@
     <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
     <publishDate />
     <version />
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-default-skin</artifactId>
+        <version>1.2</version>
+    </skin>
     <body>
         <links>
             <item name="${project.artifactId}" href="${ghPagesUrl}" />
