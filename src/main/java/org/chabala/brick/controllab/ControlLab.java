@@ -121,7 +121,7 @@ public interface ControlLab extends Closeable {
      * @param outputs identifiers of the desired output ports
      * @return handle for the outputs specific to this control lab instance
      */
-    Output getOutputGroup(Set<OutputId> outputs);
+    Output getOutput(Set<OutputId> outputs);
 
     /**
      * Return a handle for the stop button on this control lab instance.

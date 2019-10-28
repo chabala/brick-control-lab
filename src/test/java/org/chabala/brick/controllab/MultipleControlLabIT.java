@@ -189,13 +189,13 @@ public class MultipleControlLabIT {
         List<ControlLab> rightToLeft = controlLabs.subList(splitIndex, controlLabs.size());
         for (ControlLab controlLab : leftToRight) {
             for (EnumSet<OutputId> column : columnOrder) {
-                outputOrder.add(controlLab.getOutputGroup(column));
+                outputOrder.add(controlLab.getOutput(column));
             }
         }
         Collections.reverse(columnOrder);
         for (ControlLab controlLab : rightToLeft) {
             for (EnumSet<OutputId> column : columnOrder) {
-                outputOrder.add(controlLab.getOutputGroup(column));
+                outputOrder.add(controlLab.getOutput(column));
             }
         }
         return outputOrder;

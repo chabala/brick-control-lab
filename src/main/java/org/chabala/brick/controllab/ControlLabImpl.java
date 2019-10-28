@@ -113,7 +113,7 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
-    public Output getOutputGroup(Set<OutputId> outputs) {
+    public Output getOutput(Set<OutputId> outputs) {
         if (outputs.size() == 1) {
             return getOutput(outputs.iterator().next());
         }
