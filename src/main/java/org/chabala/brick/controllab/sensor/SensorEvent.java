@@ -23,7 +23,7 @@ import org.chabala.brick.controllab.InputId;
 import java.util.EventObject;
 import java.util.function.Function;
 
-import static org.chabala.brick.controllab.BinaryStringFormatter.printInBinary;
+import static org.chabala.brick.controllab.sensor.BinaryStringFormatter.printInBinary;
 
 /**
  * The event triggered by receiving a {@link SensorValue} from an {@link InputId}.

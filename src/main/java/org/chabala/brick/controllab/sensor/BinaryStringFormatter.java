@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
-package org.chabala.brick.controllab;
+package org.chabala.brick.controllab.sensor;
 
 /**
  * Helper methods for making readable binary strings of data bytes.
  */
-public final class BinaryStringFormatter {
+final class BinaryStringFormatter {
 
     /**
      * Takes a byte array of two bytes and returns a string of those bytes
@@ -29,7 +29,7 @@ public final class BinaryStringFormatter {
      * @param highLow byte array containing two bytes
      * @return a sixteen character string of zeros and ones
      */
-    public static String printInBinary(byte[] highLow) {
+    static String printInBinary(byte[] highLow) {
         return printByteInBinary(highLow[0]) + printByteInBinary(highLow[1]);
     }
 
@@ -39,7 +39,7 @@ public final class BinaryStringFormatter {
      * @param data a single byte of data
      * @return an eight character string of zeros and ones
      */
-    public static String printByteInBinary(byte data) {
+    static String printByteInBinary(byte data) {
         return Integer.toBinaryString(Byte.toUnsignedInt(data) + 0x100).substring(1);
     }
 

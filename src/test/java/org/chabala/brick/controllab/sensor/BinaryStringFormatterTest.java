@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
-package org.chabala.brick.controllab;
+package org.chabala.brick.controllab.sensor;
 
 import org.junit.Test;
 
-import static org.chabala.brick.controllab.BinaryStringFormatter.printByteInBinary;
+import static org.chabala.brick.controllab.sensor.BinaryStringFormatter.printByteInBinary;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 public class BinaryStringFormatterTest {
 
     @Test
-    public void testPrintByteInBinary() throws Exception {
+    public void testPrintByteInBinary() {
         assertThat(printByteInBinary((byte) 0b00000000), is("00000000"));
         assertThat(printByteInBinary((byte) 0b00000001), is("00000001"));
         assertThat(printByteInBinary((byte) 0b10000000), is("10000000"));
