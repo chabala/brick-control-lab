@@ -19,6 +19,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <ghPagesUrl>https://chabala.github.io/${project.artifactId}/</ghPagesUrl>
         <slf4j.version>1.7.28</slf4j.version>
+        <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
     </properties>
 
     <build>
@@ -48,26 +49,22 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.1.1</version>
                     <configuration>
+                        <docfilessubdirs>true</docfilessubdirs>
                         <links>
                             <link>https://docs.oracle.com/javase/8/docs/api/</link>
                         </links>
-                        <header>
-                            <![CDATA[
+                        <header><![CDATA[
     <!-- Google Analytics -->
     <script type="text/javascript">
-
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-256611-4']);
+      _gaq.push(['_setAccount', '${googleAnalyticsAccountId}']);
       _gaq.push(['_trackPageview']);
-
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
-    </script>
-    ]]>
+    </script>]]>
                         </header>
                         <additionalJOptions>--allow-script-in-comments</additionalJOptions>
                     </configuration>

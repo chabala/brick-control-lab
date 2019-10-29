@@ -25,7 +25,7 @@
     <bannerLeft>
         <name>${project.artifactId}</name>
     </bannerLeft>
-    <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
+    <googleAnalyticsAccountId>${googleAnalyticsAccountId}</googleAnalyticsAccountId>
     <publishDate />
     <version />
     <skin>
