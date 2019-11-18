@@ -1,0 +1,14 @@
+table {
+    width: unset;
+}
+h5 {
+    margin: 1em 0 0;
+}
+a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:active, a.externalLink:hover {
+    background: unset;
+    padding-right: unset;
+}
+pre.prettyprint {
+    padding: 12px !important;
+    border: 1px solid #999 !important;
+}

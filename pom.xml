@@ -10,21 +10,45 @@
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <description>Library for controlling the LEGO® control lab interface.</description>
-    <url>https://github.com/chabala/${project.artifactId}</url>
+    <url>https://chabala.github.io/${project.artifactId}/</url>
     <inceptionYear>2016</inceptionYear>
 
     <properties>
         <source.version>1.8</source.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <ghPagesUrl>https://chabala.github.io/${project.artifactId}/</ghPagesUrl>
-        <slf4j.version>1.7.28</slf4j.version>
+        <ghUser>chabala</ghUser>
+        <ghProjectUrl>https://github.com/${ghUser}/${project.artifactId}</ghProjectUrl>
+        <ghPagesUrl>https://${ghUser}.github.io/${project.artifactId}/</ghPagesUrl>
+        <slf4j.version>1.7.29</slf4j.version>
         <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
     </properties>
 
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <configLocation>src/main/config/checkstyle.xml</configLocation>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>log4j-over-slf4j</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.1.0</version>
@@ -65,6 +89,13 @@
                         </header>
                         <additionalJOptions>--allow-script-in-comments</additionalJOptions>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>log4j-over-slf4j</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -78,23 +109,8 @@
                     </dependencies>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <configLocation>src/main/config/checkstyle.xml</configLocation>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.1.1</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.5.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
@@ -103,6 +119,11 @@
                 <plugin>
                     <artifactId>maven-linkcheck-plugin</artifactId>
                     <version>1.2</version>
+                    <configuration>
+                        <httpMethod>GET</httpMethod>
+                        <timeout>6000</timeout>
+                        <excludedLinks>linkcheck.html</excludedLinks>
+                    </configuration>
                     <dependencies>
                         <!-- workaround for https://stackoverflow.com/q/35414355/62462 -->
                         <dependency>
@@ -124,6 +145,18 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jdepend-maven-plugin</artifactId>
+                    <version>2.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>guru.nidi</groupId>
+                            <artifactId>jdepend</artifactId>
+                            <version>2.9.5</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
@@ -161,7 +194,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -175,7 +208,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -309,6 +342,21 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.simplify4u.plugins</groupId>
+                <artifactId>sitemapxml-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <maxDepth>8</maxDepth>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>gen</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
@@ -331,6 +379,22 @@
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy site-deploy</goals>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete file="${project.basedir}/velocity.log"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -392,8 +456,20 @@
                 </reportSets>
             </plugin>
             <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>3.1.12.2</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <title>${project.name} - JaCoCo Report</title>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -401,6 +477,18 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>nl.demon.shadowland.maven.plugins</groupId>
+                <artifactId>sonarqube-maven-report</artifactId>
+                <version>0.2.2</version>
+                <configuration>
+                    <sonarHostURL>https://sonarcloud.io</sonarHostURL>
+                </configuration>
             </plugin>
         </plugins>
     </reporting>
@@ -475,22 +563,22 @@
         </developer>
     </developers>
     <organization>
-        <url>http://chabala.org/</url>
+        <url>https://chabala.org/</url>
     </organization>
 
     <scm>
-        <connection>scm:git:git@github.com:chabala/${project.artifactId}.git</connection>
-        <developerConnection>scm:git:git@github.com:chabala/${project.artifactId}.git</developerConnection>
-        <url>${project.url}</url>
+        <connection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</developerConnection>
+        <url>${ghProjectUrl}</url>
         <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
-        <url>${project.url}/issues</url>
+        <url>${ghProjectUrl}/issues</url>
     </issueManagement>
     <ciManagement>
         <system>travis</system>
-        <url>https://travis-ci.org/chabala/${project.artifactId}</url>
+        <url>https://travis-ci.org/${ghUser}/${project.artifactId}</url>
     </ciManagement>
     <licenses>
         <license>
