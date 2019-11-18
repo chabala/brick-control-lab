@@ -4,7 +4,7 @@
 
     <groupId>org.chabala.brick</groupId>
     <artifactId>brick-control-lab</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <description>Library for controlling the LEGO® control lab interface.</description>
@@ -568,7 +568,7 @@
         <connection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</connection>
         <developerConnection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</developerConnection>
         <url>${ghProjectUrl}</url>
-        <tag>0.2.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
