@@ -30,19 +30,22 @@ import java.util.Set;
  * This is the main interface for interacting with the LEGO® control lab, instances of
  * which can be created with {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
  *
- * <p>Usage example: <pre>   {@code
- *   ControlLab controlLab = ControlLab.newControlLab();
- *   List<String> availablePorts = controlLab.getAvailablePorts();
- *   try {
- *       controlLab.open(availablePorts.get(0));
- *       controlLab.setOutputPowerLevel(PowerLevel.P4, EnumSet.of(Output.A));
- *       controlLab.turnOutputOn(EnumSet.of(Output.A));
- *   } catch (IOException e) {
- *       e.printStackTrace();
- *   } finally {
- *       controlLab.close();
- *   }
- *       }</pre>
+ * <p>Usage example: <pre class="prettyprint lang-java">
+ *    ControlLab controlLab = ControlLab.newControlLab();
+ *    {@code List<String>} availablePorts = controlLab.getAvailablePorts();
+ *    try {
+ *        controlLab.open(availablePorts.get(0));
+ *        controlLab.getOutput(OutputId.A).setPowerLevel(PowerLevel.P4).turnOn();
+ *    } catch (IOException e) {
+ *        e.printStackTrace();
+ *    } finally {
+ *        try {
+ *            controlLab.close();
+ *        } catch (IOException e) {
+ *            e.printStackTrace();
+ *        }
+ *    }</pre>
+ * <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
  */
 public interface ControlLab extends Closeable {
 
@@ -121,7 +124,7 @@ public interface ControlLab extends Closeable {
      * @param outputs identifiers of the desired output ports
      * @return handle for the outputs specific to this control lab instance
      */
-    Output getOutputGroup(Set<OutputId> outputs);
+    Output getOutput(Set<OutputId> outputs);
 
     /**
      * Return a handle for the stop button on this control lab instance.

@@ -1,0 +1,153 @@
+#*
+ * Copyright © 2016 Greg Chabala
+ *
+ * This file is part of brick-control-lab.
+ *
+ * brick-control-lab is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * brick-control-lab is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
+ *#
+
+#[[##]]# Usage
+
+#[[###]]# Declare dependency on the library
+
+brick-control-lab uses [Maven Central][1] for distribution. To use brick-control-lab with Maven, add the
+following to your pom:
+
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<pre class="prettyprint lang-xml source">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.chabala.brick&lt;/groupId&gt;
+  &lt;artifactId&gt;brick-control-lab&lt;/artifactId&gt;
+  &lt;version&gt;${project.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+
+For syntax for other dependency management systems, see [Dependency Information](dependency-info.html).
+
+[1]: https://search.maven.org/search?q=g:org.chabala.brick%20AND%20a:brick-control-lab&core=gav
+
+#[[###]]# Working with ControlLab
+
+The entrypoint to using the library is the `ControlLab` interface. Obtain an instance via `newControlLab()`:
+
+<pre class="prettyprint lang-java source">
+ControlLab controlLab = ControlLab.newControlLab();
+</pre>
+
+Next the control lab needs to be bound to a serial port. This could be a hard coded or user defined value, but
+there is also a method that queries the underlying serial library to find what ports are available, based on
+some heuristics for port names. This might be useful for populating a configuration dialog. Here we'll take
+the first port returned and bind it to the control lab:
+
+<pre class="prettyprint lang-java source">
+List&lt;String&gt; availablePorts = controlLab.getAvailablePorts();
+controlLab.open(availablePorts.get(0));
+</pre>
+
+There is a fluent style for controlling output ports (motors, lights, etc).
+
+<pre class="prettyprint lang-java source">
+controlLab.getOutput(OutputId.A).turnOn();
+controlLab.getOutput(OutputId.B).setPowerLevel(PowerLevel.P4).turnOn();
+controlLab.getOutput(OutputId.C).setDirection(Direction.LEFT).turnOn();
+</pre>
+
+The reference for an output can be retained and reused.
+
+<pre class="prettyprint lang-java source">
+Output outputA = controlLab.getOutput(OutputId.A);
+outputA.turnOn();
+outputA.setPowerLevel(PowerLevel.P4)
+outputA.reverseDirection();
+outputA.turnOff();
+</pre>
+
+Outputs can also be operated on as a group.
+
+<pre class="prettyprint lang-java source">
+controlLab.getOutput(EnumSet.range(OutputId.A, OutputId.D)).setPowerLevel(PowerLevel.P4).turnOn();
+controlLab.getOutput(OutputId.ALL).turnOff();
+</pre>
+
+There are also non-fluent style methods that are closer to the underlying protocol used by the interface hardware.
+
+<pre class="prettyprint lang-java source">
+controlLab.turnOutputOn(OutputId.ALL);
+controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(OutputId.E, OutputId.F));
+</pre>
+
+Input handling from the control lab is based on callback listeners. The stop button can be considered a special type
+of input, as it supports pressed and released events.
+
+<pre class="prettyprint lang-java source">
+controlLab.getStopButton().addListener(new StopButtonListener() {
+    @Override
+    public void stopButtonPressed(StopButtonEvent stopButtonEvent) {
+        System.out.println("Stopped");
+    }
+    <br/>
+    @Override
+    public void stopButtonReleased(StopButtonEvent stopButtonEvent) {
+        System.out.println("Running");
+    }
+});
+</pre>
+
+The release event has a default no-op implementation, so if one is only interested in the inital stop event, lambdas
+can be used instead:
+
+<pre class="prettyprint lang-java source">
+controlLab.getStopButton().addListener(stopButtonEvent -> System.out.println("Stopped"));
+</pre>
+
+Listeners can be added to other inputs, either as the raw values returned by the hardware, or specific sensor
+subclasses that attempt to interpret the values. Improvements are needed in this area, but the touch sensor is
+well understood:
+
+<pre class="prettyprint lang-java source">
+controlLab.getInput(InputId.I1).addListener(new TouchSensorListener() {
+    @Override
+    public void touchSensorEventReceived(TouchSensorEvent sensorEvent) {
+        System.out.println(sensorEvent.getValue().touchStatus());
+    }
+});
+</pre>
+
+Every operation that involves the serial connection can potentially throw `IOException`, so one will need to
+catch those exceptions and determine how to recover. Once opened, the control lab needs to be closed in order
+to release the serial port and associated resources. Recommended usage is with try-finally or try-with-resources
+blocks to ensure proper closure.
+
+<pre class="prettyprint lang-java source">
+ControlLab controlLab = ControlLab.newControlLab();
+List&lt;String&gt; availablePorts = controlLab.getAvailablePorts();
+try {
+    controlLab.open(availablePorts.get(0));
+    controlLab.getOutput(OutputId.A).setPowerLevel(PowerLevel.P4).turnOn();
+} catch (IOException e) {
+    e.printStackTrace();
+} finally {
+    try {
+        controlLab.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+</pre>
+
+Refer to the [javadoc](apidocs/index.html) for further details on using `ControlLab` and related classes.
+
+For more usage examples, examine the integration tests [ControlLabIT](
+xref-test/org/chabala/brick/controllab/ControlLabIT.html) and [MultipleControlLabIT](
+xref-test/org/chabala/brick/controllab/MultipleControlLabIT.html).

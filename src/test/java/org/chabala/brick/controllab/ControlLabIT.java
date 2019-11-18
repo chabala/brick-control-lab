@@ -79,7 +79,7 @@ public class ControlLabIT {
             controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(OutputId.E, OutputId.F));
             Thread.sleep(ONE_SECOND);
 
-            controlLab.getOutputGroup(EnumSet.range(OutputId.E, OutputId.H)).reverseDirection();
+            controlLab.getOutput(EnumSet.range(OutputId.E, OutputId.H)).reverseDirection();
             Thread.sleep(ONE_SECOND);
 
             controlLab.getOutput(OutputId.H).setDirection(Direction.RIGHT);
@@ -237,7 +237,7 @@ public class ControlLabIT {
             }
             Thread.sleep(ONE_SECOND);
             controlLab.getInput(InputId.I1).addListener((TouchSensorListener) sensorEvent -> stop.set(true));
-            Output outputs = controlLab.getOutputGroup(OutputId.ALL);
+            Output outputs = controlLab.getOutput(OutputId.ALL);
             while (!stop.get()) {
                 outputs.setPowerLevel(PowerLevel.P8).setDirection(Direction.RIGHT).turnOn();
                 Thread.sleep(ONE_SECOND);

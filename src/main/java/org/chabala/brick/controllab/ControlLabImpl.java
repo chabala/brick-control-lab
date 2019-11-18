@@ -26,6 +26,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+
 /**
  * Object to represent interacting with the LEGO® control lab interface.
  */
@@ -73,7 +75,7 @@ class ControlLabImpl implements ControlLab {
         serialPort.addEventListener(serialListener);
 
         serialPortWriter = new SerialPortWriter(serialPort);
-        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes(), log);
+        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes(ISO_8859_1), log);
         if (!serialListener.isHandshakeSeen()) {
             close();
             throw new IOException("No response to handshake");
@@ -113,7 +115,7 @@ class ControlLabImpl implements ControlLab {
 
     /** {@inheritDoc} */
     @Override
-    public Output getOutputGroup(Set<OutputId> outputs) {
+    public Output getOutput(Set<OutputId> outputs) {
         if (outputs.size() == 1) {
             return getOutput(outputs.iterator().next());
         }

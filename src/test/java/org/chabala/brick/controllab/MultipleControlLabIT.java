@@ -122,7 +122,7 @@ public class MultipleControlLabIT {
     /**
      * Example of advanced coordination of multiple control labs, activating the motors in
      * a chasing pattern. To use, arrange the control labs in a grid with two rows, start
-     * the test, wait for all the control labs show they are connected, then press each
+     * the test, wait for all the control labs to show they are connected, then press each
      * stop button in a clockwise direction from the top left. Pressing any stop button
      * after the pattern has started will end the test.
      * @throws Exception on any issue with the test
@@ -189,13 +189,13 @@ public class MultipleControlLabIT {
         List<ControlLab> rightToLeft = controlLabs.subList(splitIndex, controlLabs.size());
         for (ControlLab controlLab : leftToRight) {
             for (EnumSet<OutputId> column : columnOrder) {
-                outputOrder.add(controlLab.getOutputGroup(column));
+                outputOrder.add(controlLab.getOutput(column));
             }
         }
         Collections.reverse(columnOrder);
         for (ControlLab controlLab : rightToLeft) {
             for (EnumSet<OutputId> column : columnOrder) {
-                outputOrder.add(controlLab.getOutputGroup(column));
+                outputOrder.add(controlLab.getOutput(column));
             }
         }
         return outputOrder;

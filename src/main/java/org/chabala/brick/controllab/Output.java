@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * Handle for an output port (or group of ports) on a specific control lab instance.
- * Obtain via {@link ControlLab#getOutput(OutputId)} or {@link ControlLab#getOutputGroup(Set)}.
+ * Obtain via {@link ControlLab#getOutput(OutputId)} or {@link ControlLab#getOutput(Set)}.
  */
 public class Output {
 
@@ -42,7 +42,7 @@ public class Output {
     }
 
     /**
-     * Called internally by {@link ControlLab#getOutputGroup(Set)}.
+     * Called internally by {@link ControlLab#getOutput(Set)}.
      * @param controlLab the control lab this output is a handle to
      * @param outputIdSet the output IDs this output should reference
      */

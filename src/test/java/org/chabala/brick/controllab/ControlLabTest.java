@@ -117,14 +117,14 @@ public class ControlLabTest {
         OutputId outputId = OutputId.B;
         Output output = controlLab.getOutput(outputId);
         assumeThat(output.getOutputIdSet(), contains(outputId));
-        Output outputGroup = controlLab.getOutputGroup(EnumSet.of(outputId));
+        Output outputGroup = controlLab.getOutput(EnumSet.of(outputId));
         assertThat(outputGroup.getOutputIdSet(), contains(outputId));
         assertThat(outputGroup, is(output));
     }
 
     @Test
     public void testGetOutputGroup() {
-        Output outputGroup = controlLab.getOutputGroup(EnumSet.of(OutputId.C, OutputId.F));
+        Output outputGroup = controlLab.getOutput(EnumSet.of(OutputId.C, OutputId.F));
         assertThat(outputGroup.getOutputIdSet(), contains(OutputId.C, OutputId.F));
     }
 

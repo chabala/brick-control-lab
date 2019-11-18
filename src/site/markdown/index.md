@@ -1,17 +1,15 @@
-# brick-control-lab
+## About brick-control-lab
 
 Library for controlling the [LEGO® control lab interface][1].
 
-[![Build Status][2]][3]
-[![Coverage Status][7]][8]
-[![Codacy Badge][5]][6]
-[![License: GNU LGPL 3.0][4]](https://www.gnu.org/licenses/lgpl-3.0.en.html)
-
-[![Maven Central][16]][17]
+[1]: http://www.peeron.com/inv/sets/9751-1
 
 ### What is the control lab?
 
-[![control lab][9]][10]
+<a href="https://www.bricklink.com/catalogItemPic.asp?S=9751-1" class="nodecorate">
+<img src="https://camo.githubusercontent.com/a5d3217cb2e92cc029de96ade710af24375c6c80/68747470733a2f2f7777772e627269636b6c696e6b2e636f6d2f534c2f393735312d312e6a7067" 
+alt="control lab" align="right" width="372" height="240"/>
+</a>
 
 The control lab is a computer control interface for LEGO® electrical elements, like motors and sensors. It
 is a predecessor to LEGO® MINDSTORMS® products, and is compatible with many of the elements that work with
@@ -27,10 +25,15 @@ It has eight controllable outputs and eight sensor inputs, along with another al
 button to halt the running program. It is compatible with elements from the 9 volt electric system,
 including motors, lights and sound blocks. Compatible sensors include touch, temperature, light, and rotation.
 
+[9]: https://www.bricklink.com/SL/9751-1.jpg
+[10]: https://www.bricklink.com/catalogItemPic.asp?S=9751-1
+[11]: https://en.wikipedia.org/wiki/Lego_Mindstorms#RCX
+
 ### What is brick-control-lab?
 
 brick-control-lab is a Java library to allow programs to control the control lab programmatically. It is not the first
 piece of hobby software to target working with the control lab, but it is the first with these goals:
+
 * Java-based
 * as a library (e.g. no user interface, used by other programs)
 * usable from Maven
@@ -44,35 +47,15 @@ The solution is a relatively new library called [Java Simple Serial Connector][1
 of the library is unclear, it has a release on Maven Central that allows cross platform serial port access without any
 JRE modifications.
 
-### Usage
-
-Refer to the [Maven generated site](https://chabala.github.io/brick-control-lab/usage.html) for usage
-instructions and additional documentation.
+[14]: https://en.wikibooks.org/wiki/Serial_Programming/Serial_Java
+[15]: https://github.com/scream3r/java-simple-serial-connector
 
 ### Licensing
 Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
-[1]: http://www.peeron.com/inv/sets/9751-1
-[2]: https://travis-ci.org/chabala/brick-control-lab.svg?branch=master
-[3]: https://travis-ci.org/chabala/brick-control-lab
-[4]: https://img.shields.io/badge/license-GNU_LGPL_3.0-brightgreen.svg
-[5]: https://api.codacy.com/project/badge/Grade/f05f0d18f49a48659b1066884a7fef68
-[6]: https://www.codacy.com/app/chabala/brick-control-lab
-[7]: https://coveralls.io/repos/github/chabala/brick-control-lab/badge.svg?branch=master
-[8]: https://coveralls.io/github/chabala/brick-control-lab?branch=master
-[9]: https://www.bricklink.com/SL/9751-1.jpg
-[10]: https://www.bricklink.com/catalogItemPic.asp?S=9751-1
-[11]: https://en.wikipedia.org/wiki/Lego_Mindstorms#RCX
-[14]: https://en.wikibooks.org/wiki/Serial_Programming/Serial_Java
-[15]: https://github.com/scream3r/java-simple-serial-connector
-[16]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab/badge.svg
-[17]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab
+See also: [Licenses](license.html)
 
-<!---
-Potential replacements for maven-badges.herokuapp.com
-[16]: https://img.shields.io/maven-central/v/org.chabala.brick/brick-control-lab.svg
-[17]: https://mvnrepository.com/artifact/org.chabala.brick/brick-control-lab
--->
+---
 
 LEGO®, DACTA®, TECHNIC®, and MINDSTORMS® are trademarks and/or copyrights of the LEGO Group,
 which does not sponsor, authorize or endorse this software.
