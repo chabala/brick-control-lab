@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InputId.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">InputId.java</span></div><h1>InputId.java</h1><pre class="source lang-java linenums">/*
+ * Copyright © 2016 Greg Chabala
+ *
+ * This file is part of brick-control-lab.
+ *
+ * brick-control-lab is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * brick-control-lab is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
+ */
+package org.chabala.brick.controllab;
+
+/**
+ * Identifiers for the input ports on the control lab.
+ * &lt;p&gt;
+ * Inputs 1-4 are passive, they read the resistence of the sensor
+ * connected to them. They are colored yellow on the control lab.
+ * &lt;p&gt;
+ * Inputs 5-8 are active, they supply power to the connected sensor
+ * in order for it to work. They are colored blue on the control lab.
+ */
+<span class="fc" id="L30">public enum InputId {</span>
+<span class="fc" id="L31">    /** Input 1. */ I1(InputType.PASSIVE),</span>
+<span class="fc" id="L32">    /** Input 2. */ I2(InputType.PASSIVE),</span>
+<span class="fc" id="L33">    /** Input 3. */ I3(InputType.PASSIVE),</span>
+<span class="fc" id="L34">    /** Input 4. */ I4(InputType.PASSIVE),</span>
+<span class="fc" id="L35">    /** Input 5. */ I5(InputType.ACTIVE),</span>
+<span class="fc" id="L36">    /** Input 6. */ I6(InputType.ACTIVE),</span>
+<span class="fc" id="L37">    /** Input 7. */ I7(InputType.ACTIVE),</span>
+<span class="fc" id="L38">    /** Input 8. */ I8(InputType.ACTIVE);</span>
+
+    private final InputType inputType;
+
+<span class="fc" id="L42">    InputId(InputType inputType) {</span>
+<span class="fc" id="L43">        this.inputType = inputType;</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Returns an {@link InputType} to indicate if this {@link InputId} is
+     * active or passive.
+     * @return the input type for this input ID
+     */
+    public InputType getInputType() {
+<span class="fc" id="L52">        return inputType;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

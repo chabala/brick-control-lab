@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SensorEvent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab.sensor</a> &gt; <span class="el_source">SensorEvent.java</span></div><h1>SensorEvent.java</h1><pre class="source lang-java linenums">/*
+ * Copyright © 2016 Greg Chabala
+ *
+ * This file is part of brick-control-lab.
+ *
+ * brick-control-lab is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * brick-control-lab is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
+ */
+package org.chabala.brick.controllab.sensor;
+
+import org.chabala.brick.controllab.InputId;
+
+import java.util.EventObject;
+import java.util.function.Function;
+
+import static org.chabala.brick.controllab.sensor.BinaryStringFormatter.printInBinary;
+
+/**
+ * The event triggered by receiving a {@link SensorValue} from an {@link InputId}.
+ * @param &lt;T&gt; specific {@link SensorValue} subclass contained in this event
+ */
+public class SensorEvent&lt;T extends SensorValue&gt; extends EventObject {
+
+    private final byte[] oldValue;
+    private final byte[] newValue;
+    private final T value;
+
+    /**
+     * Constructs a SensorEvent.
+     *
+     * @param input    The input port that triggered this event.
+     * @param oldValue The last known value from this input, as a two byte array.
+     * @param newValue The new value from this input, as a two byte array.
+     * @param value    The new value wrapped in the SensorValue class.
+     */
+    public SensorEvent(InputId input, byte[] oldValue, byte[] newValue, T value) {
+<span class="fc" id="L47">        super(input);</span>
+<span class="fc" id="L48">        this.oldValue = oldValue;</span>
+<span class="fc" id="L49">        this.newValue = newValue;</span>
+<span class="fc" id="L50">        this.value = value;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * A copy constructor for subclasses, to easily wrap the {@link SensorValue} in a
+     * more specific subclass.
+     * @param sensorEvent   The SensorEvent to be copied
+     * @param sensorWrapper The constructor method reference for a SensorValue subclass
+     */
+    public SensorEvent(SensorEvent&lt;SensorValue&gt; sensorEvent, Function&lt;SensorValue, T&gt; sensorWrapper) {
+<span class="fc" id="L60">        this(sensorEvent.getInput(),</span>
+<span class="fc" id="L61">             sensorEvent.getOldValue(),</span>
+<span class="fc" id="L62">             sensorEvent.getNewValue(),</span>
+<span class="fc" id="L63">             sensorWrapper.apply(sensorEvent.getValue()));</span>
+<span class="fc" id="L64">    }</span>
+
+    /**
+     * The input port that triggered this event.
+     * @return the input port that triggered this event.
+     */
+    public InputId getInput() {
+<span class="fc" id="L71">        return (InputId) getSource();</span>
+    }
+
+    /**
+     * The last known value from this input, prior to the event, as a two byte array.
+     * @return the last known value from this input as a two byte array
+     */
+    public byte[] getOldValue() {
+<span class="fc" id="L79">        return oldValue;</span>
+    }
+
+    /**
+     * The new value from this input, as a two byte array.
+     * @return the new value from this input as a two byte array
+     */
+    public byte[] getNewValue() {
+<span class="fc" id="L87">        return newValue;</span>
+    }
+
+    /**
+     * The new value from this input wrapped in the SensorValue class, or sensor specific subclass.
+     * @return SensorValue class, or sensor specific subclass
+     */
+    public T getValue() {
+<span class="fc" id="L95">        return value;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L100">        return String.format(&quot;%1s value changed: %2s -&gt; %3s aka %4s&quot;,</span>
+<span class="nc" id="L101">                source, printInBinary(oldValue), printInBinary(newValue), value);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

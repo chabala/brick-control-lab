@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Output.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">Output.java</span></div><h1>Output.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Output.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">Output.java</span></div><h1>Output.java</h1><pre class="source lang-java linenums">/*
  * Copyright © 2016 Greg Chabala
  *
  * This file is part of brick-control-lab.
@@ -14,62 +14,117 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
 package org.chabala.brick.controllab;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Identifiers for the output ports on the control lab.
+ * Handle for an output port (or group of ports) on a specific control lab instance.
+ * Obtain via {@link ControlLab#getOutput(OutputId)} or {@link ControlLab#getOutput(Set)}.
  */
-<span class="pc" id="L28">public enum Output {</span>
-<span class="fc" id="L29">    /** Output A. */ A,</span>
-<span class="fc" id="L30">    /** Output B. */ B,</span>
-<span class="fc" id="L31">    /** Output C. */ C,</span>
-<span class="fc" id="L32">    /** Output D. */ D,</span>
-<span class="fc" id="L33">    /** Output E. */ E,</span>
-<span class="fc" id="L34">    /** Output F. */ F,</span>
-<span class="fc" id="L35">    /** Output G. */ G,</span>
-<span class="fc" id="L36">    /** Output H. */ H;</span>
+public class Output {
+
+    private final ControlLab controlLab;
+    private final Set&lt;OutputId&gt; outputIdSet;
 
     /**
-     * Convenience constant for specifying all output ports.
+     * Called internally by {@link ControlLab#getOutput(OutputId)}.
+     * @param controlLab the control lab this output is a handle to
+     * @param outputId the output port ID on that control lab
      */
-<span class="fc" id="L41">    public static final Set&lt;Output&gt; ALL = Collections.unmodifiableSet(EnumSet.allOf(Output.class));</span>
+    Output(ControlLab controlLab, OutputId outputId) {
+<span class="fc" id="L41">        this(controlLab, EnumSet.of(outputId));</span>
+<span class="fc" id="L42">    }</span>
 
     /**
-     * Encodes values from a {@link Set} of {@link Enum}s to a byte. Uses the
-     * ordinal of the Enum as the position of the bit in the byte to set high.
-     *
-     * @param set set of values to be encoded
-     * @param &lt;T&gt; type of Enum, only used with {@link Output} internally
-     * @return a byte with high bits relating to the values in the set
+     * Called internally by {@link ControlLab#getOutput(Set)}.
+     * @param controlLab the control lab this output is a handle to
+     * @param outputIdSet the output IDs this output should reference
      */
-    public static &lt;T extends Enum&lt;T&gt;&gt; byte encodeSetToByte(Set&lt;T&gt; set) {
-<span class="fc" id="L52">        byte r = 0;</span>
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        for (T value : set) {</span>
-<span class="fc" id="L54">            r |= 1 &lt;&lt; value.ordinal();</span>
-<span class="fc" id="L55">        }</span>
-<span class="fc" id="L56">        return r;</span>
+<span class="fc" id="L49">    Output(ControlLab controlLab, Set&lt;OutputId&gt; outputIdSet) {</span>
+<span class="fc" id="L50">        this.controlLab = controlLab;</span>
+<span class="fc" id="L51">        this.outputIdSet = outputIdSet;</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Returns set of {@link OutputId}s this {@link Output} relates to. In normal
+     * usage, this is unlikely to be called as one would obtain the {@link Output}
+     * from {@link ControlLab#getOutput(OutputId)} and immediately chain one of the
+     * fluent method calls. But it can useful to inspect the {@link OutputId}s if the
+     * {@link Output} reference is retained and seperated from the creation site.
+     * @return set of {@link OutputId}s this {@link Output} relates to
+     */
+    public Set&lt;OutputId&gt; getOutputIdSet() {
+<span class="fc" id="L63">        return Collections.unmodifiableSet(outputIdSet);</span>
     }
 
     /**
-     * Decodes a byte into a {@link Set} of {@link Output}s.
-     * @param b byte where each bit corresponds to the ordinal of an Output
-     * @return a Set containing the desired Outputs
+     * Stops sending power to this output.
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
      */
-    public static Set&lt;Output&gt; decodeByteToSet(byte b) {
-<span class="fc" id="L65">        Output[] enums = Output.class.getEnumConstants();</span>
-<span class="fc" id="L66">        Set&lt;Output&gt; enumSet = EnumSet.noneOf(Output.class);</span>
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        for (int bit = 0; bit &lt; Byte.SIZE; bit++) {</span>
-<span class="fc bfc" id="L68" title="All 2 branches covered.">            if ((b &amp; 1 &lt;&lt; bit) &gt; 0) {</span>
-<span class="fc" id="L69">                enumSet.add(enums[bit]);</span>
-            }
-        }
-<span class="fc" id="L72">        return enumSet;</span>
+    public Output turnOff() throws IOException {
+<span class="fc" id="L72">        controlLab.turnOutputOff(outputIdSet);</span>
+<span class="fc" id="L73">        return this;</span>
+    }
+
+    /**
+     * Starts sending power to this output.
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output turnOn() throws IOException {
+<span class="fc" id="L82">        controlLab.turnOutputOn(outputIdSet);</span>
+<span class="fc" id="L83">        return this;</span>
+    }
+
+    /**
+     * Sets the {@link Direction} of this output. Direction may be changed
+     * while the output is powered or unpowered.
+     * @param direction desired direction
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output setDirection(Direction direction) throws IOException {
+<span class="fc" id="L94">        controlLab.setOutputDirection(direction, outputIdSet);</span>
+<span class="fc" id="L95">        return this;</span>
+    }
+
+    /**
+     * Reverses the {@link Direction} of this output. This is a convenience method
+     * that is the same as
+     * {@link Output#setDirection(Direction) setDirection(}{@link Direction#REVERSE Direction.REVERSE)}.
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output reverseDirection() throws IOException {
+<span class="fc" id="L106">        return setDirection(Direction.REVERSE);</span>
+    }
+
+    /**
+     * Sets the {@link PowerLevel} of this output. Power level may be changed
+     * while the output is powered or unpowered.
+     * @param powerLevel desired power level
+     * @return self reference to the output for chaining
+     * @throws IOException if any number of possible communication issues occurs
+     */
+    public Output setPowerLevel(PowerLevel powerLevel) throws IOException {
+<span class="fc" id="L117">        controlLab.setOutputPowerLevel(powerLevel, outputIdSet);</span>
+<span class="fc" id="L118">        return this;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+<span class="fc" id="L124">        return &quot;Output{&quot; +</span>
+                &quot;controlLab=&quot; + controlLab +
+                &quot;, outputIdSet=&quot; + outputIdSet +
+                '}';
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

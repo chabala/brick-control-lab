@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StopButtonListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">StopButtonListener.java</span></div><h1>StopButtonListener.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StopButtonListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">StopButtonListener.java</span></div><h1>StopButtonListener.java</h1><pre class="source lang-java linenums">/*
  * Copyright © 2016 Greg Chabala
  *
  * This file is part of brick-control-lab.
@@ -14,7 +14,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
 package org.chabala.brick.controllab;
 
@@ -25,6 +25,7 @@ import java.util.EventListener;
  *
  * @see StopButtonEvent
  */
+@FunctionalInterface
 public interface StopButtonListener extends EventListener {
 
     /**
@@ -32,27 +33,27 @@ public interface StopButtonListener extends EventListener {
      * a flashing LED next to the stop button to indicate a paused state.
      * &lt;p&gt;
      * While the OEM implementation of the control lab software would halt
-     * program operation in this state, the hardware does not hamper output
-     * control or the flow of input data, so actual behavior is left to the
-     * implementor of the interface.
-     * &lt;p&gt;
-     * The default implementation is no-op.
+     * program operation in this state, the hardware does not hamper the flow
+     * of input data and continues to track output commands, only the physical
+     * outputs are prevented from receiving power. Actual behavior is left to
+     * the implementor of the interface.
      *
      * @param stopButtonEvent The event that triggered this callback.
      */
-    default void stopButtonPressed(StopButtonEvent stopButtonEvent) {
-<span class="nc" id="L44">    }</span>
+    void stopButtonPressed(StopButtonEvent stopButtonEvent);
 
     /**
      * Invoked when the stop button is disengaged. The hardware will have
      * an unlit LED next to the stop button to indicate the computer is
-     * connected.
+     * connected. Any outputs that were powered prior to the stop button
+     * being pressed will return to their prior state. Any output commands
+     * issued while in the stopped state will also take effect.
      * &lt;p&gt;
      * The default implementation is no-op.
      *
      * @param stopButtonEvent The event that triggered this callback.
      */
     default void stopButtonReleased(StopButtonEvent stopButtonEvent) {
-<span class="nc" id="L56">    }</span>
+<span class="nc" id="L57">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

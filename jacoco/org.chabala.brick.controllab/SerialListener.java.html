@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SerialListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">SerialListener.java</span></div><h1>SerialListener.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SerialListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">SerialListener.java</span></div><h1>SerialListener.java</h1><pre class="source lang-java linenums">/*
  * Copyright © 2016 Greg Chabala
  *
  * This file is part of brick-control-lab.
@@ -14,7 +14,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
 package org.chabala.brick.controllab;
 
@@ -22,174 +22,94 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static org.chabala.brick.controllab.Protocol.HANDSHAKE_RESPONSE;
 
 /**
  * Handles serial events.
  */
 class SerialListener implements SerialPortEventListener {
 
-    private static final int FRAME_SIZE = 19;
-<span class="fc" id="L36">    private final Logger log = LoggerFactory.getLogger(getClass());</span>
+<span class="fc" id="L35">    private final Logger log = LoggerFactory.getLogger(getClass());</span>
     private final SerialPort serialPort;
-    private final Map&lt;Input, byte[]&gt; sensorData;
-<span class="fc" id="L39">    private final Set&lt;StopButtonListener&gt; stopButtonListeners = Collections.synchronizedSet(new HashSet&lt;&gt;(2));</span>
-<span class="fc" id="L40">    private final List&lt;Input&gt; frameInputOrder =</span>
-<span class="fc" id="L41">            Arrays.asList(Input.I4, Input.I8, Input.I3, Input.I7, Input.I2, Input.I6, Input.I1, Input.I5);</span>
+    private final InputManager inputManager;
     private final boolean ignoreBadHandshake;
 
-<span class="fc" id="L44">    private boolean handshakeSeen = false;</span>
-<span class="fc" id="L45">    private boolean stopDepressed = false;</span>
-<span class="fc" id="L46">    private String handshake = &quot;&quot;;</span>
+<span class="fc" id="L40">    private boolean handshakeSeen = false;</span>
+<span class="fc" id="L41">    private CountDownLatch handshakeLatch = new CountDownLatch(1);</span>
+<span class="fc" id="L42">    private StringBuilder handshakeBuilder = new StringBuilder();</span>
 
-<span class="fc" id="L48">    SerialListener(SerialPort serialPort) {</span>
-<span class="fc" id="L49">        this.serialPort = serialPort;</span>
-<span class="fc" id="L50">        sensorData = Collections.synchronizedMap(new EnumMap&lt;&gt;(Input.class));</span>
-<span class="fc" id="L51">        Arrays.stream(Input.values()).forEach(i -&gt; sensorData.put(i, new byte[] {0, 0}));</span>
-<span class="fc" id="L52">        ignoreBadHandshake = Boolean.valueOf(</span>
-<span class="fc" id="L53">                System.getProperty(&quot;brick-control-lab.ignoreBadHandshake&quot;, &quot;false&quot;));</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L44">    SerialListener(SerialPort serialPort, InputManager inputManager) {</span>
+<span class="fc" id="L45">        this.serialPort = serialPort;</span>
+<span class="fc" id="L46">        this.inputManager = inputManager;</span>
+<span class="fc" id="L47">        ignoreBadHandshake = Boolean.valueOf(</span>
+<span class="fc" id="L48">                System.getProperty(&quot;brick-control-lab.ignoreBadHandshake&quot;, &quot;false&quot;));</span>
+<span class="fc" id="L49">    }</span>
 
     @Override
     public boolean isHandshakeSeen() {
-<span class="fc" id="L58">        return handshakeSeen;</span>
+<span class="fc" id="L53">        boolean returnedEarly = false;</span>
+        try {
+<span class="fc" id="L55">            returnedEarly = handshakeLatch.await(1, TimeUnit.SECONDS);</span>
+<span class="nc" id="L56">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L57">            log.error(e.getMessage(), e);</span>
+<span class="nc" id="L58">            Thread.currentThread().interrupt();</span>
+<span class="fc" id="L59">        }</span>
+<span class="pc bpc" id="L60" title="3 of 4 branches missed.">        return handshakeSeen || returnedEarly;</span>
     }
+
+    private void setHandshakeSeen() {
+<span class="fc" id="L64">        handshakeSeen = true;</span>
+<span class="fc" id="L65">        handshakeLatch.countDown();</span>
+<span class="fc" id="L66">        handshakeBuilder = null;</span>
+<span class="fc" id="L67">    }</span>
 
     /** {@inheritDoc} */
     @Override
     public void serialEventRXCHAR(int availableBytes) {
-<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (!handshakeSeen) {</span>
-<span class="fc" id="L65">            processHandshake(availableBytes);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!handshakeSeen) {</span>
+<span class="fc" id="L73">            processHandshake(availableBytes);</span>
         } else {
-<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (availableBytes &gt;= FRAME_SIZE) {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (availableBytes &gt;= Protocol.FRAME_SIZE) {</span>
                 try {
-<span class="fc" id="L69">                    byte[] buffer = serialPort.readBytes(FRAME_SIZE);</span>
-<span class="fc" id="L70">                    processInputSensors(buffer);</span>
-<span class="nc" id="L71">                } catch (IOException e) {</span>
-<span class="nc" id="L72">                    log.error(e.getMessage(), e);</span>
-<span class="fc" id="L73">                }</span>
+<span class="fc" id="L77">                    byte[] buffer = serialPort.readBytes(Protocol.FRAME_SIZE);</span>
+<span class="fc" id="L78">                    inputManager.processInputSensors(buffer);</span>
+<span class="nc" id="L79">                } catch (IOException e) {</span>
+<span class="nc" id="L80">                    log.error(e.getMessage(), e);</span>
+<span class="fc" id="L81">                }</span>
             }
         }
-<span class="fc" id="L76">    }</span>
+<span class="fc" id="L84">    }</span>
 
     private void processHandshake(int availableBytes) {
         try {
-<span class="fc bfc" id="L80" title="All 4 branches covered.">            while (!handshakeSeen &amp;&amp; availableBytes &gt; 0) {</span>
-<span class="fc" id="L81">                availableBytes--;</span>
-<span class="fc" id="L82">                String newChar = new String(serialPort.readBytes(1), ISO_8859_1);</span>
-<span class="fc" id="L83">                handshake += newChar;</span>
-<span class="fc bfc" id="L84" title="All 2 branches covered.">                if (handshake.endsWith(HANDSHAKE_RESPONSE)) {</span>
-<span class="fc" id="L85">                    handshakeSeen = true;</span>
-<span class="fc" id="L86">                    log.info(handshake);</span>
-<span class="fc" id="L87">                    handshake = &quot;&quot;;</span>
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                } else if (handshake.length() &gt;= HANDSHAKE_RESPONSE.length()) {</span>
-<span class="nc" id="L89">                    log.error(&quot;Bad handshake: {}&quot;, handshake);</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">                    if (ignoreBadHandshake) {</span>
-<span class="nc" id="L91">                        handshakeSeen = true;</span>
-<span class="nc" id="L92">                        handshake = &quot;&quot;;</span>
+<span class="fc bfc" id="L88" title="All 4 branches covered.">            while (!handshakeSeen &amp;&amp; availableBytes &gt; 0) {</span>
+<span class="fc" id="L89">                availableBytes--;</span>
+<span class="fc" id="L90">                handshakeBuilder.append(new String(serialPort.readBytes(1), ISO_8859_1));</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">                if (handshakeBuilder.length() &gt;= Protocol.HANDSHAKE_RESPONSE.length()) {</span>
+<span class="fc" id="L92">                    String handshake = handshakeBuilder.toString();</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                    if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {</span>
+<span class="fc" id="L94">                        log.info(&quot;RX &lt;- {}&quot;, handshake);</span>
+<span class="fc" id="L95">                        setHandshakeSeen();</span>
                     } else {
-<span class="nc" id="L94">                        serialPort.close();</span>
+<span class="nc" id="L97">                        log.error(&quot;Bad handshake: {}&quot;, handshake);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                        if (ignoreBadHandshake) {</span>
+<span class="nc" id="L99">                            setHandshakeSeen();</span>
+                        } else {
+<span class="nc" id="L101">                            serialPort.close();</span>
+<span class="nc" id="L102">                            return;</span>
+                        }
                     }
-                }
-<span class="fc" id="L97">            }</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (!handshakeSeen) {</span>
-<span class="fc" id="L99">                log.debug(handshake);</span>
+<span class="fc" id="L105">                }</span>
             }
-<span class="nc" id="L101">        } catch (IOException e) {</span>
-<span class="nc" id="L102">            log.error(e.getMessage(), e);</span>
-<span class="fc" id="L103">        }</span>
-<span class="fc" id="L104">    }</span>
-
-    @Override
-    public void addStopButtonListener(StopButtonListener listener) {
-<span class="nc" id="L108">        stopButtonListeners.add(listener);</span>
-<span class="nc" id="L109">    }</span>
-
-    @Override
-    public void removeStopButtonListener(StopButtonListener listener) {
-<span class="nc" id="L113">        stopButtonListeners.remove(listener);</span>
-<span class="nc" id="L114">    }</span>
-
-    /**
-     * Expects 19 bytes of data.
-     * @param inputFrame byte array of 19 bytes
-     */
-    private void processInputSensors(byte[] inputFrame) throws IOException {
-<span class="fc" id="L121">        int frameIndex = 0;</span>
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (inputFrame.length != FRAME_SIZE) {</span>
-<span class="nc" id="L123">            StringBuilder sb = new StringBuilder();</span>
-<span class="nc bnc" id="L124" title="All 2 branches missed.">            for (byte b : inputFrame) {</span>
-<span class="nc" id="L125">                sb.append(String.format(&quot;0x%02X &quot;, b));</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (!handshakeSeen) {</span>
+<span class="fc" id="L108">                log.debug(&quot;Current handshake: {}&quot;, handshakeBuilder);</span>
             }
-<span class="nc" id="L127">            throw new IOException(</span>
-                    &quot;Expected 19 bytes, got &quot; + inputFrame.length +
-<span class="nc" id="L129">                    &quot; - &quot; + sb.toString());</span>
-        }
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (!isChecksumValid(inputFrame)) {</span>
-<span class="nc" id="L132">            log.warn(&quot;Bad checksum received&quot;);</span>
-<span class="nc" id="L133">            return;</span>
-        }
-<span class="fc" id="L135">        processStopButton(inputFrame[frameIndex++]);</span>
-<span class="fc" id="L136">        int lastCommandIndex = frameIndex++;</span>
-<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (0x00 != inputFrame[lastCommandIndex]) {</span>
-<span class="fc" id="L138">            log.info(&quot;Ports affected by last command {}&quot;,</span>
-<span class="fc" id="L139">                    Output.decodeByteToSet(inputFrame[lastCommandIndex]));</span>
-        }
-<span class="fc bfc" id="L141" title="All 2 branches covered.">        for (Input in : frameInputOrder) {</span>
-<span class="fc" id="L142">            setSensorValue(in, inputFrame[frameIndex++], inputFrame[frameIndex++]);</span>
-<span class="fc" id="L143">        }</span>
-<span class="fc" id="L144">    }</span>
-
-    private void processStopButton(byte b) {
-<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (0x00 != b) {</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (!stopDepressed) {</span>
-<span class="nc" id="L149">                synchronized (stopButtonListeners) {</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">                    for (StopButtonListener listener : stopButtonListeners) {</span>
-<span class="nc" id="L151">                        listener.stopButtonPressed(new StopButtonEvent(this, b));</span>
-<span class="nc" id="L152">                    }</span>
-<span class="nc" id="L153">                }</span>
-<span class="nc" id="L154">                log.info(&quot;Stop button depressed {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
-<span class="nc" id="L155">                stopDepressed = true;</span>
-            }
-        } else {
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">            if (stopDepressed) {</span>
-<span class="nc" id="L159">                synchronized (stopButtonListeners) {</span>
-<span class="nc bnc" id="L160" title="All 2 branches missed.">                    for (StopButtonListener listener : stopButtonListeners) {</span>
-<span class="nc" id="L161">                        listener.stopButtonReleased(new StopButtonEvent(this, b));</span>
-<span class="nc" id="L162">                    }</span>
-<span class="nc" id="L163">                }</span>
-<span class="nc" id="L164">                log.info(&quot;Stop button released {}&quot;, String.format(&quot;0x%02X&quot;, b));</span>
-<span class="nc" id="L165">                stopDepressed = false;</span>
-            }
-        }
-<span class="fc" id="L168">    }</span>
-
-    private void setSensorValue(Input input, byte high, byte low) {
-<span class="fc" id="L171">        byte[] newValue = {high, low};</span>
-<span class="fc" id="L172">        byte[] oldValue = sensorData.put(input, newValue);</span>
-<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (!Arrays.equals(newValue, oldValue)) {</span>
-<span class="fc" id="L174">            log.info(&quot;{} value changed: {} -&gt; {} aka {}&quot;, input,</span>
-<span class="fc" id="L175">                    printInBinary(oldValue), printInBinary(newValue), new SensorValueImpl(high, low));</span>
-        }
-<span class="fc" id="L177">    }</span>
-
-    private boolean isChecksumValid(byte[] inputFrame) {
-<span class="fc" id="L180">        int checksum = 0;</span>
-<span class="fc bfc" id="L181" title="All 2 branches covered.">        for (byte b : inputFrame) {</span>
-<span class="fc" id="L182">            checksum += Byte.toUnsignedInt(b);</span>
-        }
-<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        return (checksum &amp; 0xFF) == 0xFF;</span>
-    }
-
-    private String printInBinary(byte[] highLow) {
-<span class="fc" id="L188">        return printByteInBinary(highLow[0]) + printByteInBinary(highLow[1]);</span>
-    }
-
-    String printByteInBinary(int data) {
-<span class="fc" id="L192">        return Integer.toBinaryString((data &amp; 0xFF) + 0x100).substring(1);</span>
-    }
+<span class="nc" id="L110">        } catch (IOException e) {</span>
+<span class="nc" id="L111">            log.error(e.getMessage(), e);</span>
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

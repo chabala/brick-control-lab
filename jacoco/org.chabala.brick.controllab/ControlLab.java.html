@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControlLab.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">ControlLab.java</span></div><h1>ControlLab.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControlLab.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">ControlLab.java</span></div><h1>ControlLab.java</h1><pre class="source lang-java linenums">/*
  * Copyright © 2016 Greg Chabala
  *
  * This file is part of brick-control-lab.
@@ -14,12 +14,15 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
 package org.chabala.brick.controllab;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
 
@@ -27,19 +30,22 @@ import java.util.Set;
  * This is the main interface for interacting with the LEGO® control lab, instances of
  * which can be created with {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
  *
- * &lt;p&gt;Usage example: &lt;pre&gt;   {@code
- *   ControlLab controlLab = ControlLab.newControlLab();
- *   List&lt;String&gt; availablePorts = controlLab.getAvailablePorts();
- *   try {
- *       controlLab.open(availablePorts.get(0));
- *       controlLab.setOutputPowerLevel(PowerLevel.P4, EnumSet.of(Output.A));
- *       controlLab.turnOutputOn(EnumSet.of(Output.A));
- *   } catch (IOException e) {
- *       e.printStackTrace();
- *   } finally {
- *       controlLab.close();
- *   }
- *       }&lt;/pre&gt;
+ * &lt;p&gt;Usage example: &lt;pre class=&quot;prettyprint lang-java&quot;&gt;
+ *    ControlLab controlLab = ControlLab.newControlLab();
+ *    {@code List&lt;String&gt;} availablePorts = controlLab.getAvailablePorts();
+ *    try {
+ *        controlLab.open(availablePorts.get(0));
+ *        controlLab.getOutput(OutputId.A).setPowerLevel(PowerLevel.P4).turnOn();
+ *    } catch (IOException e) {
+ *        e.printStackTrace();
+ *    } finally {
+ *        try {
+ *            controlLab.close();
+ *        } catch (IOException e) {
+ *            e.printStackTrace();
+ *        }
+ *    }&lt;/pre&gt;
+ * &lt;script src=&quot;https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js&quot;&gt;&lt;/script&gt;
  */
 public interface ControlLab extends Closeable {
 
@@ -48,7 +54,8 @@ public interface ControlLab extends Closeable {
      * @return a new ControlLab instance
      */
     static ControlLab newControlLab() {
-<span class="fc" id="L51">        return new ControlLabImpl();</span>
+<span class="fc" id="L57">        return new ControlLabImpl(</span>
+<span class="fc" id="L58">                LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()));</span>
     }
 
     /**
@@ -67,18 +74,25 @@ public interface ControlLab extends Closeable {
     void open(String portName) throws IOException;
 
     /**
+     * Returns the system specific serial port identifier the control lab is
+     * connected to, or empty string if not connected.
+     * @return system specific serial port identifier or empty string
+     */
+    String getConnectedPortName();
+
+    /**
      * Stops sending power to the specified outputs.
      * @param outputs outputs to stop
      * @throws IOException if any number of possible communication issues occurs
      */
-    void turnOutputOff(Set&lt;Output&gt; outputs) throws IOException;
+    void turnOutputOff(Set&lt;OutputId&gt; outputs) throws IOException;
 
     /**
      * Starts sending power to the specified outputs.
      * @param outputs outputs to start
      * @throws IOException if any number of possible communication issues occurs
      */
-    void turnOutputOn(Set&lt;Output&gt; outputs) throws IOException;
+    void turnOutputOn(Set&lt;OutputId&gt; outputs) throws IOException;
 
     /**
      * Sets the {@link Direction} of the specified outputs. Direction may be changed
@@ -87,7 +101,7 @@ public interface ControlLab extends Closeable {
      * @param outputs which outputs to change
      * @throws IOException if any number of possible communication issues occurs
      */
-    void setOutputDirection(Direction direction, Set&lt;Output&gt; outputs) throws IOException;
+    void setOutputDirection(Direction direction, Set&lt;OutputId&gt; outputs) throws IOException;
 
     /**
      * Sets the {@link PowerLevel} of the specified outputs. Power level may be changed
@@ -96,22 +110,34 @@ public interface ControlLab extends Closeable {
      * @param outputs which outputs to change
      * @throws IOException if any number of possible communication issues occurs
      */
-    void setOutputPowerLevel(PowerLevel powerLevel, Set&lt;Output&gt; outputs) throws IOException;
+    void setOutputPowerLevel(PowerLevel powerLevel, Set&lt;OutputId&gt; outputs) throws IOException;
 
     /**
-     * Attach a listener for {@link StopButtonEvent}s.
-     *
-     * &lt;p&gt;Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
-     * @param listener listener to add
+     * Return a handle for the output specified on this control lab instance.
+     * @param outputId identifier of the desired output port
+     * @return handle for the output specific to this control lab instance
      */
-    void addStopButtonListener(StopButtonListener listener);
+    Output getOutput(OutputId outputId);
 
     /**
-     * Remove a listener for {@link StopButtonEvent}s.
-     * @param listener listener to remove
+     * Return a handle for multiple outputs on this control lab instance.
+     * @param outputs identifiers of the desired output ports
+     * @return handle for the outputs specific to this control lab instance
      */
-    void removeStopButtonListener(StopButtonListener listener);
+    Output getOutput(Set&lt;OutputId&gt; outputs);
+
+    /**
+     * Return a handle for the stop button on this control lab instance.
+     * @return handle for the stop button on this control lab instance
+     */
+    StopButton getStopButton();
+
+    /**
+     * Return a handle for the input specified on this control lab instance.
+     * @param inputId identifier of the desired input port
+     * @return handle for the input specific to this control lab instance
+     */
+    Input getInput(InputId inputId);
 
     /**
      * Disconnects from the control lab and releases any resources.
@@ -120,4 +146,4 @@ public interface ControlLab extends Closeable {
     @Override
     void close() throws IOException;
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

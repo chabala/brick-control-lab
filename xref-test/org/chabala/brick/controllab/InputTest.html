@@ -22,27 +22,78 @@
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * GNU Lesser General Public License for more details.</em>
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> * You should have received a copy of the GNU Lesser General Public License</em>
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * along with brick-control-lab.  If not, see &lt;<a href="http://www.gnu.org/licenses/&gt;" target="alexandria_uri">http://www.gnu.org/licenses/&gt;</a>.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * along with brick-control-lab.  If not, see <a href="http://www.gnu.org/licenses/" target="alexandria_uri">http://www.gnu.org/licenses/</a>.</em>
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">package</strong> org.chabala.brick.controllab;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.hamcrest.Matchers.arrayWithSize;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertThat;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * Testing {@link Input}.</em>
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/chabala/brick/controllab/InputTest.html">InputTest</a> {
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.chabala.brick.controllab.sensor.SensorListener;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.junit.After;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.Rule;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.junit.rules.ExpectedException;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mock;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.mockito.junit.MockitoJUnit;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.mockito.junit.MockitoRule;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      @Test
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testThereAreEightInputs() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          assertThat(Input.values(), arrayWithSize(8));
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      }
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  }
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.hamcrest.Matchers.*;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.*;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.*;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * Testing {@link Input}.</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/chabala/brick/controllab/InputTest.html">InputTest</a> {
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      @Rule
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">public</strong> MockitoRule rule = MockitoJUnit.rule();
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      @Rule
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">public</strong> ExpectedException thrown = ExpectedException.none();
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      @Mock
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> InputManager inputManager;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      @Mock
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">private</strong> SensorListener listener;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">private</strong> InputId inputId;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">private</strong> Input input;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../org/chabala/brick/controllab/RandomEnum.html">RandomEnum</a> randomEnum = <strong class="jxr_keyword">new</strong> <a href="../../../../org/chabala/brick/controllab/RandomEnum.html">RandomEnum</a>();
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      @Before
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUp() {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          inputId = randomEnum.get(InputId.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          input = <strong class="jxr_keyword">new</strong> Input(inputManager, inputId);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      @After
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> tearDown() {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          input = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          inputId = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      @Test
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAddListener() {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          input.addListener(listener);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          verify(inputManager, times(1)).addSensorListener(inputId, listener);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      }
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      @Test
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testRemoveListener() {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          input.removeListener(listener);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          verify(inputManager, times(1)).removeSensorListener(inputId, listener);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      @Test
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testToString() {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          assertThat(input + <span class="jxr_string">""</span>, containsString(<span class="jxr_string">"inputId="</span> + inputId.name()));
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2016. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2016&#x2013;2019. All rights reserved.</div>
 </body>
 </html>

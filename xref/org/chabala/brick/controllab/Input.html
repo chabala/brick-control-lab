@@ -22,31 +22,55 @@
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * GNU Lesser General Public License for more details.</em>
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> * You should have received a copy of the GNU Lesser General Public License</em>
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * along with brick-control-lab.  If not, see &lt;<a href="http://www.gnu.org/licenses/&gt;" target="alexandria_uri">http://www.gnu.org/licenses/&gt;</a>.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * along with brick-control-lab.  If not, see <a href="http://www.gnu.org/licenses/" target="alexandria_uri">http://www.gnu.org/licenses/</a>.</em>
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">package</strong> org.chabala.brick.controllab;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * Identifiers for the input ports on the control lab.</em>
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * Inputs 1-4 are passive, they read the resistence of the sensor</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * connected to them. They are colored yellow on the control lab.</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * Inputs 5-8 are active, they supply power to the connected sensor</em>
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * in order for it to work. They are colored blue on the control lab.</em>
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> enum <a href="../../../../org/chabala/brick/controllab/Input.html">Input</a> {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <em class="jxr_javadoccomment">/** Input 1. */</em> I1,
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <em class="jxr_javadoccomment">/** Input 2. */</em> I2,
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <em class="jxr_javadoccomment">/** Input 3. */</em> I3,
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <em class="jxr_javadoccomment">/** Input 4. */</em> I4,
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <em class="jxr_javadoccomment">/** Input 5. */</em> I5,
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <em class="jxr_javadoccomment">/** Input 6. */</em> I6,
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <em class="jxr_javadoccomment">/** Input 7. */</em> I7,
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <em class="jxr_javadoccomment">/** Input 8. */</em> I8
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  }
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.chabala.brick.controllab.sensor.SensorEvent;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.chabala.brick.controllab.sensor.SensorListener;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * Handle for an input port on a specific control lab instance. Obtain</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * via {@link ControlLab#getInput(InputId)}.</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/chabala/brick/controllab/Input.html">Input</a> {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/chabala/brick/controllab/InputManager.html">InputManager</a> inputManager;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/chabala/brick/controllab/InputId.html">InputId</a> inputId;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <a href="../../../../org/chabala/brick/controllab/Input.html">Input</a>(<a href="../../../../org/chabala/brick/controllab/InputManager.html">InputManager</a> inputManager, <a href="../../../../org/chabala/brick/controllab/InputId.html">InputId</a> inputId) {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>          <strong class="jxr_keyword">this</strong>.inputManager = inputManager;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>          <strong class="jxr_keyword">this</strong>.inputId = inputId;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      }
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">     * Attach a listener for {@link SensorEvent}s.</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">     * &lt;p&gt;Multiple listeners are allowed. A listener instance will only be registered</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">     * once even if it is added multiple times.</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">     * @param listener listener to add</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addListener(<a href="../../../../org/chabala/brick/controllab/sensor/SensorListener.html">SensorListener</a> listener) {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          inputManager.addSensorListener(inputId, listener);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">     * Remove a listener for {@link SensorEvent}s.</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">     * @param listener listener to remove</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> removeListener(<a href="../../../../org/chabala/brick/controllab/sensor/SensorListener.html">SensorListener</a> listener) {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          inputManager.removeSensorListener(inputId, listener);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <em class="jxr_javadoccomment">/** {@inheritDoc} */</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      @Override
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Input{"</span> +
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>                  <span class="jxr_string">"inputId="</span> + inputId +
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>                  '}';
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2016. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2016&#x2013;2019. All rights reserved.</div>
 </body>
 </html>

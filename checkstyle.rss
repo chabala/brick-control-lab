@@ -20,19 +20,19 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>brick-control-lab - Checkstyle report</title>
-    <link>https://github.com/chabala/brick-control-lab</link>
+    <link>https://chabala.github.io/brick-control-lab/</link>
     <description>brick-control-lab - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2016</copyright>
+    <copyright>&#169;2016 - 2019</copyright>
     <item>
-      <title>File: 22,
-             Errors: 44,
+      <title>File: 37,
+             Errors: 31,
              Warnings: 0,
              Infos: 0
       </title>
-            <link>https://github.com/chabala/brick-control-lab/checkstyle.html</link>
+            <link>https://chabala.github.io/brick-control-lab//checkstyle.html</link>
       <description>
-        <p>Click <a href="https://github.com/chabala/brick-control-lab/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://chabala.github.io/brick-control-lab//checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,231 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.Direction.java">org/chabala/brick/controllab/Direction.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.Input.java">org/chabala/brick/controllab/Input.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.StopButtonListener.java">org/chabala/brick/controllab/StopButtonListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SerialListener.java">org/chabala/brick/controllab/SerialListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  4
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.sensor.TemperatureSensor.java">org/chabala/brick/controllab/sensor/TemperatureSensor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  9
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.sensor.LightSensor.java">org/chabala/brick/controllab/sensor/LightSensor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  9
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SerialPortEventListener.java">org/chabala/brick/controllab/SerialPortEventListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.sensor.TouchSensor.java">org/chabala/brick/controllab/sensor/TouchSensor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  10
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SensorValueImpl.java">org/chabala/brick/controllab/SensorValueImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  4
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.Protocol.java">org/chabala/brick/controllab/Protocol.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.Output.java">org/chabala/brick/controllab/Output.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.StopButtonEvent.java">org/chabala/brick/controllab/StopButtonEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SerialPort.java">org/chabala/brick/controllab/SerialPort.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.ControlLabImpl.java">org/chabala/brick/controllab/ControlLabImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SensorValue.java">org/chabala/brick/controllab/SensorValue.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.KeepAliveMonitor.java">org/chabala/brick/controllab/KeepAliveMonitor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.PowerLevel.java">org/chabala/brick/controllab/PowerLevel.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.SensorValue.java">org/chabala/brick/controllab/sensor/SensorValue.java</a>
                 </td>
                 <td>
                   0
@@ -284,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.JsscSerialPort.java">org/chabala/brick/controllab/JsscSerialPort.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.Input.java">org/chabala/brick/controllab/Input.java</a>
                 </td>
                 <td>
                   0
@@ -298,7 +74,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.package-info.java">org/chabala/brick/controllab/package-info.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.BinaryStringFormatter.java">org/chabala/brick/controllab/sensor/BinaryStringFormatter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.SensorListener.java">org/chabala/brick/controllab/sensor/SensorListener.java</a>
                 </td>
                 <td>
                   0
@@ -312,7 +102,63 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.JsscSerialPortFactory.java">org/chabala/brick/controllab/JsscSerialPortFactory.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.InputManager.java">org/chabala/brick/controllab/InputManager.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialPortWriter.java">org/chabala/brick/controllab/SerialPortWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.TemperatureSensor.java">org/chabala/brick/controllab/sensor/TemperatureSensor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.LightSensor.java">org/chabala/brick/controllab/sensor/LightSensor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.TouchSensorListener.java">org/chabala/brick/controllab/sensor/TouchSensorListener.java</a>
                 </td>
                 <td>
                   0
@@ -326,7 +172,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.SerialPortFactory.java">org/chabala/brick/controllab/SerialPortFactory.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.OutputId.java">org/chabala/brick/controllab/OutputId.java</a>
                 </td>
                 <td>
                   0
@@ -340,7 +186,371 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/chabala/brick-control-lab/checkstyle.html#org.chabala.brick.controllab.ControlLab.java">org/chabala/brick/controllab/ControlLab.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.StopButtonEvent.java">org/chabala/brick/controllab/StopButtonEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialPort.java">org/chabala/brick/controllab/SerialPort.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.ControlLabImpl.java">org/chabala/brick/controllab/ControlLabImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.SensorValueImpl.java">org/chabala/brick/controllab/sensor/SensorValueImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.LightSensorListener.java">org/chabala/brick/controllab/sensor/LightSensorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.KeepAliveMonitor.java">org/chabala/brick/controllab/KeepAliveMonitor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.SensorEvent.java">org/chabala/brick/controllab/sensor/SensorEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.TouchSensorEvent.java">org/chabala/brick/controllab/sensor/TouchSensorEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.package-info.java">org/chabala/brick/controllab/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialPortFactory.java">org/chabala/brick/controllab/SerialPortFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.ControlLab.java">org/chabala/brick/controllab/ControlLab.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.LightSensorEvent.java">org/chabala/brick/controllab/sensor/LightSensorEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.InputId.java">org/chabala/brick/controllab/InputId.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.Direction.java">org/chabala/brick/controllab/Direction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.StopButtonListener.java">org/chabala/brick/controllab/StopButtonListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.InputType.java">org/chabala/brick/controllab/InputType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.ByteConsumer.java">org/chabala/brick/controllab/ByteConsumer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialListener.java">org/chabala/brick/controllab/SerialListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialPortEventListener.java">org/chabala/brick/controllab/SerialPortEventListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.TouchSensor.java">org/chabala/brick/controllab/sensor/TouchSensor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.Protocol.java">org/chabala/brick/controllab/Protocol.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.Output.java">org/chabala/brick/controllab/Output.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.package-info.java">org/chabala/brick/controllab/sensor/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.PowerLevel.java">org/chabala/brick/controllab/PowerLevel.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.JsscSerialPort.java">org/chabala/brick/controllab/JsscSerialPort.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.JsscSerialPortFactory.java">org/chabala/brick/controllab/JsscSerialPortFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.StopButton.java">org/chabala/brick/controllab/StopButton.java</a>
                 </td>
                 <td>
                   0

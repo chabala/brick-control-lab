@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsscSerialPort.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">JsscSerialPort.java</span></div><h1>JsscSerialPort.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsscSerialPort.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">brick-control-lab - JaCoCo Report</a> &gt; <a href="index.source.html" class="el_package">org.chabala.brick.controllab</a> &gt; <span class="el_source">JsscSerialPort.java</span></div><h1>JsscSerialPort.java</h1><pre class="source lang-java linenums">/*
  * Copyright © 2016 Greg Chabala
  *
  * This file is part of brick-control-lab.
@@ -14,11 +14,10 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with brick-control-lab.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ * along with brick-control-lab.  If not, see http://www.gnu.org/licenses/.
  */
 package org.chabala.brick.controllab;
 
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import java.io.IOException;
@@ -38,47 +37,47 @@ class JsscSerialPort implements SerialPort {
      * @param portName system specific serial port identifier
      */
     JsscSerialPort(String portName) {
-<span class="fc" id="L41">        this(new jssc.SerialPort(portName));</span>
-<span class="fc" id="L42">    }</span>
+<span class="fc" id="L40">        this(new jssc.SerialPort(portName));</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * This constructor is for unit testing.
      */
-<span class="fc" id="L47">    JsscSerialPort(jssc.SerialPort serialPort) {</span>
-<span class="fc" id="L48">        this.serialPort = serialPort;</span>
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L46">    JsscSerialPort(jssc.SerialPort serialPort) {</span>
+<span class="fc" id="L47">        this.serialPort = serialPort;</span>
+<span class="fc" id="L48">    }</span>
 
     /** {@inheritDoc} */
     @Override
     public String getPortName() {
-<span class="fc" id="L54">        return serialPort.getPortName();</span>
+<span class="fc" id="L53">        return serialPort.getPortName();</span>
     }
 
     /** {@inheritDoc} */
     @Override
     public void openPort() throws IOException {
         try {
-<span class="fc" id="L61">            serialPort.openPort();</span>
-<span class="fc" id="L62">            setParams();</span>
-<span class="fc" id="L63">            setEventsMask();</span>
-<span class="fc" id="L64">        } catch (SerialPortException e) {</span>
-<span class="fc" id="L65">            throw new IOException(e);</span>
-<span class="fc" id="L66">        }</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L60">            serialPort.openPort();</span>
+<span class="fc" id="L61">            setParams();</span>
+<span class="fc" id="L62">            setEventsMask();</span>
+<span class="fc" id="L63">        } catch (SerialPortException e) {</span>
+<span class="fc" id="L64">            throw new IOException(e);</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">    }</span>
 
     /** {@inheritDoc} */
     @Override
     public boolean isOpen() {
-<span class="fc" id="L72">        return serialPort.isOpened();</span>
+<span class="fc" id="L71">        return serialPort.isOpened();</span>
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean write(byte b) throws IOException {
         try {
-<span class="fc" id="L79">            return serialPort.writeByte(b);</span>
-<span class="fc" id="L80">        } catch (SerialPortException e) {</span>
-<span class="fc" id="L81">            throw new IOException(e);</span>
+<span class="fc" id="L78">            return serialPort.writeByte(b);</span>
+<span class="fc" id="L79">        } catch (SerialPortException e) {</span>
+<span class="fc" id="L80">            throw new IOException(e);</span>
         }
     }
 
@@ -86,9 +85,9 @@ class JsscSerialPort implements SerialPort {
     @Override
     public boolean write(byte[] bytes) throws IOException {
         try {
-<span class="fc" id="L89">            return serialPort.writeBytes(bytes);</span>
-<span class="fc" id="L90">        } catch (SerialPortException e) {</span>
-<span class="fc" id="L91">            throw new IOException(e);</span>
+<span class="fc" id="L88">            return serialPort.writeBytes(bytes);</span>
+<span class="fc" id="L89">        } catch (SerialPortException e) {</span>
+<span class="fc" id="L90">            throw new IOException(e);</span>
         }
     }
 
@@ -96,26 +95,26 @@ class JsscSerialPort implements SerialPort {
     @Override
     public byte[] readBytes(int byteCount) throws IOException {
         try {
-<span class="fc" id="L99">            return serialPort.readBytes(byteCount);</span>
-<span class="fc" id="L100">        } catch (SerialPortException e) {</span>
-<span class="fc" id="L101">            throw new IOException(e);</span>
+<span class="fc" id="L98">            return serialPort.readBytes(byteCount);</span>
+<span class="fc" id="L99">        } catch (SerialPortException e) {</span>
+<span class="fc" id="L100">            throw new IOException(e);</span>
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (serialPort.isOpened()) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (serialPort.isOpened()) {</span>
             try {
-<span class="fc" id="L110">                serialPort.closePort();</span>
-<span class="fc" id="L111">            } catch (SerialPortException e) {</span>
-<span class="fc" id="L112">                throw new IOException(&quot;Error closing serial port&quot;, e);</span>
-<span class="fc" id="L113">            }</span>
+<span class="fc" id="L109">                serialPort.closePort();</span>
+<span class="fc" id="L110">            } catch (SerialPortException e) {</span>
+<span class="fc" id="L111">                throw new IOException(&quot;Error closing serial port&quot;, e);</span>
+<span class="fc" id="L112">            }</span>
         }
-<span class="fc" id="L115">    }</span>
+<span class="fc" id="L114">    }</span>
 
     private boolean setParams() throws SerialPortException {
-<span class="fc" id="L118">        return serialPort.setParams(</span>
+<span class="fc" id="L117">        return serialPort.setParams(</span>
                 jssc.SerialPort.BAUDRATE_9600,
                 jssc.SerialPort.DATABITS_8,
                 jssc.SerialPort.STOPBITS_1,
@@ -125,7 +124,7 @@ class JsscSerialPort implements SerialPort {
     }
 
     private boolean setEventsMask() throws SerialPortException {
-<span class="fc" id="L128">        return serialPort.setEventsMask(</span>
+<span class="fc" id="L127">        return serialPort.setEventsMask(</span>
                 jssc.SerialPort.MASK_RXCHAR |
                 jssc.SerialPort.MASK_CTS |
                 jssc.SerialPort.MASK_DSR);
@@ -135,10 +134,19 @@ class JsscSerialPort implements SerialPort {
     @Override
     public void addEventListener(SerialPortEventListener listener) throws IOException {
         try {
-<span class="fc" id="L138">            serialPort.addEventListener(listener);</span>
-<span class="fc" id="L139">        } catch (SerialPortException e) {</span>
-<span class="fc" id="L140">            throw new IOException(e);</span>
-<span class="fc" id="L141">        }</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L137">            serialPort.addEventListener(listener);</span>
+<span class="fc" id="L138">        } catch (SerialPortException e) {</span>
+<span class="fc" id="L139">            throw new IOException(e);</span>
+<span class="fc" id="L140">        }</span>
+<span class="fc" id="L141">    }</span>
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+<span class="fc" id="L146">        return &quot;JsscSerialPort{&quot; +</span>
+<span class="fc" id="L147">                &quot;portName='&quot; + getPortName() + '\'' +</span>
+<span class="fc" id="L148">                &quot;, open=&quot; + isOpen() +</span>
+                '}';
+    }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
