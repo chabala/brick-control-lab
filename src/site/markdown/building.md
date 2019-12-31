@@ -18,3 +18,9 @@ See [Source Code Management](source-repository.html) for more details regarding 
 
 ### Building
 Run ```mvn clean verify``` to clean, compile, test, and produce the artifact.
+
+### Releasing
+Run ```mvn release:clean release:prepare``` to stage the release. This includes tagging the repo,
+building the site, and signing the artifacts.
+
+Then run ```mvn release:perform``` to finalize the release with Maven Central.
