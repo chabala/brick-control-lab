@@ -52,6 +52,8 @@ instructions and additional documentation.
 ### Licensing
 Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
+### test travis integration
+
 [1]: http://www.peeron.com/inv/sets/9751-1
 [2]: https://travis-ci.org/chabala/brick-control-lab.svg?branch=master
 [3]: https://travis-ci.org/chabala/brick-control-lab
