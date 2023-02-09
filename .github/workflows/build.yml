@@ -24,7 +24,7 @@ jobs:
       - name: 'Build'
         run: |
           mvn --batch-mode verify jacoco:report coveralls:report sonar:sonar \
-          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }} -DserviceName=github \
+          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }} \
           -Dsonar.organization=chabala -Dsonar.projectKey=org.chabala.brick:brick-control-lab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
