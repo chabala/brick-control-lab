@@ -291,8 +291,9 @@
                         <exclude>**/COPYING*</exclude>
                         <exclude>src/main/config/**</exclude>
                         <exclude>**/resources/**</exclude>
-                        <exclude>.shelf/**</exclude>
+                        <exclude>.github/**</exclude>
                         <exclude>.mvn/jvm.config</exclude>
+                        <exclude>.shelf/**</exclude>
                     </excludes>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>
