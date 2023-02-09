@@ -24,4 +24,7 @@ jobs:
       - name: 'Build'
         run: |
           mvn --batch-mode verify jacoco:report coveralls:report sonar:sonar \
-          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }}
+          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }} -DserviceName=github \
+          -DserviceBuildNumber=${{ github.run_id }}-${{ github.run_number }}
+        env:
+          SONAR_HOST_URL: "https://sonarcloud.io"
