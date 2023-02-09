@@ -54,4 +54,5 @@ jobs:
           -Dsonar.organization=chabala -Dsonar.projectKey=org.chabala.brick:brick-control-lab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "https://sonarcloud.io"
