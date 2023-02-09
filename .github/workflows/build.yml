@@ -23,8 +23,34 @@ jobs:
 
       - name: 'Build'
         run: |
-          mvn --batch-mode verify jacoco:report coveralls:report sonar:sonar \
-          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }} \
+          mvn --batch-mode verify jacoco:report coveralls:report \
+          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }}
+
+      - name: 'Upload directory to pass to next job'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: .
+  sonar:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Restore directory from build'
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: .
+
+      - name: 'Set up Java 11'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+          cache: 'maven'
+
+      - name: 'Sonar'
+        run: |
+          mvn --batch-mode sonar:sonar \
           -Dsonar.organization=chabala -Dsonar.projectKey=org.chabala.brick:brick-control-lab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
