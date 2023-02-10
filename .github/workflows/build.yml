@@ -32,9 +32,12 @@ jobs:
           path: .
   coveralls:
     needs: build
-    if: secrets.COVERALLS_TOKEN != ''
     runs-on: ubuntu-latest
     steps:
+      - name: 'Check secret access for fast fail'
+        run: [ -n "$REPO_TOKEN" ]
+        env:
+          REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
       - name: 'Restore directory from build'
         uses: actions/download-artifact@v3
         with:
