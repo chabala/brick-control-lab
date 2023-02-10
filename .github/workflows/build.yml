@@ -23,7 +23,7 @@ jobs:
 
       - name: 'Build'
         run: |
-          mvn --batch-mode verify jacoco:report coveralls:report \
+          mvn -V --batch-mode verify jacoco:report coveralls:report \
           -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }}
 
       - name: 'Upload directory to pass to next job'
@@ -48,10 +48,16 @@ jobs:
           java-version: 11
           cache: 'maven'
 
+      - name: 'Cache SonarCloud packages'
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: 'Sonar'
         run: |
-          mvn --batch-mode sonar:sonar \
-          -Dsonar.organization=chabala -Dsonar.projectKey=org.chabala.brick:brick-control-lab
+          mvn -V --batch-mode sonar:sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
