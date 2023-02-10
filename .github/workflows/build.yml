@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Check secret access for fast fail'
-        run: [ -n "$REPO_TOKEN" ]
+        run: test -n "$REPO_TOKEN"
         env:
           REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
       - name: 'Restore directory from build'
