@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request: # all pull requests
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check out repository'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Set up Java 8'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 8
+          cache: 'maven'
+
+      - name: 'Build'
+        run: |
+          mvn -V --batch-mode verify jacoco:report coveralls:report \
+          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -DpullRequest=${{ github.event.number }}
+
+      - name: 'Upload directory to pass to next job'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: .
+  sonar:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Restore directory from build'
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: .
+
+      - name: 'Set up Java 11'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+          cache: 'maven'
+
+      - name: 'Cache SonarCloud packages'
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: 'Sonar'
+        run: |
+          mvn -V --batch-mode sonar:sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "https://sonarcloud.io"
