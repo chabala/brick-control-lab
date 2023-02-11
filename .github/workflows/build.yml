@@ -33,10 +33,14 @@ jobs:
   coveralls-pre-check:
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      HAVE_REPO_TOKEN: ${{ steps.step1.outputs.HAVE_REPO_TOKEN }}
     steps:
-      - name: 'Check secret access for fast fail'
+      - id: step1
+        name: 'Check secret access for fast fail'
         run: |
           echo "HAVE_REPO_TOKEN=$HAVE_REPO_TOKEN" >> $GITHUB_OUTPUT
+          echo "HAVE_REPO_TOKEN=$HAVE_REPO_TOKEN" >> $GITHUB_STEP_SUMMARY
         env:
           HAVE_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN != '' }}
           REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
@@ -45,6 +49,9 @@ jobs:
     if: needs.coveralls-pre-check.outputs.HAVE_REPO_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: 'Check prior job output'
+        run: |
+          echo "needs.coveralls-pre-check.outputs.HAVE_REPO_TOKEN=${{ needs.coveralls-pre-check.outputs.HAVE_REPO_TOKEN }}" >> $GITHUB_STEP_SUMMARY
       - name: 'Restore directory from build'
         uses: actions/download-artifact@v3
         with:
