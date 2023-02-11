@@ -43,15 +43,11 @@ jobs:
           echo "HAVE_REPO_TOKEN=$HAVE_REPO_TOKEN" >> $GITHUB_STEP_SUMMARY
         env:
           HAVE_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN != '' }}
-          REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
   coveralls:
     needs: coveralls-pre-check
     if: needs.coveralls-pre-check.outputs.HAVE_REPO_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: 'Check prior job output'
-        run: |
-          echo "needs.coveralls-pre-check.outputs.HAVE_REPO_TOKEN=${{ needs.coveralls-pre-check.outputs.HAVE_REPO_TOKEN }}" >> $GITHUB_STEP_SUMMARY
       - name: 'Restore directory from build'
         uses: actions/download-artifact@v3
         with:
@@ -71,8 +67,22 @@ jobs:
           -DrepoToken=$REPO_TOKEN -DpullRequest=${{ github.event.number }}
         env:
           REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-  sonar:
+  sonar-pre-check:
     needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      HAVE_SONAR_TOKEN: ${{ steps.step1.outputs.HAVE_SONAR_TOKEN }}
+    steps:
+      - id: step1
+        name: 'Check secret access for fast fail'
+        run: |
+          echo "HAVE_SONAR_TOKEN=$HAVE_SONAR_TOKEN" >> $GITHUB_OUTPUT
+          echo "HAVE_SONAR_TOKEN=$HAVE_SONAR_TOKEN" >> $GITHUB_STEP_SUMMARY
+        env:
+          HAVE_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN != '' }}
+  sonar:
+    needs: sonar-pre-check
+    if: needs.sonar-pre-check.outputs.HAVE_REPO_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 'Restore directory from build'
