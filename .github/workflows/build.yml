@@ -82,7 +82,7 @@ jobs:
           HAVE_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN != '' }}
   sonar:
     needs: sonar-pre-check
-    if: needs.sonar-pre-check.outputs.HAVE_REPO_TOKEN == 'true'
+    if: needs.sonar-pre-check.outputs.HAVE_SONAR_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 'Restore directory from build'
