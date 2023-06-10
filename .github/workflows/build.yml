@@ -4,6 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request: # all pull requests
+  workflow_dispatch: # allow triggering manually
 
 jobs:
   build:
