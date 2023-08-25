@@ -53,11 +53,11 @@ instructions and additional documentation.
 Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 [1]: http://www.peeron.com/inv/sets/9751-1
-[2]: https://travis-ci.org/chabala/brick-control-lab.svg?branch=master
-[3]: https://travis-ci.org/chabala/brick-control-lab
+[2]: https://github.com/chabala/brick-control-lab/actions/workflows/build.yml/badge.svg?branch=master
+[3]: https://github.com/chabala/brick-control-lab/actions/workflows/build.yml
 [4]: https://img.shields.io/badge/license-GNU_LGPL_3.0-brightgreen.svg
-[5]: https://api.codacy.com/project/badge/Grade/f05f0d18f49a48659b1066884a7fef68
-[6]: https://www.codacy.com/app/chabala/brick-control-lab
+[5]: https://app.codacy.com/project/badge/Grade/1635550c03fb4874889f145d3d9bd237?branch=master
+[6]: https://app.codacy.com/gh/chabala/brick-control-lab/dashboard
 [7]: https://coveralls.io/repos/github/chabala/brick-control-lab/badge.svg?branch=master
 [8]: https://coveralls.io/github/chabala/brick-control-lab?branch=master
 [9]: https://www.bricklink.com/SL/9751-1.jpg

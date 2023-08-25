@@ -579,13 +579,13 @@
         <url>${ghProjectUrl}/issues</url>
     </issueManagement>
     <ciManagement>
-        <system>travis</system>
-        <url>https://travis-ci.org/${ghUser}/${project.artifactId}</url>
+        <system>GitHub</system>
+        <url>${ghProjectUrl}/actions</url>
     </ciManagement>
     <licenses>
         <license>
             <name>GNU Lesser General Public License 3.0</name>
-            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
