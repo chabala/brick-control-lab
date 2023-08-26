@@ -14,7 +14,7 @@ pre-built jars. Building from source is only necessary for developing brick-cont
 $ git clone git@github.com:chabala/brick-control-lab.git
 ```
 
-See [Source Code Management](source-repository.html) for more details regarding this.
+See [Source Code Management](scm.html) for more details regarding this.
 
 ### Building
 Run ```mvn clean verify``` to clean, compile, test, and produce the artifact.

@@ -53,7 +53,7 @@ JRE modifications.
 ### Licensing
 Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
-See also: [Licenses](license.html)
+See also: [Licenses](licenses.html)
 
 ---
 

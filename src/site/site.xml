@@ -56,17 +56,17 @@
         </menu>
         <menu name="Project Documentation">
             <item name="Project Information" href="project-info.html" collapse="true">
-                <item name="Summary" href="project-summary.html"/>
+                <item name="Summary" href="summary.html"/>
                 <item name="Dependency Information" href="dependency-info.html"/>
-                <item name="Distribution Management" href="distribution-management.html"/>
                 <item name="Dependencies" href="dependencies.html"/>
-                <item name="CI Management" href="integration.html"/>
-                <item name="Issue Management" href="issue-tracking.html"/>
-                <item name="Licenses" href="license.html"/>
+                <item name="CI Management" href="ci-management.html"/>
+                <item name="Issue Management" href="issue-management.html"/>
+                <item name="Licenses" href="licenses.html"/>
                 <item name="Plugin Management" href="plugin-management.html"/>
                 <item name="Plugins" href="plugins.html"/>
-                <item name="Team" href="team-list.html"/>
-                <item name="Source Code Management" href="source-repository.html"/>
+                <item name="Team" href="team.html"/>
+                <item name="Source Code Management" href="scm.html"/>
+                <item name="Distribution Management" href="distribution-management.html"/>
             </item>
             <item name="Project Reports" href="project-reports.html" collapse="true">
                 <item name="GitHub Report" href="github-report.html"/>
