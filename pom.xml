@@ -100,7 +100,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.9</version>
+                    <version>3.1.2</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.bcel</groupId>
@@ -145,7 +145,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.5</version>
+                    <version>0.8.10</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -282,22 +282,26 @@
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
+                <version>4.2</version>
                 <configuration>
-                    <header>src/main/config/copyright_template.txt</header>
                     <properties>
                         <owner>Greg Chabala</owner>
                     </properties>
-                    <useDefaultExcludes>true</useDefaultExcludes>
-                    <excludes>
-                        <exclude>**/pom*.xml</exclude>
-                        <exclude>**/COPYING*</exclude>
-                        <exclude>src/main/config/**</exclude>
-                        <exclude>**/resources/**</exclude>
-                        <exclude>.github/**</exclude>
-                        <exclude>.mvn/jvm.config</exclude>
-                        <exclude>.shelf/**</exclude>
-                    </excludes>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>src/main/config/copyright_template.txt</header>
+                            <useDefaultExcludes>true</useDefaultExcludes>
+                            <excludes>
+                                <exclude>**/pom*.xml</exclude>
+                                <exclude>**/COPYING*</exclude>
+                                <exclude>src/main/config/**</exclude>
+                                <exclude>**/resources/**</exclude>
+                                <exclude>.github/**</exclude>
+                                <exclude>.mvn/jvm.config</exclude>
+                                <exclude>.shelf/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>
                     </mapping>
@@ -547,7 +551,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.0.1</version>
+            <version>4.2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -579,13 +583,13 @@
         <url>${ghProjectUrl}/issues</url>
     </issueManagement>
     <ciManagement>
-        <system>travis</system>
-        <url>https://travis-ci.org/${ghUser}/${project.artifactId}</url>
+        <system>GitHub</system>
+        <url>${ghProjectUrl}/actions</url>
     </ciManagement>
     <licenses>
         <license>
             <name>GNU Lesser General Public License 3.0</name>
-            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
