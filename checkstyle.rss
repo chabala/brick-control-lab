@@ -23,7 +23,7 @@ under the License.
     <link>https://chabala.github.io/brick-control-lab/</link>
     <description>brick-control-lab - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2016 - 2019</copyright>
+    <copyright>&#169;2016 - 2023</copyright>
     <item>
       <title>File: 37,
              Errors: 31,
@@ -186,7 +186,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.StopButtonEvent.java">org/chabala/brick/controllab/StopButtonEvent.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialPort.java">org/chabala/brick/controllab/SerialPort.java</a>
                 </td>
                 <td>
                   0
@@ -200,7 +200,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.SerialPort.java">org/chabala/brick/controllab/SerialPort.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.StopButtonEvent.java">org/chabala/brick/controllab/StopButtonEvent.java</a>
                 </td>
                 <td>
                   0
@@ -256,7 +256,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.KeepAliveMonitor.java">org/chabala/brick/controllab/KeepAliveMonitor.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.SensorEvent.java">org/chabala/brick/controllab/sensor/SensorEvent.java</a>
                 </td>
                 <td>
                   0
@@ -270,7 +270,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.sensor.SensorEvent.java">org/chabala/brick/controllab/sensor/SensorEvent.java</a>
+                  <a href="https://chabala.github.io/brick-control-lab//checkstyle.html#org.chabala.brick.controllab.KeepAliveMonitor.java">org/chabala/brick/controllab/KeepAliveMonitor.java</a>
                 </td>
                 <td>
                   0

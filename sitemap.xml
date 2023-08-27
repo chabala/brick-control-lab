@@ -7,6 +7,9 @@
         <loc>https://chabala.github.io/brick-control-lab/checkstyle.html</loc>
     </url>
     <url>
+        <loc>https://chabala.github.io/brick-control-lab/ci-management.html</loc>
+    </url>
+    <url>
         <loc>https://chabala.github.io/brick-control-lab/cpd.html</loc>
     </url>
     <url>
@@ -37,16 +40,13 @@
         <loc>https://chabala.github.io/brick-control-lab/index.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/integration.html</loc>
-    </url>
-    <url>
-        <loc>https://chabala.github.io/brick-control-lab/issue-tracking.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/issue-management.html</loc>
     </url>
     <url>
         <loc>https://chabala.github.io/brick-control-lab/jdepend-report.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/license.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/licenses.html</loc>
     </url>
     <url>
         <loc>https://chabala.github.io/brick-control-lab/linkcheck.html</loc>
@@ -70,10 +70,10 @@
         <loc>https://chabala.github.io/brick-control-lab/project-reports.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/project-summary.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/references.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/references.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/scm.html</loc>
     </url>
     <url>
         <loc>https://chabala.github.io/brick-control-lab/serial-sniffing.html</loc>
@@ -82,16 +82,16 @@
         <loc>https://chabala.github.io/brick-control-lab/sonarcloud.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/source-repository.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/spotbugs.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/spotbugs.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/summary.html</loc>
     </url>
     <url>
         <loc>https://chabala.github.io/brick-control-lab/surefire-report.html</loc>
     </url>
     <url>
-        <loc>https://chabala.github.io/brick-control-lab/team-list.html</loc>
+        <loc>https://chabala.github.io/brick-control-lab/team.html</loc>
     </url>
     <url>
         <loc>https://chabala.github.io/brick-control-lab/usage.html</loc>

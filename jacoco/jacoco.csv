@@ -3,8 +3,8 @@ brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,Output,0,70,0,0,0
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,PowerLevel,0,120,0,2,0,17,0,5,0,4
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,StopButtonEvent,0,35,0,0,0,6,0,3,0,3
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,InputId,0,103,0,0,0,13,0,3,0,3
-brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,Protocol,6,0,0,0,2,0,1,0,1,0
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,Direction,0,48,0,0,0,8,0,3,0,3
+brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,Protocol,6,0,0,0,2,0,1,0,1,0
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,InputType,0,24,0,0,0,3,0,1,0,1
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,KeepAliveMonitor,7,79,1,1,2,21,1,7,0,7
 brick-control-lab - JaCoCo Report,org.chabala.brick.controllab,ControlLabImpl,16,230,2,10,4,52,4,19,2,15
