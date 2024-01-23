@@ -164,6 +164,11 @@
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>3.7.0.1746</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.github.genthaler</groupId>
+                    <artifactId>beanshell-maven-plugin</artifactId>
+                    <version>1.4</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -398,6 +403,54 @@
                             <target>
                                 <delete file="${project.basedir}/velocity.log" />
                             </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.genthaler</groupId>
+                <artifactId>beanshell-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-redirect-pages</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <script><![CDATA[
+                            // Generate redirect pages for historic site URLs (MPIR-323)
+                            String contents(String target) {
+                                String url = project.url + target;
+                                String template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" " +
+                                        "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                                        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n" +
+                                        "<head>\n" +
+                                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" +
+                                        "    <link rel=\"canonical\" href=\"" + url + "\" />\n" +
+                                        "    <meta http-equiv=\"refresh\" content=\"0;url=" + target + "\" />\n" +
+                                        "</head>\n<body>\n<h1>\n" +
+                                        "    This page has been moved to <a href=\"" + target + "\">" + url + "</a>\n" +
+                                        "    <script type='text/javascript'> window.location.replace(\"" + url + "\"); </script>\n" +
+                                        "</h1>\n</body>\n</html>\n";
+                                return template;
+                            }
+                            File site = new File(project.reporting.outputDirectory);
+                            site.mkdirs();
+                            String[][] filenameArray = new String[][] {
+                                    {"integration.html", "ci-management.html"},
+                                    {"issue-tracking.html", "issue-management.html"},
+                                    {"license.html", "licenses.html"},
+                                    {"project-summary.html", "summary.html"},
+                                    {"source-repository.html", "scm.html"},
+                                    {"team-list.html", "team.html"}};
+                            for (int i=0; i<filenameArray.length; i++) {
+                                File file = new File(site, filenameArray[i][0]);
+                                org.codehaus.plexus.util.FileUtils.fileWrite(file, "UTF-8", contents(filenameArray[i][1]));
+                            }
+                            ]]>
+                            </script>
                         </configuration>
                     </execution>
                 </executions>
