@@ -168,6 +168,13 @@
                     <groupId>com.github.genthaler</groupId>
                     <artifactId>beanshell-maven-plugin</artifactId>
                     <version>1.4</version>
+                    <dependencies>
+                        <dependency><!-- used by late-site-add-canonical-urls -->
+                            <groupId>org.jsoup</groupId>
+                            <artifactId>jsoup</artifactId>
+                            <version>1.17.2</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -449,6 +456,87 @@
                                 File file = new File(site, filenameArray[i][0]);
                                 org.codehaus.plexus.util.FileUtils.fileWrite(file, "UTF-8", contents(filenameArray[i][1]));
                             }
+                            ]]>
+                            </script>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>late-site-add-canonical-urls</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <script><![CDATA[
+// Add canonical URLs to any site HTML pages that are missing them
+String buildCanonicalUrl(String absoluteFilePath, String baseDirectory, String baseUrl) {
+    String urlPath = (
+        org.codehaus.plexus.util.FileUtils.basename(absoluteFilePath).equalsIgnoreCase("index.")
+            ? org.codehaus.plexus.util.FileUtils.dirname(absoluteFilePath) + File.separator
+            : absoluteFilePath
+        ).substring(baseDirectory.length());
+    return baseUrl + (File.separator.equals("/") ? urlPath : urlPath.replace(File.separator, "/"));
+}
+void insert(String filename, long offset, String content) throws IOException {
+    File tempFile = File.createTempFile(org.codehaus.plexus.util.FileUtils.filename(filename), null);
+    try {
+        RandomAccessFile r = new RandomAccessFile(new File(filename), "rw");
+        try {
+            RandomAccessFile rtemp = new RandomAccessFile(tempFile, "rw");
+            try {
+                final long fileSize = r.length();
+                java.nio.channels.FileChannel sourceChannel = r.getChannel();
+                try {
+                    java.nio.channels.FileChannel targetChannel = rtemp.getChannel();
+                    try {
+                        //move origin file contents from offset to end-of-file to temp file
+                        sourceChannel.transferTo(offset, (fileSize - offset), targetChannel);
+                        //clear origin file after offset
+                        sourceChannel.truncate(offset);
+                        r.seek(offset);        //move to new end-of-file
+                        r.writeBytes(content); //write new content
+                        long newOffset = r.getFilePointer(); //obtain offset for new end-of-file
+                        targetChannel.position(0L); //set cursor in temp file to beginning for read
+                        //move saved content from temp file back to end of origin file
+                        sourceChannel.transferFrom(targetChannel, newOffset, (fileSize - offset));
+                    } finally {
+                        targetChannel.close();
+                    }
+                } finally {
+                    sourceChannel.close();
+                }
+            } finally {
+                rtemp.close();
+            }
+        } finally {
+            r.close();
+        }
+    } finally {
+        org.codehaus.plexus.util.FileUtils.forceDelete(tempFile);
+    }
+}
+int countCanonicalLinks(File htmlFile, String projectUrl) throws IOException {
+    //jsoup object scope
+    org.jsoup.nodes.Document document = org.jsoup.Jsoup.parse(htmlFile, "UTF-8", projectUrl);
+    return document.head().selectXpath("//link[@rel='canonical']").size();
+}
+void ensureCanonicalLink(String absoluteFilePath, String outputDirectory, String projectUrl) throws IOException {
+    if (countCanonicalLinks(new File(absoluteFilePath), projectUrl) == 0) {
+        //build canonical link tag
+        String canonicalLinkTag = "<link rel=\"canonical\" href=\"" +
+            buildCanonicalUrl(absoluteFilePath, outputDirectory, projectUrl.substring(0, projectUrl.length() - 1)) + "\" />\n";
+        //find </head>
+        int offset = org.codehaus.plexus.util.FileUtils.fileRead(absoluteFilePath, "UTF-8").indexOf("</head>");
+        //insert link tag and linebreak
+        insert(absoluteFilePath, offset, canonicalLinkTag);
+    }
+}
+files = org.codehaus.plexus.util.FileUtils.getFilesFromExtension(
+    project.reporting.outputDirectory, new String[] { "htm", "html" });
+for (int i=0; i<files.length; i++) {
+    ensureCanonicalLink(files[i], project.reporting.outputDirectory, project.url);
+}
                             ]]>
                             </script>
                         </configuration>
