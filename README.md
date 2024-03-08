@@ -40,9 +40,8 @@ As software that uses a serial port, usability from Maven was a challenge. The s
 library, RxTx, but neither it nor JavaComm are usable from Maven, as they have setup procedures that involve adding
 files into the JRE on the target platform. See [Serial Java][14] for more details.
 
-The solution is a relatively new library called [Java Simple Serial Connector][15] (jSSC). While the future development
-of the library is unclear, it has a release on Maven Central that allows cross platform serial port access without any
-JRE modifications.
+The solution is a relatively new library called [Java Simple Serial Connector][15] (jSSC). It has a release on Maven 
+Central that allows cross-platform serial port access without any JRE modifications.
 
 ### Usage
 
@@ -64,7 +63,7 @@ Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licen
 [10]: https://www.bricklink.com/catalogItemPic.asp?S=9751-1
 [11]: https://en.wikipedia.org/wiki/Lego_Mindstorms#RCX
 [14]: https://en.wikibooks.org/wiki/Serial_Programming/Serial_Java
-[15]: https://github.com/scream3r/java-simple-serial-connector
+[15]: https://github.com/java-native/jssc
 [16]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab/badge.svg
 [17]: https://maven-badges.herokuapp.com/maven-central/org.chabala.brick/brick-control-lab
 
