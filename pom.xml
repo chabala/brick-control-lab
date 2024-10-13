@@ -1,15 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.chabala.brick</groupId>
     <artifactId>brick-control-lab</artifactId>
     <version>0.2.2-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>${project.artifactId}</name>
     <description>Library for controlling the LEGO® control lab interface.</description>
     <url>https://chabala.github.io/${project.artifactId}/</url>
     <inceptionYear>2016</inceptionYear>
+    <organization>
+        <url>https://chabala.org/</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License 3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>chabala</id>
+            <name>Greg Chabala</name>
+            <email>greg.chabala@gmail.com</email>
+            <url>https://github.com/chabala</url>
+            <timezone>America/Chicago</timezone>
+            <properties><!-- workaround for https://issues.apache.org/jira/browse/MPIR-352 -->
+                <picUrl>https://www.gravatar.com/avatar/fc310991ac87cccdee90aaed90c9e25f?d=mm&amp;s=60</picUrl>
+            </properties>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</developerConnection>
+        <url>${ghProjectUrl}</url>
+        <tag>HEAD</tag>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>${ghProjectUrl}/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>GitHub</system>
+        <url>${ghProjectUrl}/actions</url>
+    </ciManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>github-pages</id>
+            <url>${project.scm.connection}</url>
+        </site>
+    </distributionManagement>
 
     <properties>
         <source.version>1.8</source.version>
@@ -23,6 +72,63 @@
         <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
         <sonar.organization>${ghUser}</sonar.organization>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scream3r</groupId>
+            <artifactId>jssc</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.2.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
@@ -543,8 +649,23 @@ for (int i=0; i<files.length; i++) {
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tidy-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
     <reporting>
         <plugins>
             <plugin>
@@ -640,110 +761,6 @@ for (int i=0; i<files.length; i++) {
         </plugins>
     </reporting>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.scream3r</groupId>
-            <artifactId>jssc</artifactId>
-            <version>2.8.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.5.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.5.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>4.2.0</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <developers>
-        <developer>
-            <id>chabala</id>
-            <name>Greg Chabala</name>
-            <email>greg.chabala@gmail.com</email>
-            <url>https://github.com/chabala</url>
-            <timezone>America/Chicago</timezone>
-            <properties><!-- workaround for https://issues.apache.org/jira/browse/MPIR-352 -->
-                <picUrl>https://www.gravatar.com/avatar/fc310991ac87cccdee90aaed90c9e25f?d=mm&amp;s=60</picUrl>
-            </properties>
-        </developer>
-    </developers>
-    <organization>
-        <url>https://chabala.org/</url>
-    </organization>
-
-    <scm>
-        <connection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</connection>
-        <developerConnection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</developerConnection>
-        <url>${ghProjectUrl}</url>
-        <tag>HEAD</tag>
-    </scm>
-    <issueManagement>
-        <system>GitHub</system>
-        <url>${ghProjectUrl}/issues</url>
-    </issueManagement>
-    <ciManagement>
-        <system>GitHub</system>
-        <url>${ghProjectUrl}/actions</url>
-    </ciManagement>
-    <licenses>
-        <license>
-            <name>GNU Lesser General Public License 3.0</name>
-            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <site>
-            <id>github-pages</id>
-            <url>${project.scm.connection}</url>
-        </site>
-    </distributionManagement>
     <profiles>
         <profile>
             <id>release</id>
