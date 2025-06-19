@@ -652,7 +652,7 @@ for (int i=0; i<files.length; i++) {
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tidy-maven-plugin</artifactId>
-                <version>1.3.0</version>
+                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <id>validate</id>
@@ -660,6 +660,9 @@ for (int i=0; i<files.length; i++) {
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <pomFile>${project.basedir}/pom.xml</pomFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

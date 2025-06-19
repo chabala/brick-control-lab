@@ -13,3 +13,6 @@ target
 *.jar
 *.war
 *.ear
+
+# maven-linkcheck-plugin
+/pom[0-9]*.xml
