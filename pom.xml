@@ -17,7 +17,7 @@
     <licenses>
         <license>
             <name>GNU Lesser General Public License 3.0</name>
-            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <url>https://raw.githubusercontent.com/chabala/brick-control-lab/refs/heads/master/COPYING.LESSER</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -50,10 +50,6 @@
         <url>${ghProjectUrl}/actions</url>
     </ciManagement>
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <site>
             <id>github-pages</id>
             <url>${project.scm.connection}</url>
@@ -69,7 +65,7 @@
         <ghProjectUrl>https://github.com/${ghUser}/${project.artifactId}</ghProjectUrl>
         <ghPagesUrl>https://${ghUser}.github.io/${project.artifactId}/</ghPagesUrl>
         <slf4j.version>1.7.29</slf4j.version>
-        <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
+        <googleAnalyticsAccountId>G-C4CXTKCF75</googleAnalyticsAccountId>
         <sonar.organization>${ghUser}</sonar.organization>
     </properties>
 
@@ -486,14 +482,14 @@
                 <version>4.3.0</version>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
                 </configuration>
             </plugin>
             <plugin>
@@ -652,7 +648,7 @@ for (int i=0; i<files.length; i++) {
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tidy-maven-plugin</artifactId>
-                <version>1.3.0</version>
+                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <id>validate</id>
@@ -660,6 +656,9 @@ for (int i=0; i<files.length; i++) {
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <pomFile>${project.basedir}/pom.xml</pomFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -768,7 +767,7 @@ for (int i=0; i<files.length; i++) {
                 <plugins>
                     <plugin>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

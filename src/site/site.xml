@@ -26,7 +26,6 @@
         <name>${project.artifactId}</name>
         <href>${ghPagesUrl}</href>
     </bannerLeft>
-    <googleAnalyticsAccountId>${googleAnalyticsAccountId}</googleAnalyticsAccountId>
     <publishDate />
     <version />
     <skin>
@@ -35,9 +34,15 @@
         <version>1.2</version>
     </skin>
     <body>
-        <head>
-            <![CDATA[<meta name="viewport" content="width=device-width, initial-scale=1.0" />]]>
-        </head>
+        <head><![CDATA[
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsAccountId}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){window.dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${googleAnalyticsAccountId}');
+    </script>]]></head>
         <links>
             <item name="${project.artifactId}" href="${ghPagesUrl}"/>
             <item name="GitHub repo" href="${ghProjectUrl}" />

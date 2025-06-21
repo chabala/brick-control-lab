@@ -7,7 +7,7 @@ Library for controlling the [LEGO® control lab interface][1].
 ### What is the control lab?
 
 <a href="https://www.bricklink.com/catalogItemPic.asp?S=9751-1" class="nodecorate">
-<img src="https://camo.githubusercontent.com/a5d3217cb2e92cc029de96ade710af24375c6c80/68747470733a2f2f7777772e627269636b6c696e6b2e636f6d2f534c2f393735312d312e6a7067" 
+<img src="https://web.archive.org/web/20200103084341if_/https://www.bricklink.com/SL/9751-1.jpg" 
 alt="control lab" align="right" width="372" height="240"/>
 </a>
 
