@@ -69,7 +69,7 @@
         <ghProjectUrl>https://github.com/${ghUser}/${project.artifactId}</ghProjectUrl>
         <ghPagesUrl>https://${ghUser}.github.io/${project.artifactId}/</ghPagesUrl>
         <slf4j.version>1.7.29</slf4j.version>
-        <googleAnalyticsAccountId>UA-256611-4</googleAnalyticsAccountId>
+        <googleAnalyticsAccountId>G-C4CXTKCF75</googleAnalyticsAccountId>
         <sonar.organization>${ghUser}</sonar.organization>
     </properties>
 
