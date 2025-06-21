@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1693170794284">
-    <module artifactId="brick-control-lab" groupId="org.chabala.brick" version="0.2.1"/>
+<licensePluginReport goal="CHECK" timestamp="1750530738048">
+    <module artifactId="brick-control-lab" groupId="org.chabala.brick" version="0.2.2"/>
     <files>
         <file path="src/main/java/org/chabala/brick/controllab/ByteConsumer.java" result="PRESENT"/>
         <file path="src/main/java/org/chabala/brick/controllab/ControlLab.java" result="PRESENT"/>
