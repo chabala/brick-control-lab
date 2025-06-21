@@ -4,7 +4,7 @@
 
     <groupId>org.chabala.brick</groupId>
     <artifactId>brick-control-lab</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.2.2</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -39,7 +39,7 @@
         <connection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</connection>
         <developerConnection>scm:git:git@github.com:${ghUser}/${project.artifactId}.git</developerConnection>
         <url>${ghProjectUrl}</url>
-        <tag>HEAD</tag>
+        <tag>0.2.2</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
@@ -60,7 +60,7 @@
         <source.version>1.8</source.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.build.outputTimestamp>2023-08-27T20:37:36Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-06-21T18:18:32Z</project.build.outputTimestamp>
         <ghUser>chabala</ghUser>
         <ghProjectUrl>https://github.com/${ghUser}/${project.artifactId}</ghProjectUrl>
         <ghPagesUrl>https://${ghUser}.github.io/${project.artifactId}/</ghPagesUrl>
@@ -554,8 +554,7 @@
                                     {"project-summary.html", "summary.html"},
                                     {"source-repository.html", "scm.html"},
                                     {"team-list.html", "team.html"}};
-                            for (int i=0; i<filenameArray.length; i++) {
-                                File file = new File(site, filenameArray[i][0]);
+                            for (int i=0; i<filenameArray.length; i++) { File file = new File(site, filenameArray[i][0]);
                                 org.codehaus.plexus.util.FileUtils.fileWrite(file, "UTF-8", contents(filenameArray[i][1]));
                             }
                             ]]>
@@ -626,8 +625,7 @@ int countCanonicalLinks(File htmlFile, String projectUrl) throws IOException {
 void ensureCanonicalLink(String absoluteFilePath, String outputDirectory, String projectUrl) throws IOException {
     if (countCanonicalLinks(new File(absoluteFilePath), projectUrl) == 0) {
         //build canonical link tag
-        String canonicalLinkTag = "<link rel=\"canonical\" href=\"" +
-            buildCanonicalUrl(absoluteFilePath, outputDirectory, projectUrl.substring(0, projectUrl.length() - 1)) + "\" />\n";
+        String canonicalLinkTag = "<link rel=\"canonical\" href=\"" + buildCanonicalUrl(absoluteFilePath, outputDirectory, projectUrl.substring(0, projectUrl.length() - 1)) + "\" />\n";
         //find </head>
         int offset = org.codehaus.plexus.util.FileUtils.fileRead(absoluteFilePath, "UTF-8").indexOf("</head>");
         //insert link tag and linebreak
@@ -636,8 +634,7 @@ void ensureCanonicalLink(String absoluteFilePath, String outputDirectory, String
 }
 files = org.codehaus.plexus.util.FileUtils.getFilesFromExtension(
     project.reporting.outputDirectory, new String[] { "htm", "html" });
-for (int i=0; i<files.length; i++) {
-    ensureCanonicalLink(files[i], project.reporting.outputDirectory, project.url);
+for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.reporting.outputDirectory, project.url);
 }
                             ]]>
                             </script>
