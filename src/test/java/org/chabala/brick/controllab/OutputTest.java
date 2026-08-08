@@ -18,8 +18,10 @@
  */
 package org.chabala.brick.controllab;
 
-import org.junit.*;
-import org.junit.rules.ExpectedException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -27,9 +29,12 @@ import org.mockito.junit.MockitoRule;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Testing {@link Output}.
@@ -38,9 +43,6 @@ public class OutputTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private ControlLab controlLab;
@@ -65,12 +67,10 @@ public class OutputTest {
         outputId = null;
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetOutputIdSet() {
         Set<OutputId> outputIds = output.getOutputIdSet();
         assertThat(outputIds, contains(outputId));
-
-        thrown.expect(UnsupportedOperationException.class);
         outputIds.add(randomEnum.get(OutputId.class));
     }
 

@@ -31,7 +31,7 @@
     <skin>
         <groupId>org.apache.maven.skins</groupId>
         <artifactId>maven-default-skin</artifactId>
-        <version>1.2</version>
+        <version>1.3</version>
     </skin>
     <body>
         <head><![CDATA[
@@ -75,8 +75,8 @@
             </item>
             <item name="Project Reports" href="project-reports.html" collapse="true">
                 <item name="GitHub Report" href="github-report.html"/>
-                <item name="Surefire Report" href="surefire-report.html"/>
-                <item name="Failsafe Report" href="failsafe-report.html"/>
+                <item name="Surefire Report" href="surefire.html"/>
+                <item name="Failsafe Report" href="failsafe.html"/>
                 <item name="Javadoc" href="apidocs/index.html"/>
                 <item name="Test Javadoc" href="testapidocs/index.html"/>
                 <item name="Source Xref" href="xref/index.html"/>

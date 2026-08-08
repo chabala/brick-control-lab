@@ -19,33 +19,34 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Handles serial events.
  */
 class SerialListener implements SerialPortEventListener {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = getLogger(lookup().lookupClass());
     private final SerialPort serialPort;
     private final InputManager inputManager;
     private final boolean ignoreBadHandshake;
 
     private boolean handshakeSeen = false;
-    private CountDownLatch handshakeLatch = new CountDownLatch(1);
+    private final CountDownLatch handshakeLatch = new CountDownLatch(1);
     private StringBuilder handshakeBuilder = new StringBuilder();
 
     SerialListener(SerialPort serialPort, InputManager inputManager) {
         this.serialPort = serialPort;
         this.inputManager = inputManager;
-        ignoreBadHandshake = Boolean.valueOf(
-                System.getProperty("brick-control-lab.ignoreBadHandshake", "false"));
+        ignoreBadHandshake = Boolean.parseBoolean(
+            System.getProperty("brick-control-lab.ignoreBadHandshake", "false"));
     }
 
     @Override

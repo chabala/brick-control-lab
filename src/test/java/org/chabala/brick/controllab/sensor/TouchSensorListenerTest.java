@@ -21,15 +21,14 @@ package org.chabala.brick.controllab.sensor;
 import org.chabala.brick.controllab.InputId;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,21 +41,19 @@ public class TouchSensorListenerTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Mock
     private SensorValue sensorValue;
 
     @Test
-    public void testTouchSensorEventReceived() throws Exception {
+    public void testTouchSensorEventReceived() {
         final int analogValue = ThreadLocalRandom.current().nextInt();
         final int statusCode = ThreadLocalRandom.current().nextInt();
         final byte[] oldValue = {};
         final byte[] newValue= {};
         when(sensorValue.getAnalogValue()).thenReturn(analogValue);
         when(sensorValue.getStatusCode()).thenReturn(statusCode);
-        SensorEvent<SensorValue> sensorEvent = new SensorEvent<>(InputId.I1, oldValue, newValue, sensorValue);
+        SensorEvent<SensorValue> sensorEvent =
+            new SensorEvent<>(InputId.I1, oldValue, newValue, sensorValue);
         TouchSensorListener listener = event -> {
             assertThat(event.getValue().getAnalogValue(), is(analogValue));
             assertThat(event.getValue().getStatusCode(), is(statusCode));

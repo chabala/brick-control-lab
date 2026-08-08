@@ -18,17 +18,18 @@
  */
 package org.chabala.brick.controllab;
 
-import org.slf4j.LoggerFactory;
-
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- * This is the main interface for interacting with the LEGO® control lab, instances of
- * which can be created with {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
+ * This is the main interface for interacting with the LEGO® control lab,
+ * instances of which can be created with
+ * {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
  *
  * <p>Usage example: <pre class="prettyprint lang-java">
  *    ControlLab controlLab = ControlLab.newControlLab();
@@ -54,8 +55,7 @@ public interface ControlLab extends Closeable {
      * @return a new ControlLab instance
      */
     static ControlLab newControlLab() {
-        return new ControlLabImpl(
-                LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()));
+        return new ControlLabImpl(getLogger(lookup().lookupClass()));
     }
 
     /**

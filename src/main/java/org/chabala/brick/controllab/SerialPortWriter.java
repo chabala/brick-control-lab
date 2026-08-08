@@ -19,12 +19,13 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Owner of all writing activity for a serial port. Manages consistent logging
@@ -37,7 +38,7 @@ class SerialPortWriter implements Closeable {
      * handshake, which makes more sense to show as a string.
      */
     private static final int STRING_LOGGING_THRESHOLD = 10;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = getLogger(lookup().lookupClass());
     private final SerialPort serialPort;
     private KeepAliveMonitor keepAliveMonitor;
 

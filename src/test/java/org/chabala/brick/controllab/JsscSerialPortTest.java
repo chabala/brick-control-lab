@@ -22,7 +22,6 @@ import jssc.SerialPortException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -30,9 +29,14 @@ import org.mockito.junit.MockitoRule;
 import java.io.IOException;
 import java.util.Random;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.isA;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link JsscSerialPort}.
@@ -41,9 +45,6 @@ public class JsscSerialPortTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private jssc.SerialPort innerSerialPort;
@@ -54,7 +55,7 @@ public class JsscSerialPortTest {
     @Mock
     private SerialPortEventListener serialPortEventListener;
 
-    private Random random = new Random();
+    private final Random random = new Random();
     private SerialPort serialPort;
 
     @Before
@@ -88,10 +89,13 @@ public class JsscSerialPortTest {
 
     @Test
     public void testOpenPortOnlyThrowsIOExceptions() throws Exception {
-        thrown.expect(IOException.class);
-        thrown.expectCause(is(serialPortException));
         when(innerSerialPort.openPort()).thenThrow(serialPortException);
-        serialPort.openPort();
+        try {
+            serialPort.openPort();
+        } catch (IOException ioe) {
+            assertThat(ioe, isA(IOException.class));
+            assertThat(ioe.getCause(), isA(SerialPortException.class));
+        }
     }
 
     @Test
@@ -112,10 +116,13 @@ public class JsscSerialPortTest {
     @Test
     public void testWriteByteOnlyThrowsIOExceptions() throws Exception {
         byte b = 10;
-        thrown.expect(IOException.class);
-        thrown.expectCause(is(serialPortException));
         when(innerSerialPort.writeByte(b)).thenThrow(serialPortException);
-        serialPort.write(b);
+        try {
+            serialPort.write(b);
+        } catch (IOException ioe) {
+            assertThat(ioe, isA(IOException.class));
+            assertThat(ioe.getCause(), isA(SerialPortException.class));
+        }
     }
 
     @Test
@@ -131,10 +138,13 @@ public class JsscSerialPortTest {
     public void testWriteByteArrayOnlyThrowsIOExceptions() throws Exception {
         byte[] bytes = new byte[2];
         random.nextBytes(bytes);
-        thrown.expect(IOException.class);
-        thrown.expectCause(is(serialPortException));
         when(innerSerialPort.writeBytes(bytes)).thenThrow(serialPortException);
-        serialPort.write(bytes);
+        try {
+            serialPort.write(bytes);
+        } catch (IOException ioe) {
+            assertThat(ioe, isA(IOException.class));
+            assertThat(ioe.getCause(), isA(SerialPortException.class));
+        }
     }
 
     @Test
@@ -151,10 +161,13 @@ public class JsscSerialPortTest {
     @Test
     public void testReadBytesOnlyThrowsIOExceptions() throws Exception {
         int byteCount = 5;
-        thrown.expect(IOException.class);
-        thrown.expectCause(is(serialPortException));
         when(innerSerialPort.readBytes(byteCount)).thenThrow(serialPortException);
-        serialPort.readBytes(byteCount);
+        try {
+            serialPort.readBytes(byteCount);
+        } catch (IOException ioe) {
+            assertThat(ioe, isA(IOException.class));
+            assertThat(ioe.getCause(), isA(SerialPortException.class));
+        }
     }
 
     @Test
@@ -173,24 +186,32 @@ public class JsscSerialPortTest {
 
     @Test
     public void testCloseOnlyThrowsIOExceptions() throws Exception {
-        thrown.expect(IOException.class);
-        thrown.expectCause(is(serialPortException));
         when(innerSerialPort.isOpened()).thenReturn(true);
         when(innerSerialPort.closePort()).thenThrow(serialPortException);
-        serialPort.close();
+        try {
+            serialPort.close();
+        } catch (IOException ioe) {
+            assertThat(ioe, isA(IOException.class));
+            assertThat(ioe.getCause(), isA(SerialPortException.class));
+        }
     }
 
     @Test
     public void testAddEventListenerDelegatesToJssc() throws Exception {
         serialPort.addEventListener(serialPortEventListener);
-        verify(innerSerialPort, times(1)).addEventListener(serialPortEventListener);
+        verify(innerSerialPort,
+            times(1)).addEventListener(serialPortEventListener);
     }
 
     @Test
     public void testAddEventListenerOnlyThrowsIOExceptions() throws Exception {
-        thrown.expect(IOException.class);
-        thrown.expectCause(is(serialPortException));
-        doThrow(serialPortException).when(innerSerialPort).addEventListener(serialPortEventListener);
-        serialPort.addEventListener(serialPortEventListener);
+        doThrow(serialPortException).when(innerSerialPort)
+            .addEventListener(serialPortEventListener);
+        try {
+            serialPort.addEventListener(serialPortEventListener);
+        } catch (IOException ioe) {
+            assertThat(ioe, isA(IOException.class));
+            assertThat(ioe.getCause(), isA(SerialPortException.class));
+        }
     }
 }

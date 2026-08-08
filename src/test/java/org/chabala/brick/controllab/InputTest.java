@@ -23,14 +23,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Testing {@link Input}.
@@ -39,9 +39,6 @@ public class InputTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private InputManager inputManager;
@@ -70,17 +67,20 @@ public class InputTest {
     @Test
     public void testAddListener() {
         input.addListener(listener);
-        verify(inputManager, times(1)).addSensorListener(inputId, listener);
+        verify(inputManager,
+            times(1)).addSensorListener(inputId, listener);
     }
 
     @Test
     public void testRemoveListener() {
         input.removeListener(listener);
-        verify(inputManager, times(1)).removeSensorListener(inputId, listener);
+        verify(inputManager,
+            times(1)).removeSensorListener(inputId, listener);
     }
 
     @Test
     public void testToString() {
-        assertThat(input + "", containsString("inputId=" + inputId.name()));
+        assertThat(input + "",
+            containsString("inputId=" + inputId.name()));
     }
 }

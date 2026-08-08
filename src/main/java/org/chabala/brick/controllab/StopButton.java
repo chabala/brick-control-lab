@@ -19,19 +19,20 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static org.chabala.brick.controllab.Protocol.STOP_RELEASED;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Handle for stop button on a specific control lab instance. Obtain via {@link ControlLab#getStopButton()}.
  */
 public class StopButton {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = getLogger(lookup().lookupClass());
     private final Set<StopButtonListener> stopButtonListeners;
     private boolean stopDepressed = false;
 

@@ -21,8 +21,8 @@ package org.chabala.brick.controllab.sensor;
 import org.junit.Test;
 
 import static org.chabala.brick.controllab.sensor.BinaryStringFormatter.printByteInBinary;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 /**
  * Testing {@link BinaryStringFormatter}.

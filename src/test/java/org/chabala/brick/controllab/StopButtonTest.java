@@ -22,18 +22,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.chabala.brick.controllab.Protocol.STOP_DEPRESSED;
 import static org.chabala.brick.controllab.Protocol.STOP_RELEASED;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assume.assumeThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Testing the {@link StopButton}.
@@ -42,9 +45,6 @@ public class StopButtonTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private InputManager inputManager;
@@ -57,7 +57,8 @@ public class StopButtonTest {
 
     @Before
     public void setUp() {
-        ArgumentCaptor<ByteConsumer> captor = ArgumentCaptor.forClass(ByteConsumer.class);
+        ArgumentCaptor<ByteConsumer> captor =
+            ArgumentCaptor.forClass(ByteConsumer.class);
         stopButton = new StopButton(inputManager);
         verify(inputManager).setStopButtonCallback(captor.capture());
         stopButtonCallback = captor.getValue();
@@ -94,8 +95,10 @@ public class StopButtonTest {
         stopButton.removeListener(stopButtonListener);
 
         assertThat(stopButton.isStopDepressed(), is(true));
-        ArgumentCaptor<StopButtonEvent> captor = ArgumentCaptor.forClass(StopButtonEvent.class);
-        verify(stopButtonListener, times(1)).stopButtonPressed(captor.capture());
+        ArgumentCaptor<StopButtonEvent> captor =
+            ArgumentCaptor.forClass(StopButtonEvent.class);
+        verify(stopButtonListener,
+            times(1)).stopButtonPressed(captor.capture());
         StopButtonEvent stopButtonEvent = captor.getValue();
         assertThat(stopButtonEvent.getRawValue(), is(STOP_DEPRESSED));
         assertThat(stopButtonEvent + "", containsString("0x10"));
@@ -129,8 +132,10 @@ public class StopButtonTest {
 
         assertThat(stopButton.isStopDepressed(), is(false));
         verify(stopButtonListener, never()).stopButtonPressed(any());
-        ArgumentCaptor<StopButtonEvent> captor = ArgumentCaptor.forClass(StopButtonEvent.class);
-        verify(stopButtonListener, times(1)).stopButtonReleased(captor.capture());
+        ArgumentCaptor<StopButtonEvent> captor =
+            ArgumentCaptor.forClass(StopButtonEvent.class);
+        verify(stopButtonListener,
+            times(1)).stopButtonReleased(captor.capture());
         StopButtonEvent stopButtonEvent = captor.getValue();
         assertThat(stopButtonEvent.getRawValue(), is(STOP_RELEASED));
     }
