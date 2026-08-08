@@ -34,7 +34,8 @@ https://groups.google.com/forum/#!searchin/rec.toys.lego/Andy$20Carol%7Csort:dat
     The website of Anders Isaksson, with control lab software written in Delphi.
 <br/><br/>
 
-*   <https://www.drdobbs.com/embedded-systems/an-activex-control-for-real-time-compute/184410492>  
+*   [https://www.drdobbs.com/embedded-systems/an-activex-control-for-real-time-compute/184410492](
+https://web.archive.org/web/20190720161548/https://www.drdobbs.com/embedded-systems/an-activex-control-for-real-time-compute/184410492)  
     <https://web.archive.org/web/20070818221317/http://troyda.eas.muohio.edu/Research.html>  
     <https://web.archive.org/web/20071130212114/http://troyda.eas.muohio.edu/paper2.html>  
     <https://web.archive.org/web/20060906192126/http://troyda.eas.muohio.edu/LegoCorrection.html>  
@@ -43,7 +44,9 @@ https://groups.google.com/forum/#!searchin/rec.toys.lego/Andy$20Carol%7Csort:dat
     which was reproduced in Dr. Dobb's.
 <br/><br/>
 
-*   <http://www.timo.dk/wp/2009/01/25/java-control-class-for-dacta-70909/>
+*   <https://www.timo.dk/Projects/DACTAController/>  
+    and an older version: [http://www.timo.dk/wp/2009/01/25/java-control-class-for-dacta-70909/](
+https://web.archive.org/web/20201202175830/http://www.timo.dk/wp/2009/01/25/java-control-class-for-dacta-70909/)
 
     The website of Timo Paukku Dinnesen, who wrote a Java control for the control lab as a thesis project. It requires
     JavaComm and is tightly coupled to being a Swing application.
@@ -54,7 +57,7 @@ https://groups.google.com/forum/#!searchin/rec.toys.lego/Andy$20Carol%7Csort:dat
     Another attempt at Java software, built off of Timo's control, using RxTx. Not clear if it actually works.
 <br/><br/>
 
-*   <http://lejos.org>
+*   <https://lejos.sourceforge.io/>
 
     leJOS is the most visible Java implementation for controlling MINDSTORMS® products, so I looked to it to see if
     there were any established patterns that I should follow for brick-control-lab. But I found code that always
