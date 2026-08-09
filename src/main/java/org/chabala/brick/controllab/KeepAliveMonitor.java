@@ -19,18 +19,24 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Handles sending keep alive messages in the absence of other commands.
  */
 class KeepAliveMonitor implements Closeable {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = getLogger(lookup().lookupClass());
     private final SerialPortWriter serialPortWriter;
     private final ScheduledExecutorService executor;
     private final long keepAlivePeriodMs;

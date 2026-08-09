@@ -21,23 +21,31 @@ package org.chabala.brick.controllab;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static javax.management.timer.Timer.ONE_SECOND;
 import static org.awaitility.Awaitility.await;
 import static org.chabala.brick.controllab.PortChooser.choosePort;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assume.assumeNoException;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Integration tests for working with multiple control labs.
@@ -48,7 +56,7 @@ import static org.junit.Assume.assumeNoException;
 @SuppressWarnings({"squid:S2699","squid:S2925"})
 public class MultipleControlLabIT {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger log = getLogger(lookup().lookupClass());
 
     private static final int AVAILABLE_CONTROL_LABS = 4;
 

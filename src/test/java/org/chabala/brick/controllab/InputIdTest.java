@@ -23,32 +23,37 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasSize;
 
 /**
  * Testing {@link InputId}.
  */
 public class InputIdTest {
 
+    private static final int activeInputs = 4;
+    private static final int passiveInputs = 4;
+    private static final int totalInputs = activeInputs + passiveInputs;
+
     @Test
-    public void testThereAreEightInputs() throws Exception {
-        assertThat(InputId.values(), arrayWithSize(8));
+    public void testThereAreEightInputs() {
+        assertThat(InputId.values(), arrayWithSize(totalInputs));
     }
 
     @Test
-    public void testThereAreFourPassiveInputs() throws Exception {
+    public void testThereAreFourPassiveInputs() {
         assertThat(Arrays.stream(InputId.values())
                    .map(InputId::getInputType)
                    .filter(InputType.PASSIVE::equals)
-                   .collect(Collectors.toList()), hasSize(4));
+                   .collect(Collectors.toList()), hasSize(passiveInputs));
     }
 
     @Test
-    public void testThereAreFourActiveInputs() throws Exception {
+    public void testThereAreFourActiveInputs() {
         assertThat(Arrays.stream(InputId.values())
                    .map(InputId::getInputType)
                    .filter(InputType.ACTIVE::equals)
-                   .collect(Collectors.toList()), hasSize(4));
+                   .collect(Collectors.toList()), hasSize(activeInputs));
     }
 }

@@ -18,24 +18,33 @@
  */
 package org.chabala.brick.controllab;
 
-import org.chabala.brick.controllab.sensor.*;
+import org.chabala.brick.controllab.sensor.LightSensorListener;
+import org.chabala.brick.controllab.sensor.SensorListener;
+import org.chabala.brick.controllab.sensor.TouchSensorListener;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static javax.management.timer.Timer.ONE_SECOND;
 import static org.awaitility.Awaitility.await;
 import static org.chabala.brick.controllab.PortChooser.choosePort;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assume.assumeNoException;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Integration tests for the {@link ControlLab}.
@@ -43,9 +52,9 @@ import static org.junit.Assume.assumeNoException;
  * <p>These tests require a connection to the hardware. There's no way to validate
  * the behavior other than observing the control lab, so there are no assertions.
  */
-@SuppressWarnings({"squid:S2699","squid:S2925"})
+@SuppressWarnings({"squid:S2699"})
 public class ControlLabIT {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger log = getLogger(lookup().lookupClass());
 
     @Test
     public void testTurnOutputOff() throws Exception {
@@ -55,11 +64,11 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            Thread.sleep(ONE_SECOND * 3);
+            sleep(ONE_SECOND * 3);
             controlLab.turnOutputOn(OutputId.ALL);
-            Thread.sleep(ONE_SECOND * 3);
+            sleep(ONE_SECOND * 3);
             controlLab.turnOutputOff(EnumSet.range(OutputId.A, OutputId.D));
-            Thread.sleep(ONE_SECOND * 3);
+            sleep(ONE_SECOND * 3);
         }
     }
 
@@ -71,27 +80,27 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             controlLab.turnOutputOn(OutputId.ALL);
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             controlLab.setOutputDirection(Direction.LEFT, EnumSet.of(OutputId.E, OutputId.F));
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             controlLab.getOutput(EnumSet.range(OutputId.E, OutputId.H)).reverseDirection();
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             controlLab.getOutput(OutputId.H).setDirection(Direction.RIGHT);
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             for (OutputId o : descendingRange(OutputId.H, OutputId.E)) {
                 controlLab.getOutput(o).turnOff();
-                Thread.sleep(ONE_SECOND);
+                sleep(ONE_SECOND);
             }
 
             controlLab.turnOutputOff(EnumSet.range(OutputId.A, OutputId.D));
-            Thread.sleep(ONE_SECOND * 5);
+            sleep(ONE_SECOND * 5);
         }
     }
 
@@ -105,10 +114,10 @@ public class ControlLabIT {
             }
             Output output = controlLab.getOutput(OutputId.A);
             output.setDirection(Direction.LEFT).setPowerLevel(PowerLevel.P2).turnOn();
-            Thread.sleep(ONE_SECOND * 5);
+            sleep(ONE_SECOND * 5);
 
             output.reverseDirection().setPowerLevel(PowerLevel.P8);
-            Thread.sleep(ONE_SECOND * 5);
+            sleep(ONE_SECOND * 5);
         }
     }
 
@@ -184,22 +193,22 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             Output output = controlLab.getOutput(OutputId.A);
             output.setPowerLevel(PowerLevel.P1).turnOn();
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
                 output.setPowerLevel(p);
-                Thread.sleep(ONE_SECOND);
+                sleep(ONE_SECOND);
             }
 
             output.setPowerLevel(PowerLevel.P0);
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
 
             output.turnOn();
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
         }
     }
 
@@ -235,38 +244,50 @@ public class ControlLabIT {
             } catch (IOException e) {
                 assumeNoException(e);
             }
-            Thread.sleep(ONE_SECOND);
+            sleep(ONE_SECOND);
             controlLab.getInput(InputId.I1).addListener((TouchSensorListener) sensorEvent -> stop.set(true));
             Output outputs = controlLab.getOutput(OutputId.ALL);
             while (!stop.get()) {
                 outputs.setPowerLevel(PowerLevel.P8).setDirection(Direction.RIGHT).turnOn();
-                Thread.sleep(ONE_SECOND);
+                sleep(ONE_SECOND);
                 if (stop.get()) {
                     return;
                 }
 
                 for (PowerLevel p : descendingRange(PowerLevel.P7, PowerLevel.P1)) {
                     outputs.setPowerLevel(p);
-                    Thread.sleep(ONE_SECOND);
+                    sleep(ONE_SECOND);
                     if (stop.get()) {
                         return;
                     }
                 }
 
                 outputs.reverseDirection();
-                Thread.sleep(ONE_SECOND);
+                sleep(ONE_SECOND);
                 if (stop.get()) {
                     return;
                 }
 
                 for (PowerLevel p : EnumSet.range(PowerLevel.P2, PowerLevel.P8)) {
                     outputs.setPowerLevel(p);
-                    Thread.sleep(ONE_SECOND);
+                    sleep(ONE_SECOND);
                     if (stop.get()) {
                         return;
                     }
                 }
             }
+        }
+    }
+
+    @SuppressWarnings({"squid:S2925"})
+    private void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            String msg = "Interrupted while sleeping";
+            log.error(msg, e);
+            Thread.currentThread().interrupt();
+            assumeNoException(msg, e);
         }
     }
 

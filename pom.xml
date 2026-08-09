@@ -64,11 +64,34 @@
         <ghUser>chabala</ghUser>
         <ghProjectUrl>https://github.com/${ghUser}/${project.artifactId}</ghProjectUrl>
         <ghPagesUrl>https://${ghUser}.github.io/${project.artifactId}/</ghPagesUrl>
-        <slf4j.version>1.7.29</slf4j.version>
+        <slf4jVersion>2.0.18</slf4jVersion>
         <googleAnalyticsAccountId>G-C4CXTKCF75</googleAnalyticsAccountId>
         <sonar.organization>${ghUser}</sonar.organization>
+        <sonar.projectKey>${ghUser}_${project.artifactId}</sonar.projectKey>
+        <mavenSurefireVersion>3.6.0-M1</mavenSurefireVersion>
+        <junitJupiterVersion>5.14.4</junitJupiterVersion>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest</artifactId>
+                <version>3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.scream3r</groupId>
@@ -79,49 +102,42 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <version>${slf4jVersion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
+            <version>${slf4jVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.5.2</version>
+            <version>${junitJupiterVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.5.2</version>
+            <version>${junitJupiterVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.1.0</version>
+            <version>3.12.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.2.0</version>
+            <version>4.3.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -131,15 +147,19 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
                     <version>3.2.0</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-changes-plugin</artifactId>
+                    <version>2.12.1</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <configLocation>src/main/config/checkstyle.xml</configLocation>
                     </configuration>
@@ -147,33 +167,53 @@
                         <dependency>
                             <groupId>org.slf4j</groupId>
                             <artifactId>log4j-over-slf4j</artifactId>
-                            <version>${slf4j.version}</version>
+                            <version>${slf4jVersion}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.15.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
+                    <version>3.1.4</version>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.6.3</version>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.2</version>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${mavenSurefireVersion}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.2.8</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-help-plugin</artifactId>
+                    <version>3.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.5.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.12.0</version>
                     <configuration>
                         <docfilessubdirs>true</docfilessubdirs>
                         <links>
@@ -196,28 +236,13 @@
                         <dependency>
                             <groupId>org.slf4j</groupId>
                             <artifactId>log4j-over-slf4j</artifactId>
-                            <version>${slf4j.version}</version>
+                            <version>${slf4jVersion}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.1.2</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.bcel</groupId>
-                            <artifactId>bcel</artifactId>
-                            <version>6.7.0</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-linkcheck-plugin</artifactId>
@@ -232,22 +257,65 @@
                         <dependency>
                             <groupId>org.slf4j</groupId>
                             <artifactId>jcl-over-slf4j</artifactId>
-                            <version>${slf4j.version}</version>
+                            <version>${slf4jVersion}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.12.0</version>
+                    <version>3.28.0</version>
                     <configuration>
                         <linkXRef>true</linkXRef>
                         <skipEmptyReport>false</skipEmptyReport>
                     </configuration>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.bcel</groupId>
+                            <artifactId>bcel</artifactId>
+                            <version>6.12.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.8.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.4.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${mavenSurefireVersion}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${mavenSurefireVersion}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.10</version>
+                    <version>0.8.15</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -264,7 +332,7 @@
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.7.0.1746</version>
+                    <version>5.7.0.6970</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.genthaler</groupId>
@@ -274,7 +342,7 @@
                         <dependency><!-- used by late-site-add-canonical-urls -->
                             <groupId>org.jsoup</groupId>
                             <artifactId>jsoup</artifactId>
-                            <version>1.17.2</version>
+                            <version>1.23.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -283,7 +351,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
                     <source>${source.version}</source>
                     <target>${source.version}</target>
@@ -309,7 +376,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -323,11 +389,9 @@
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
                 <executions>
                     <execution>
                         <id>enforce-rules</id>
@@ -340,8 +404,9 @@
                                     <version>[1.8, 1.9)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>[3.5.3,)</version>
+                                    <version>[3.9.9,)</version>
                                 </requireMavenVersion>
+                                <dependencyConvergence />
                             </rules>
                         </configuration>
                     </execution>
@@ -349,7 +414,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
                 </configuration>
@@ -364,7 +428,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.8.2</version>
                 <configuration>
                     <skipDeploy>true</skipDeploy>
                 </configuration>
@@ -372,13 +435,12 @@
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-site-renderer</artifactId>
-                        <version>1.8.1</version>
+                        <version>1.9.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>3.0.0</version>
                 <configuration>
                     <content>${project.reporting.outputDirectory}</content>
                     <scmBranch>gh-pages</scmBranch>
@@ -396,7 +458,7 @@
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>4.2</version>
+                <version>4.6</version>
                 <configuration>
                     <properties>
                         <owner>Greg Chabala</owner>
@@ -477,14 +539,14 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.eluder.coveralls</groupId>
+                <groupId>com.github.hazendaz.maven</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
+                <version>4.5.0</version>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.8.0</version>
+                <version>0.11.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
@@ -529,34 +591,37 @@
                         <configuration>
                             <quiet>true</quiet>
                             <script><![CDATA[
-                            // Generate redirect pages for historic site URLs (MPIR-323)
-                            String contents(String target) {
-                                String url = project.url + target;
-                                String template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" " +
-                                        "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
-                                        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n" +
-                                        "<head>\n" +
-                                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" +
-                                        "    <link rel=\"canonical\" href=\"" + url + "\" />\n" +
-                                        "    <meta http-equiv=\"refresh\" content=\"0;url=" + target + "\" />\n" +
-                                        "</head>\n<body>\n<h1>\n" +
-                                        "    This page has been moved to <a href=\"" + target + "\">" + url + "</a>\n" +
-                                        "    <script type='text/javascript'> window.location.replace(\"" + url + "\"); </script>\n" +
-                                        "</h1>\n</body>\n</html>\n";
-                                return template;
-                            }
-                            File site = new File(project.reporting.outputDirectory);
-                            site.mkdirs();
-                            String[][] filenameArray = new String[][] {
-                                    {"integration.html", "ci-management.html"},
-                                    {"issue-tracking.html", "issue-management.html"},
-                                    {"license.html", "licenses.html"},
-                                    {"project-summary.html", "summary.html"},
-                                    {"source-repository.html", "scm.html"},
-                                    {"team-list.html", "team.html"}};
-                            for (int i=0; i<filenameArray.length; i++) { File file = new File(site, filenameArray[i][0]); org.codehaus.plexus.util.FileUtils.fileWrite(file, "UTF-8", contents(filenameArray[i][1]));
-                            }
-                            ]]>
+// Generate redirect pages for historic site URLs (MPIR-323)
+String contents(String target) {
+    String url = project.url + target;
+    String template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" " +
+            "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+            "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n" +
+            "<head>\n" +
+            "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" +
+            "    <link rel=\"canonical\" href=\"" + url + "\" />\n" +
+            "    <meta http-equiv=\"refresh\" content=\"0;url=" + target + "\" />\n" +
+            "</head>\n<body>\n<h1>\n" +
+            "    This page has been moved to <a href=\"" + target + "\">" + url + "</a>\n" +
+            "    <script type='text/javascript'> window.location.replace(\"" + url + "\"); </script>\n" +
+            "</h1>\n</body>\n</html>\n";
+    return template;
+}
+File site = new File(project.reporting.outputDirectory);
+site.mkdirs();
+String[][] filenameArray = new String[][] {
+        {"failsafe-report.html", "failsafe.html"},
+        {"integration.html", "ci-management.html"},
+        {"issue-tracking.html", "issue-management.html"},
+        {"license.html", "licenses.html"},
+        {"project-summary.html", "summary.html"},
+        {"source-repository.html", "scm.html"},
+        {"surefire-report.html", "surefire.html"},
+        {"team-list.html", "team.html"}};
+for (int i=0; i<filenameArray.length; i++) {
+    File file = new File(site, filenameArray[i][0]);
+    org.codehaus.plexus.util.FileUtils.fileWrite(file, "UTF-8", contents(filenameArray[i][1]));
+} ]]>
                             </script>
                         </configuration>
                     </execution>
@@ -624,7 +689,9 @@ int countCanonicalLinks(File htmlFile, String projectUrl) throws IOException {
 void ensureCanonicalLink(String absoluteFilePath, String outputDirectory, String projectUrl) throws IOException {
     if (countCanonicalLinks(new File(absoluteFilePath), projectUrl) == 0) {
         //build canonical link tag
-        String canonicalLinkTag = "<link rel=\"canonical\" href=\"" + buildCanonicalUrl(absoluteFilePath, outputDirectory, projectUrl.substring(0, projectUrl.length() - 1)) + "\" />\n";
+        String canonicalLinkTag = "<link rel=\"canonical\" href=\"" +
+            buildCanonicalUrl(absoluteFilePath, outputDirectory,
+                projectUrl.substring(0, projectUrl.length() - 1)) + "\" />\n";
         //find </head>
         int offset = org.codehaus.plexus.util.FileUtils.fileRead(absoluteFilePath, "UTF-8").indexOf("</head>");
         //insert link tag and linebreak
@@ -633,7 +700,8 @@ void ensureCanonicalLink(String absoluteFilePath, String outputDirectory, String
 }
 files = org.codehaus.plexus.util.FileUtils.getFilesFromExtension(
     project.reporting.outputDirectory, new String[] { "htm", "html" });
-for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.reporting.outputDirectory, project.url);
+for (int i=0; i<files.length; i++) {
+    ensureCanonicalLink(files[i], project.reporting.outputDirectory, project.url);
 } ]]>
                             </script>
                         </configuration>
@@ -664,7 +732,6 @@ for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.repor
         <plugins>
             <plugin>
                 <artifactId>maven-changes-plugin</artifactId>
-                <version>2.12.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -675,22 +742,36 @@ for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.repor
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.22.2</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report-only</report>
+                            <report>failsafe-report-only</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <report>javadoc</report>
-                            <report>test-javadoc</report>
+                            <report>javadoc-no-fork</report>
+                            <report>test-javadoc-no-fork</report>
                         </reports>
                     </reportSet>
                 </reportSets>
             </plugin>
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.5</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jxr-no-fork</report>
+                            <report>test-jxr-no-fork</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -704,7 +785,7 @@ for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.repor
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.17.1</version>
                 <configuration>
                     <rulesUri>${project.baseUri}/src/main/config/versions-maven-rules.xml</rulesUri>
                 </configuration>
@@ -743,6 +824,13 @@ for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.repor
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>generate-no-fork</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>nl.demon.shadowland.maven.plugins</groupId>
@@ -762,7 +850,6 @@ for (int i=0; i<files.length; i++) { ensureCanonicalLink(files[i], project.repor
                 <plugins>
                     <plugin>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

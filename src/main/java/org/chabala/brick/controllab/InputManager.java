@@ -22,10 +22,18 @@ import org.chabala.brick.controllab.sensor.SensorEvent;
 import org.chabala.brick.controllab.sensor.SensorListener;
 import org.chabala.brick.controllab.sensor.SensorValue;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Manages registration of input event listeners, and parsing input
@@ -33,7 +41,7 @@ import java.util.*;
  */
 class InputManager {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = getLogger(lookup().lookupClass());
     private final Map<InputId, byte[]> sensorData;
     private final Map<InputId, Set<SensorListener>> sensorListeners;
     private final List<InputId> frameInputOrder =
@@ -82,7 +90,7 @@ class InputManager {
             for (byte b : inputFrame) {
                 sb.append(String.format("0x%02X ", b));
             }
-            throw new IOException("Expected 19 bytes, got " + inputFrame.length + " - " + sb.toString());
+            throw new IOException("Expected 19 bytes, got " + inputFrame.length + " - " + sb);
         }
         if (!isChecksumValid(inputFrame)) {
             log.warn("Bad checksum received");

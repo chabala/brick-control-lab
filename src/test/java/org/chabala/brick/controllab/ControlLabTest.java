@@ -22,7 +22,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -34,8 +33,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assume.assumeThat;
 import static org.mockito.Mockito.*;
 
@@ -46,9 +50,6 @@ public class ControlLabTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private SerialPortFactory portFactory;
@@ -95,7 +96,8 @@ public class ControlLabTest {
         when(portFactory.getSerialPort(portName)).thenReturn(serialPort);
         when(serialPort.getPortName()).thenReturn(portName);
         when(serialPort.isOpen()).thenReturn(true);
-        when(serialPort.write(Protocol.HANDSHAKE_CHALLENGE.getBytes())).thenAnswer((Answer<Boolean>) invocation -> {
+        when(serialPort.write(Protocol.HANDSHAKE_CHALLENGE.getBytes()))
+            .thenAnswer((Answer<Boolean>) invocation -> {
             handshakeSeen.set(true);
             return true;
         });
@@ -151,7 +153,8 @@ public class ControlLabTest {
     @Test
     public void testToStringWhenConnected() throws Exception {
         final String portName = "cool_port_1";
-        when(portFactory.getSerialPort(portName)).thenReturn(new JsscSerialPort(innerSerialPort));
+        when(portFactory.getSerialPort(portName))
+            .thenReturn(new JsscSerialPort(innerSerialPort));
         when(innerSerialPort.getPortName()).thenReturn(portName);
         when(listener.isHandshakeSeen()).thenAnswer(i -> true);
         controlLab.open(portName);

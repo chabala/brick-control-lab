@@ -21,7 +21,7 @@ package org.chabala.brick.controllab;
 /**
  * Identifiers for the input ports on the control lab.
  * <p>
- * Inputs 1-4 are passive, they read the resistence of the sensor
+ * Inputs 1-4 are passive, they read the resistance of the sensor
  * connected to them. They are colored yellow on the control lab.
  * <p>
  * Inputs 5-8 are active, they supply power to the connected sensor

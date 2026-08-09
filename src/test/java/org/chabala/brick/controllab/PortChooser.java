@@ -19,13 +19,18 @@
 package org.chabala.brick.controllab;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assume.assumeThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Intergration tests use this class to pick a serial port to connect to. If the
@@ -34,11 +39,14 @@ import static org.junit.Assume.assumeThat;
  */
 @SuppressWarnings("WeakerAccess")
 public final class PortChooser {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String TOO_FEW_PORTS_MESSAGE = "as many serial ports as requested should be available";
+    private static final Logger log = getLogger(lookup().lookupClass());
+    private static final String TOO_FEW_PORTS_MESSAGE =
+        "as many serial ports as requested should be available";
 
-    /** System property to override the IT serial port with a specific port identifier. */
-    public static final String OVERRIDE_TEST_PORT_PROPERTY = "brick-control-lab.overrideTestPort";
+    /** System property to override the IT serial port with
+     *  a specific port identifier. */
+    public static final String OVERRIDE_TEST_PORT_PROPERTY =
+        "brick-control-lab.overrideTestPort";
 
     /**
      * Picks the first available serial port based on what the serial library finds.

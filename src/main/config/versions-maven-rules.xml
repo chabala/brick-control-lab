@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset comparisonMethod="maven"
-         xmlns="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0"
+<ruleset xmlns="https://www.mojohaus.org/VERSIONS/RULE/3.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 https://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd">
+         xsi:schemaLocation="https://www.mojohaus.org/VERSIONS/RULE/3.0.0
+             https://www.mojohaus.org/versions/versions-model/xsd/rule-3.0.0.xsd">
     <ignoreVersions>
-        <ignoreVersion type="regex">.*-(alpha|beta|M.)(.*)?</ignoreVersion>
+        <ignoreVersion type="regex">.*-(alpha|beta)(.*)?</ignoreVersion>
     </ignoreVersions>
+    <rules>
+        <rule groupId="org.junit.*">
+            <ignoreVersions>
+                <ignoreVersion type="range">[6.0.0,)</ignoreVersion>
+                <!-- 6.0.0+ requires Java 17 -->
+                <ignoreVersion type="regex">6.0.0-M\d+</ignoreVersion>
+                <ignoreVersion type="regex">6.0.0-RC\d+</ignoreVersion>
+            </ignoreVersions>
+        </rule>
+        <rule groupId="org.mockito">
+            <ignoreVersions>
+                <ignoreVersion type="range">[5.0.0,)</ignoreVersion>
+                <!-- 5.0.0+ requires Java 11 -->
+            </ignoreVersions>
+        </rule>
+    </rules>
 </ruleset>
