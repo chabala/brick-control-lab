@@ -67,6 +67,7 @@
         <slf4jVersion>2.0.18</slf4jVersion>
         <googleAnalyticsAccountId>G-C4CXTKCF75</googleAnalyticsAccountId>
         <sonar.organization>${ghUser}</sonar.organization>
+        <sonar.projectKey>${ghUser}_${project.artifactId}</sonar.projectKey>
         <mavenSurefireVersion>3.6.0-M1</mavenSurefireVersion>
         <junitJupiterVersion>5.14.4</junitJupiterVersion>
     </properties>
@@ -331,7 +332,7 @@
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.7.0.1746</version>
+                    <version>5.7.0.6970</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.genthaler</groupId>
