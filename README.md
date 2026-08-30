@@ -66,8 +66,8 @@ Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licen
 [11]: https://en.wikipedia.org/wiki/Lego_Mindstorms#RCX
 [14]: https://en.wikibooks.org/wiki/Serial_Programming/Serial_Java
 [15]: https://github.com/scream3r/java-simple-serial-connector
-[16]: https://maven-badges.sml.io/maven-central/org.chabala.brick/brick-control-lab/badge.svg
-[17]: https://maven-badges.sml.io/maven-central/org.chabala.brick/brick-control-lab
+[16]: https://maven-badges.sml.io/sonatype-central/org.chabala.brick/brick-control-lab/badge.svg
+[17]: https://maven-badges.sml.io/sonatype-central/org.chabala.brick/brick-control-lab
 [18]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/org/chabala/brick/brick-control-lab/badge.json
 [19]: https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/org/chabala/brick/brick-control-lab/README.md
 
