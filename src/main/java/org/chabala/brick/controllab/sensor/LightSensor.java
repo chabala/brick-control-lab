@@ -39,6 +39,7 @@ public class LightSensor implements SensorValue {
         return sensorValue.getStatusCode();
     }
 
+    @SuppressWarnings("magicNumber")
     public String lightValue() {
         return String.format("%.2f", (1023 - getAnalogValue()) / 1023.0 * 100);
     }

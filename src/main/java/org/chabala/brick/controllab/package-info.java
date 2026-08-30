@@ -19,7 +19,8 @@
 /**
  * Library for controlling the LEGO® control lab interface.
  *
- * <p>The main interface is {@link org.chabala.brick.controllab.ControlLab}, instances of
- * which can be created with {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
+ * <p>The main interface is {@link org.chabala.brick.controllab.ControlLab},
+ * instances of which can be created with
+ * {@link org.chabala.brick.controllab.ControlLab#newControlLab()}.
  */
 package org.chabala.brick.controllab;

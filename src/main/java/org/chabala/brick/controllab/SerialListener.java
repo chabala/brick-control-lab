@@ -45,8 +45,8 @@ class SerialListener implements SerialPortEventListener {
     SerialListener(SerialPort serialPort, InputManager inputManager) {
         this.serialPort = serialPort;
         this.inputManager = inputManager;
-        ignoreBadHandshake = Boolean.parseBoolean(
-            System.getProperty("brick-control-lab.ignoreBadHandshake", "false"));
+        ignoreBadHandshake = Boolean.parseBoolean(System.getProperty(
+            "brick-control-lab.ignoreBadHandshake", "false"));
     }
 
     @Override
@@ -88,8 +88,10 @@ class SerialListener implements SerialPortEventListener {
         try {
             while (!handshakeSeen && availableBytes > 0) {
                 availableBytes--;
-                handshakeBuilder.append(new String(serialPort.readBytes(1), ISO_8859_1));
-                if (handshakeBuilder.length() >= Protocol.HANDSHAKE_RESPONSE.length()) {
+                handshakeBuilder.append(
+                    new String(serialPort.readBytes(1), ISO_8859_1));
+                if (handshakeBuilder.length() >=
+                        Protocol.HANDSHAKE_RESPONSE.length()) {
                     String handshake = handshakeBuilder.toString();
                     if (handshake.endsWith(Protocol.HANDSHAKE_RESPONSE)) {
                         log.info("RX <- {}", handshake);

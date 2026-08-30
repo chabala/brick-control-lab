@@ -26,7 +26,8 @@ import java.util.function.Function;
 import static org.chabala.brick.controllab.sensor.BinaryStringFormatter.printInBinary;
 
 /**
- * The event triggered by receiving a {@link SensorValue} from an {@link InputId}.
+ * The event triggered by receiving a {@link SensorValue} from an
+ * {@link InputId}.
  * @param <T> specific {@link SensorValue} subclass contained in this event
  */
 public class SensorEvent<T extends SensorValue> extends EventObject {
@@ -39,11 +40,13 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
      * Constructs a SensorEvent.
      *
      * @param input    The input port that triggered this event.
-     * @param oldValue The last known value from this input, as a two byte array.
+     * @param oldValue The last known value from this input, as a two
+     *                 byte array.
      * @param newValue The new value from this input, as a two byte array.
      * @param value    The new value wrapped in the SensorValue class.
      */
-    public SensorEvent(InputId input, byte[] oldValue, byte[] newValue, T value) {
+    public SensorEvent(InputId input, byte[] oldValue,
+                       byte[] newValue, T value) {
         super(input);
         this.oldValue = oldValue;
         this.newValue = newValue;
@@ -51,12 +54,14 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
     }
 
     /**
-     * A copy constructor for subclasses, to easily wrap the {@link SensorValue} in a
-     * more specific subclass.
+     * A copy constructor for subclasses, to easily wrap the
+     * {@link SensorValue} in a more specific subclass.
      * @param sensorEvent   The SensorEvent to be copied
-     * @param sensorWrapper The constructor method reference for a SensorValue subclass
+     * @param sensorWrapper The constructor method reference for a
+     *                      SensorValue subclass
      */
-    public SensorEvent(SensorEvent<SensorValue> sensorEvent, Function<SensorValue, T> sensorWrapper) {
+    public SensorEvent(SensorEvent<SensorValue> sensorEvent,
+                       Function<SensorValue, T> sensorWrapper) {
         this(sensorEvent.getInput(),
              sensorEvent.getOldValue(),
              sensorEvent.getNewValue(),
@@ -72,7 +77,8 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
     }
 
     /**
-     * The last known value from this input, prior to the event, as a two byte array.
+     * The last known value from this input, prior to the event, as a two
+     * byte array.
      * @return the last known value from this input as a two byte array
      */
     public byte[] getOldValue() {
@@ -88,7 +94,8 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
     }
 
     /**
-     * The new value from this input wrapped in the SensorValue class, or sensor specific subclass.
+     * The new value from this input wrapped in the SensorValue class, or
+     * sensor specific subclass.
      * @return SensorValue class, or sensor specific subclass
      */
     public T getValue() {
@@ -98,6 +105,6 @@ public class SensorEvent<T extends SensorValue> extends EventObject {
     @Override
     public String toString() {
         return String.format("%1s value changed: %2s -> %3s aka %4s",
-                source, printInBinary(oldValue), printInBinary(newValue), value);
+            source, printInBinary(oldValue), printInBinary(newValue), value);
     }
 }

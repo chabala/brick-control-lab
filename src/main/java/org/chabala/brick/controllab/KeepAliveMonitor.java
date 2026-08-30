@@ -56,12 +56,13 @@ class KeepAliveMonitor implements Closeable {
         this(serialPortWriter, Duration.ofMillis(KEEP_ALIVE_PERIOD_MS));
     }
 
-    KeepAliveMonitor(SerialPortWriter serialPortWriter, Duration keepAlivePeriod) {
+    KeepAliveMonitor(SerialPortWriter serialPortWriter,
+                     Duration keepAlivePeriod) {
         this.serialPortWriter = serialPortWriter;
         this.keepAlivePeriodMs = keepAlivePeriod.toMillis();
         executor = Executors.newSingleThreadScheduledExecutor(
-                new NamedDaemonThreadFactory(
-                        "KeepAlive " + serialPortWriter.getPortName()));
+            new NamedDaemonThreadFactory(
+                "KeepAlive " + serialPortWriter.getPortName()));
         scheduleTask();
     }
 
@@ -76,8 +77,10 @@ class KeepAliveMonitor implements Closeable {
     }
 
     private void scheduleTask() {
-        task = executor.scheduleAtFixedRate(() -> sendCommand(KEEP_ALIVE_COMMAND),
-                keepAlivePeriodMs, keepAlivePeriodMs, TimeUnit.MILLISECONDS);
+        task = executor.scheduleAtFixedRate(() ->
+            sendCommand(KEEP_ALIVE_COMMAND),
+                keepAlivePeriodMs, keepAlivePeriodMs,
+                    TimeUnit.MILLISECONDS);
     }
 
     private void sendCommand(byte b) {
@@ -102,7 +105,8 @@ class KeepAliveMonitor implements Closeable {
      * A {@link ThreadFactory} which produces named, daemon threads.
      */
     private static class NamedDaemonThreadFactory implements ThreadFactory {
-        private ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
+        private ThreadFactory defaultThreadFactory =
+            Executors.defaultThreadFactory();
         private final String threadName;
 
         NamedDaemonThreadFactory(String threadName) {

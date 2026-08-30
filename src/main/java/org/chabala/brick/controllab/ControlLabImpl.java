@@ -41,7 +41,8 @@ class ControlLabImpl implements ControlLab {
     private final SerialPortFactory portFactory;
     private SerialPort serialPort;
     private final InputManager inputManager;
-    private final BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory;
+    private final BiFunction<SerialPort, InputManager,
+        SerialPortEventListener> listenerFactory;
     private final Map<OutputId, Output> outputMap;
     private final StopButton stopButton;
     private final Map<InputId, Input> inputMap;
@@ -51,24 +52,28 @@ class ControlLabImpl implements ControlLab {
      * Default constructor using jSSC serial implementation.
      */
     ControlLabImpl(Logger log) {
-        this(log, new JsscSerialPortFactory(), new InputManager(), SerialListener::new);
+        this(log, new JsscSerialPortFactory(),
+            new InputManager(), SerialListener::new);
     }
 
     ControlLabImpl(Logger log,
                    SerialPortFactory portFactory,
                    InputManager inputManager,
-                   BiFunction<SerialPort, InputManager, SerialPortEventListener> listenerFactory) {
+                   BiFunction<SerialPort, InputManager,
+                       SerialPortEventListener> listenerFactory) {
         this.log = log;
         this.portFactory = portFactory;
         this.inputManager = inputManager;
         this.listenerFactory = listenerFactory;
         outputMap = Collections.unmodifiableMap(new EnumMap<>(
-                Arrays.stream(OutputId.values()).collect(
-                        Collectors.toMap(Function.identity(), id -> new Output(this, id)))));
+            Arrays.stream(OutputId.values()).collect(
+                Collectors.toMap(Function.identity(),
+                    id -> new Output(this, id)))));
         stopButton = new StopButton(inputManager);
         inputMap = Collections.unmodifiableMap(new EnumMap<>(
-                Arrays.stream(InputId.values()).collect(
-                        Collectors.toMap(Function.identity(), id -> new Input(inputManager, id)))));
+            Arrays.stream(InputId.values()).collect(
+                Collectors.toMap(Function.identity(),
+                    id -> new Input(inputManager, id)))));
     }
 
     @Override
@@ -76,11 +81,13 @@ class ControlLabImpl implements ControlLab {
         serialPort = portFactory.getSerialPort(portName);
         log.info("Opening port {}", serialPort.getPortName());
         serialPort.openPort();
-        SerialPortEventListener serialListener = listenerFactory.apply(serialPort, inputManager);
+        SerialPortEventListener serialListener =
+            listenerFactory.apply(serialPort, inputManager);
         serialPort.addEventListener(serialListener);
 
         serialPortWriter = new SerialPortWriter(serialPort);
-        serialPortWriter.sendCommand(Protocol.HANDSHAKE_CHALLENGE.getBytes(ISO_8859_1), log);
+        serialPortWriter.sendCommand(
+            Protocol.HANDSHAKE_CHALLENGE.getBytes(ISO_8859_1), log);
         if (!serialListener.isHandshakeSeen()) {
             close();
             throw new IOException("No response to handshake");
@@ -91,25 +98,31 @@ class ControlLabImpl implements ControlLab {
     /** {@inheritDoc} */
     @Override
     public void turnOutputOff(Set<OutputId> outputs) throws IOException {
-        serialPortWriter.sendCommand(Protocol.OUTPUT_OFF, OutputId.encodeSetToByte(outputs));
+        serialPortWriter.sendCommand(
+            Protocol.OUTPUT_OFF, OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
     public void turnOutputOn(Set<OutputId> outputs) throws IOException {
-        serialPortWriter.sendCommand(Protocol.OUTPUT_ON, OutputId.encodeSetToByte(outputs));
+        serialPortWriter.sendCommand(
+            Protocol.OUTPUT_ON, OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException {
-        serialPortWriter.sendCommand(direction.getCode(), OutputId.encodeSetToByte(outputs));
+    public void setOutputDirection(Direction direction,
+                                   Set<OutputId> outputs) throws IOException {
+        serialPortWriter.sendCommand(
+            direction.getCode(), OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException {
-        serialPortWriter.sendCommand(powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
+    public void setOutputPowerLevel(PowerLevel powerLevel,
+                                    Set<OutputId> outputs) throws IOException {
+        serialPortWriter.sendCommand(
+            powerLevel.getCode(), OutputId.encodeSetToByte(outputs));
     }
 
     /** {@inheritDoc} */

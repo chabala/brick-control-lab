@@ -24,8 +24,9 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Handle for an output port (or group of ports) on a specific control lab instance.
- * Obtain via {@link ControlLab#getOutput(OutputId)} or {@link ControlLab#getOutput(Set)}.
+ * Handle for an output port (or group of ports) on a specific control
+ * lab instance. Obtain via {@link ControlLab#getOutput(OutputId)} or
+ * {@link ControlLab#getOutput(Set)}.
  */
 public class Output {
 
@@ -52,11 +53,12 @@ public class Output {
     }
 
     /**
-     * Returns set of {@link OutputId}s this {@link Output} relates to. In normal
-     * usage, this is unlikely to be called as one would obtain the {@link Output}
-     * from {@link ControlLab#getOutput(OutputId)} and immediately chain one of the
-     * fluent method calls. But it can useful to inspect the {@link OutputId}s if the
-     * {@link Output} reference is retained and seperated from the creation site.
+     * Returns set of {@link OutputId}s this {@link Output} relates to. In
+     * normal usage, this is unlikely to be called as one would obtain the
+     * {@link Output} from {@link ControlLab#getOutput(OutputId)} and
+     * immediately chain one of the fluent method calls. But it can be useful
+     * to inspect the {@link OutputId}s if the {@link Output} reference is
+     * retained and separated from the creation site.
      * @return set of {@link OutputId}s this {@link Output} relates to
      */
     public Set<OutputId> getOutputIdSet() {
@@ -66,7 +68,8 @@ public class Output {
     /**
      * Stops sending power to this output.
      * @return self reference to the output for chaining
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     public Output turnOff() throws IOException {
         controlLab.turnOutputOff(outputIdSet);
@@ -76,7 +79,8 @@ public class Output {
     /**
      * Starts sending power to this output.
      * @return self reference to the output for chaining
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     public Output turnOn() throws IOException {
         controlLab.turnOutputOn(outputIdSet);
@@ -88,7 +92,8 @@ public class Output {
      * while the output is powered or unpowered.
      * @param direction desired direction
      * @return self reference to the output for chaining
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     public Output setDirection(Direction direction) throws IOException {
         controlLab.setOutputDirection(direction, outputIdSet);
@@ -96,22 +101,25 @@ public class Output {
     }
 
     /**
-     * Reverses the {@link Direction} of this output. This is a convenience method
-     * that is the same as
-     * {@link Output#setDirection(Direction) setDirection(}{@link Direction#REVERSE Direction.REVERSE)}.
+     * Reverses the {@link Direction} of this output. This is a
+     * convenience method that is the same as
+     * {@link Output#setDirection(Direction) setDirection(}
+     * {@link Direction#REVERSE Direction.REVERSE)}.
      * @return self reference to the output for chaining
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     public Output reverseDirection() throws IOException {
         return setDirection(Direction.REVERSE);
     }
 
     /**
-     * Sets the {@link PowerLevel} of this output. Power level may be changed
-     * while the output is powered or unpowered.
+     * Sets the {@link PowerLevel} of this output. Power level may be
+     * changed while the output is powered or unpowered.
      * @param powerLevel desired power level
      * @return self reference to the output for chaining
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     public Output setPowerLevel(PowerLevel powerLevel) throws IOException {
         controlLab.setOutputPowerLevel(powerLevel, outputIdSet);

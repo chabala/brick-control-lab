@@ -38,7 +38,7 @@
 
         <property name="basedir" value="${basedir}"/>
     -->
-
+    <module name="SuppressWarningsFilter"/>
     <property name="fileExtensions" value="java, properties, xml"/>
 
     <!-- Checks that a package-info.java file exists for each package.     -->
@@ -71,7 +71,7 @@
     </module>
 
     <module name="LineLength">
-        <property name="max" value="110"/>
+        <property name="max" value="85"/>
     </module>
 
     <!-- Checks for Headers                                -->
@@ -82,7 +82,7 @@
     <!-- </module> -->
 
     <module name="TreeWalker">
-
+        <module name="SuppressWarningsHolder"/>
         <!-- Checks for Javadoc comments.                          -->
         <!-- See https://checkstyle.sourceforge.io/checks/javadoc/ -->
         <module name="JavadocMethod">

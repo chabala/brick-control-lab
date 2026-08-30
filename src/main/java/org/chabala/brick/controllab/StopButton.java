@@ -29,7 +29,8 @@ import static org.chabala.brick.controllab.Protocol.STOP_RELEASED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Handle for stop button on a specific control lab instance. Obtain via {@link ControlLab#getStopButton()}.
+ * Handle for stop button on a specific control lab instance. Obtain
+ * via {@link ControlLab#getStopButton()}.
  */
 public class StopButton {
     private final Logger log = getLogger(lookup().lookupClass());
@@ -44,8 +45,8 @@ public class StopButton {
     /**
      * Attach a listener for {@link StopButtonEvent}s.
      *
-     * <p>Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
+     * <p>Multiple listeners are allowed. A listener instance will only be
+     * registered once even if it is added multiple times.
      * @param listener listener to add
      */
     public void addListener(StopButtonListener listener) {

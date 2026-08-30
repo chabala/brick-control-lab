@@ -38,7 +38,8 @@ public enum OutputId {
     /**
      * Convenience constant for specifying all output ports.
      */
-    public static final Set<OutputId> ALL = Collections.unmodifiableSet(EnumSet.allOf(OutputId.class));
+    public static final Set<OutputId> ALL =
+        Collections.unmodifiableSet(EnumSet.allOf(OutputId.class));
 
     /**
      * Encodes values from a {@link Set} of {@link Enum}s to a byte. Uses the

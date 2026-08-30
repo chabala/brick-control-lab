@@ -29,8 +29,9 @@ import java.util.EventListener;
 public interface SensorListener extends EventListener {
 
     /**
-     * This is the entrypoint for raw sensor data events. Sensor specific listener
-     * interfaces override this and delegate to more specific callbacks.
+     * This is the entrypoint for raw sensor data events. Sensor-specific
+     * listener interfaces override this and delegate to more specific
+     * callbacks.
      * @param sensorEvent a sensor event containing a raw sensor value
      */
     void sensorEventReceived(SensorEvent<SensorValue> sensorEvent);

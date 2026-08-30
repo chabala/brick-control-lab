@@ -39,8 +39,10 @@ final class BinaryStringFormatter {
      * @param data a single byte of data
      * @return an eight character string of zeros and ones
      */
+    @SuppressWarnings("magicNumber")
     static String printByteInBinary(byte data) {
-        return Integer.toBinaryString(Byte.toUnsignedInt(data) + 0x100).substring(1);
+        return Integer.toBinaryString(Byte.toUnsignedInt(data) + 0x100)
+            .substring(1);
     }
 
     private BinaryStringFormatter() {

@@ -61,8 +61,8 @@ class InputManager {
     /**
      * Attach a listener for {@link SensorEvent}s.
      *
-     * <p>Multiple listeners are allowed. A listener instance will only be registered
-     * once even if it is added multiple times.
+     * <p>Multiple listeners are allowed. A listener instance will only be
+     * registered once even if it is added multiple times.
      * @param input    input to add the listener to
      * @param listener listener to add
      */
@@ -90,7 +90,8 @@ class InputManager {
             for (byte b : inputFrame) {
                 sb.append(String.format("0x%02X ", b));
             }
-            throw new IOException("Expected 19 bytes, got " + inputFrame.length + " - " + sb);
+            throw new IOException("Expected 19 bytes, got " +
+                inputFrame.length + " - " + sb);
         }
         if (!isChecksumValid(inputFrame)) {
             log.warn("Bad checksum received");
@@ -108,6 +109,7 @@ class InputManager {
         }
     }
 
+    @SuppressWarnings("magicNumber")
     private boolean isChecksumValid(byte[] inputFrame) {
         int checksum = 0;
         for (byte b : inputFrame) {
@@ -126,10 +128,12 @@ class InputManager {
         byte[] newValue = {high, low};
         byte[] oldValue = sensorData.put(input, newValue);
         if (!Arrays.equals(newValue, oldValue)) {
-            SensorEvent<SensorValue> event =
-                    new SensorEvent<>(input, oldValue, newValue, SensorValue.newSensorValue(high, low));
+            SensorEvent<SensorValue> event = new SensorEvent<>(
+                input, oldValue, newValue,
+                    SensorValue.newSensorValue(high, low));
             synchronized (sensorListeners) {
-                sensorListeners.get(input).forEach(l -> l.sensorEventReceived(event));
+                sensorListeners.get(input).forEach(
+                    l -> l.sensorEventReceived(event));
             }
         }
     }

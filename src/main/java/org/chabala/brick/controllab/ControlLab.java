@@ -59,8 +59,8 @@ public interface ControlLab extends Closeable {
     }
 
     /**
-     * List available serial ports on this machine. May change over time due to
-     * hot pluggable USB serial port adapters and the like.
+     * List available serial ports on this machine. May change over time due
+     * to hot pluggable USB serial port adapters and the like.
      *
      * @return a list of system specific string identifiers for serial ports
      */
@@ -69,7 +69,8 @@ public interface ControlLab extends Closeable {
     /**
      * Opens a connection to the control lab on the specified port.
      * @param portName system specific serial port identifier
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     void open(String portName) throws IOException;
 
@@ -83,34 +84,40 @@ public interface ControlLab extends Closeable {
     /**
      * Stops sending power to the specified outputs.
      * @param outputs outputs to stop
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     void turnOutputOff(Set<OutputId> outputs) throws IOException;
 
     /**
      * Starts sending power to the specified outputs.
      * @param outputs outputs to start
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     void turnOutputOn(Set<OutputId> outputs) throws IOException;
 
     /**
-     * Sets the {@link Direction} of the specified outputs. Direction may be changed
-     * while the outputs are powered or unpowered.
+     * Sets the {@link Direction} of the specified outputs. Direction may
+     * be changed while the outputs are powered or unpowered.
      * @param direction desired direction
      * @param outputs which outputs to change
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
-    void setOutputDirection(Direction direction, Set<OutputId> outputs) throws IOException;
+    void setOutputDirection(Direction direction,
+                            Set<OutputId> outputs) throws IOException;
 
     /**
-     * Sets the {@link PowerLevel} of the specified outputs. Power level may be changed
-     * while the outputs are powered or unpowered.
+     * Sets the {@link PowerLevel} of the specified outputs. Power level may
+     * be changed while the outputs are powered or unpowered.
      * @param powerLevel desired power level
      * @param outputs which outputs to change
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
-    void setOutputPowerLevel(PowerLevel powerLevel, Set<OutputId> outputs) throws IOException;
+    void setOutputPowerLevel(PowerLevel powerLevel,
+                             Set<OutputId> outputs) throws IOException;
 
     /**
      * Return a handle for the output specified on this control lab instance.
@@ -141,7 +148,8 @@ public interface ControlLab extends Closeable {
 
     /**
      * Disconnects from the control lab and releases any resources.
-     * @throws IOException if any number of possible communication issues occurs
+     * @throws IOException if any number of possible communication
+     *         issues occur
      */
     @Override
     void close() throws IOException;

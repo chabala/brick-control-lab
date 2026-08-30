@@ -45,6 +45,7 @@ public interface SensorValue {
      * bit 3 looks like 0 for passive, 1 for active sensors.
      * @return true for passive sensors, false for active sensors
      */
+    @SuppressWarnings("magicNumber")
     default boolean isPassive() {
         return (getStatusCode() & 0b000100) == 0;
     }
@@ -54,6 +55,7 @@ public interface SensorValue {
      * (when four is low, sensor is lit on box)
      * @return true for engaged sensors, false for released sensors
      */
+    @SuppressWarnings("magicNumber")
     default boolean isEngaged() {
         return (getStatusCode() & 0b001000) == 0;
     }
