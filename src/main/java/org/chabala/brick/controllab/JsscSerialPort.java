@@ -132,7 +132,8 @@ class JsscSerialPort implements SerialPort {
 
     /** {@inheritDoc} */
     @Override
-    public void addEventListener(SerialPortEventListener listener) throws IOException {
+    public void addEventListener(SerialPortEventListener listener)
+            throws IOException {
         try {
             serialPort.addEventListener(listener);
         } catch (SerialPortException e) {

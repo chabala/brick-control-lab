@@ -24,6 +24,7 @@ package org.chabala.brick.controllab;
  * When an output is turned on without specifying a direction, the
  * default direction is {@link #RIGHT}.
  */
+@SuppressWarnings("methodParamPad")
 public enum Direction {
     /** Left direction, as indicated by the LED on the control lab. */
     LEFT   ((byte) 0b10010100),

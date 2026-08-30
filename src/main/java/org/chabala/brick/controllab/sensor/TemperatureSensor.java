@@ -39,6 +39,7 @@ public class TemperatureSensor implements SensorValue {
         return sensorValue.getStatusCode();
     }
 
+    @SuppressWarnings("magicNumber")
     public String temperatureValue() {
         if (isPassive() && isEngaged()) {
             double degreesF = (760 - getAnalogValue()) / 4.4 + 32;

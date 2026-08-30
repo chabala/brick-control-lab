@@ -91,6 +91,7 @@
                 <item name="JaCoCo" href="jacoco/index.html"/>
                 <item name="JDepend" href="jdepend-report.html"/>
                 <item name="SonarCloud" href="sonarcloud.html"/>
+                <item name="Reproducible Central" href="reproducible-central.html"/>
             </item>
         </menu>
         <!-- replaced with manually configured menu for more control -->

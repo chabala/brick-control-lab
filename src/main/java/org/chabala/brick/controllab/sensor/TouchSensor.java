@@ -39,6 +39,7 @@ public class TouchSensor implements SensorValue {
         return sensorValue.getStatusCode();
     }
 
+    @SuppressWarnings("magicNumber")
     public String touchStatus() {
         switch (getStatusCode()) {
             case 0:
