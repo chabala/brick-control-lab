@@ -150,6 +150,10 @@
                     <version>3.2.0</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-artifact-plugin</artifactId>
+                    <version>3.6.1</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>3.8.0</version>
                 </plugin>
@@ -730,6 +734,16 @@ for (int i=0; i<files.length; i++) {
 
     <reporting>
         <plugins>
+            <plugin>
+                <artifactId>maven-artifact-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>reproducible-central</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
             <plugin>
                 <artifactId>maven-changes-plugin</artifactId>
                 <reportSets>

@@ -8,6 +8,7 @@ Library for controlling the [LEGO® control lab interface][1].
 [![License: GNU LGPL 3.0][4]](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 [![Maven Central][16]][17]
+[![Reproducible Builds][18]][19]
 
 ### What is the control lab?
 
@@ -67,6 +68,8 @@ Licensed under [GNU Lesser General Public License 3.0](https://www.gnu.org/licen
 [15]: https://github.com/scream3r/java-simple-serial-connector
 [16]: https://maven-badges.sml.io/maven-central/org.chabala.brick/brick-control-lab/badge.svg
 [17]: https://maven-badges.sml.io/maven-central/org.chabala.brick/brick-control-lab
+[18]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/org/chabala/brick/brick-control-lab/badge.json
+[19]: https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/org/chabala/brick/brick-control-lab/README.md
 
 <!---
 Potential replacements for maven-badges.sml.io
